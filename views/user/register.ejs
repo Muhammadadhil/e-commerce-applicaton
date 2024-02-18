@@ -13,7 +13,7 @@
                             <a href="/login">Log in instead!</a>
                         </p>
 
-                        <form action="" id="form" method="post" onsubmit="handleFormSubmission(event)">
+                        <form action="" id="form" method="post">
                             <div class="single-form">
                                 <input  type="text" id="firstName" placeholder="First Name" oninput="validate(this)" name="firstname" required/>
                                 <span style="color: red;" id="firstNameErro msg0"></span>
@@ -63,34 +63,35 @@
     <!-- Register Section End -->
 
 
-    <script>
-        const form=document.getElementById('form');        // Prevent default form submission behavior
-            form.addEventListener('keydown',(e)=>{
-            if(e.key==='Enter'){
-                console.log(e);
-                e.preventDefault()
-            }
-        })
+    <script> 
+        //abshar
+        // const form=document.getElementById('form');        // Prevent default form submission behavior
+        //     form.addEventListener('keydown',(e)=>{
+        //     if(e.key==='Enter'){
+        //         console.log(e);
+        //         e.preventDefault()
+        //     }
+        // })
      
-        const submit=document.getElementById('registerButton');
-        function validate(name){
+        // const submit=document.getElementById('registerButton');
+        // function validate(name){
             
-            if(name.value.trim()==""){
-                submit.style.opacity=0.6;
-                submit.style.pointerEvents='none';
-                name.nextElementSibling.textContent='input not empty';
+        //     if(name.value.trim()==""){
+        //         submit.style.opacity=0.6;
+        //         submit.style.pointerEvents='none';
+        //         name.nextElementSibling.textContent='input not empty';
 
-            }else if(name){
+        //     }else if(name){
 
-            }
-            else{
-                submit.style.opacity=1;
-                submit.style.pointerEvents='all';
-                name.nextElementSibling.textContent=''
+        //     }
+        //     else{
+        //         submit.style.opacity=1;
+        //         submit.style.pointerEvents='all';
+        //         name.nextElementSibling.textContent=''
 
-            }
+        //     }
 
-        }
+        // }
 
     
         

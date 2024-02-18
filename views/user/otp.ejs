@@ -1,53 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OTP Verification</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    /* Custom styles */
-    .otp-input {
-      width: 50px;
-      text-align: center;
-      margin: 0 5px;
-      padding: 10px;
-      font-size: 18px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Furbar</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+    </style>
 </head>
+
 <body>
+    <div class="container">
+        <div class="row justify-content-center ">
+            <div class="col-md-6 mt-5">
+                <div class="card mt-5 ">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">OTP Verification</h4>
+                        <p class="card-text">Please enter the OTP sent to your email address.</p>
 
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Enter OTP</h5>
-          <form id="otpForm">
-            <div class="form-group">
-              <div class="d-flex justify-content-center">
-                <!-- OTP input fields -->
-                <input type="text" class="form-control otp-input" maxlength="1" name="digit1" id="digit1" pattern="[0-9]{1}" required>
-                <input type="text" class="form-control otp-input" maxlength="1" name="digit2" id="digit2" pattern="[0-9]{1}" required>
-                <input type="text" class="form-control otp-input" maxlength="1" name="digit3" id="digit3" pattern="[0-9]{1}" required>
-                <input type="text" class="form-control otp-input" maxlength="1" name="digit4" id="digit4" pattern="[0-9]{1}" required>
-              </div>
+                        <form id="otpForm" action="/verifyOtp" method="post">
+                            <div class="form-group text-center">
+                                <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter OTP" required>
+                            </div>
+                            <button type="submit" class="btn btn-success ">Verify OTP</button>
+                        </form>
+                        
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-              <button type="submit" class="btn btn-primary btn-block">Verify OTP</button>
-            </div>
-          </form>
         </div>
-      </div>
     </div>
-  </div>
-</div>
 
-<!-- Bootstrap JS (optional, for certain components) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS and jQuery (required for Bootstrap components) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
+
+    <!-- Custom script for OTP verification -->
+    <!-- <script>
+        $(document).ready(function () {
+            $('#otpForm').submit(function (event) {
+                event.preventDefault(); // Prevent default form submission
+
+                var otp = $('#otp').val(); // Get the entered OTP
+
+                // Send the OTP to the server for verification using AJAX
+                $.ajax({
+                    url: '/verify-otp',
+                    type: 'POST',
+                    data: {
+                        otp: otp
+                    },
+                    success: function (response) {
+                        // Handle success response from the server
+                        console.log(response);
+                        alert('OTP verified successfully!');
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error response from the server
+                        console.error(xhr.responseText);
+                        alert('Error verifying OTP. Please try again.');
+                    }
+                });
+            });
+        });
+    </script> -->

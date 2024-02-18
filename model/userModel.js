@@ -20,7 +20,15 @@ const userSchema=new mongoose.Schema({
     password:{
         type:String,
         required:true
-    }
+    },
+    verified:{
+        type:Boolean,
+        default:false
+    },
+    isAdmin:{
+        type:Boolean
+    },
+    
 
 })
 module.exports=mongoose.model('User',userSchema);
