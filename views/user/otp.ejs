@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>OTP Verification</title>
+        <title>Furbar</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -19,6 +19,8 @@
                 border-radius: 10px;
                 padding: 20px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                
+                
             }
 
             .otp-input-container {
@@ -45,7 +47,7 @@
             button {
                 margin-top: 20px;
                 padding: 10px 20px;
-                background-color: #007bff;
+                background-color: #ffc107;
                 color: #fff;
                 border: none;
                 border-radius: 5px;
@@ -54,7 +56,18 @@
             }
 
             button:hover {
-                background-color: #0056b3;
+                background-color: #ffd350;
+            }
+            
+            #otp-error {
+                color: red;
+                font-size: 16px;
+                margin-top: 10px;
+                text-align: center;
+            }
+            .verify-button{
+                display: flex;
+                justify-content: center;
             }
         </style>
     </head>
@@ -94,10 +107,13 @@
                     oninput="focusNext(event)"
                     onkeydown="focusPrevious(event)"
                 />
-                <br /><br />
-
-                <button onclick="verifyOTP()">Verify</button>
             </div>
+            <div class="verify-button">
+                <button onclick="verifyOTP()" class="verify-button">Verify</button>
+            </div>
+            <button id="resendOtp-button" onclick="timer()"  disabled>resend otp</button>
+            <div id="timerDisplay" class="text-center " ></div>
+            <p id="otp-error" class="text-danger text-center "></p>
         </div>
 
         <script>
@@ -128,6 +144,7 @@
                 const num2 = document.getElementById("num2").value;
                 const num3 = document.getElementById("num3").value;
                 const num4 = document.getElementById("num4").value;
+
                 let otp = "";
                 document.querySelectorAll(".otp-input").forEach(function (input) {
                     otp += input.value;
@@ -159,14 +176,44 @@
                             otpErrorElement.textContent = data.message;
                         } else if (data.otp == "invalid") {
                             otpErrorElement.textContent = data.message;
-                        } else if (data.otp == true) {
+                        }else if(data.otp =='noRecord'){
+                            otpErrorElement.textContent = data.message;
+                        }else if (data.otp == true) {
                             window.location.href = "/";
                         }
                     })
-                    .catch((error) => {
-                        console.log(error);
+                    .catch(error => {
+                        // Handle errors
+                        console.error('Error:', error.message);
                     });
+            
             }
+            //timer for the otp 
+            function timer(){
+                let secondsRemaining=60;
+                let display=document.getElementById('timerDisplay');
+                let resendOtpButton=document.getElementById('resendOtp-button');
+
+
+                let timerInterval=setInterval(()=>{
+                    display.innerHTML=`Expire within ${secondsRemaining} seconds`;
+
+                    if(secondsRemaining <=0){
+                        clearInterval(timerInterval);
+                        display.innerHTML='';
+                        resendOtpButton.disabled=false;
+
+                    }else{
+                        secondsRemaining--;
+                    }
+                },1000)
+
+
+            }
+            //load the timer when otp page loaded
+            window.onload = function () {
+                timer(); 
+            };
         </script>
     </body>
 </html>

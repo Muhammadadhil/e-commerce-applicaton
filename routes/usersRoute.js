@@ -8,18 +8,7 @@ router.use(express.urlencoded({extended:true}));
 //setting views path for users
 router.set('views','./views/user');
 
-//lading the main page
-router.get('/',(req,res)=>{
-    try {   
-        
-        res.render('home')
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).render('Error-500')
-    }
-})
-
-router.get('/home',userController.loadHomePage)
+router.get('/',userController.loadHomePage)
 
 router.get('/about',userController.loadAbout);
 router.get('/shop',userController.loadShop);
@@ -31,6 +20,8 @@ router.post('/register',userController.insertUser);
 
 router.get('/verifyOtp',userController.loadOtpPage);
 router.post('/verifyOtp',userController.verifyuserOtp);
+
+router.get('/profile',userController.loadProfile);
 
 
 

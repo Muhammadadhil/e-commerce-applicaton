@@ -48,7 +48,7 @@
                         <div class="header-menu">
                             <ul class="nav-menu">
                                 <li>
-                                    <a href="/home">Home</a>
+                                    <a href="/">Home</a>
                                 </li>
                                 <li>
                                     <a href="/about">About</a>
@@ -71,33 +71,13 @@
                     <div class="col-lg-3">
                         <!-- Header Meta Start -->
                         <div class="header-meta">
-                            <div class="dropdown">
-                                <a class="action" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="pe-7s-search"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-search">
-                                    <!-- Header Search Start -->
-                                    <div class="header-search">
-                                        <form action="#">
-                                            <input type="text" placeholder="Enter your search key ... " />
-                                            <button>
-                                                <i class="pe-7s-search"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                    <!-- Header Search End -->
-                                </div>
-                            </div>
 
                             <div class="dropdown">
-                                <a class="action" href="#" role="button" data-bs-toggle="dropdown"
-                                    ><i class="pe-7s-user"></i
-                                ></a>
-                                <ul class="dropdown-menu dropdown-profile">
-                                    <li><a href="">My Account</a></li>
-                                    <li><a href="">Checkout</a></li>
-                                    <li><a href="/login">Sign In</a></li>
-                                </ul>
+                                <%if(locals.user){%>
+                                    <a class="action" href="/profile" role="button"><i class="pe-7s-user"></i></a>    
+                                <%}else{%>
+                                    <a class="action" href="/login" role="button"><i class="pe-7s-user"></i></a>    
+                                <%}%>
                             </div>
 
                             <a class="action" href="#"><i class="pe-7s-like"></i></a>

@@ -14,7 +14,9 @@ const nodemailer=require('nodemailer');
 //loading home page
 const loadHomePage=(req,res)=>{
     try {
-        res.render('home')
+        const user=req.session.userId;
+        console.log(`hello aadhi,this is user : ${user}`);
+        res.render('home',{user})
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500')
@@ -43,7 +45,6 @@ const loadAbout=async (req,res)=>{
 //loading the login page
 const loginLoad=async (req,res)=>{
     try {
-
         res.render('login');
     } catch (error) {
         console.log(error.message);
@@ -59,6 +60,17 @@ const registerLoad=async (req,res)=>{
     }
     
 }
+//load profle
+const loadProfile=async (req,res)=>{
+    try {
+        res.render('profile');
+    } catch (error) {
+        console.log(error.message);
+        
+    }
+}
+
+
 //loading the shop page
 const loadShop=async (req,res)=>{
     try {
@@ -154,7 +166,7 @@ const otpVerificationEmail=async ({_id,email},req,res)=>{
         //         email
         //     }
         // })
-        req.session.userId=_id;
+        req.session.OtpUserId=_id;
         res.redirect('/verifyOtp');
         
         
@@ -180,16 +192,16 @@ const verifyuserOtp=async (req,res)=>{
     try {
 
         console.log('ok,reached post route');
-        const userId=req.session.userId;
+        const userId=req.session.OtpUserId;
         const {num1,num2,num3,num4}=req.body;
         // console.log(num1,num2,num3,num4);
         const otp=`${num1}${num2}${num3}${num4}`
-        console.log(otp);
-        
 
-        // console.log(`userid:${userId} , user entered otp:${otp}`);
+        console.log(`userEntered OTP:${otp}`);
+        console.log(`userId:${userId}`);
+
         if(!userId || !otp){
-            throw Error('no details')
+            res.json({otp:'noRecord',message:'no records found'})
         }else{
             const otpRecords=await userOtpVerfication.findOne({userId});
             // console.log(otpRecords);
@@ -204,19 +216,20 @@ const verifyuserOtp=async (req,res)=>{
                 
                 if(expiresAt<Date.now()){
                     //if time limit exceeded
-                    // throw new Error('otp code time limit exceeded, please try again later');
                     await userOtpVerfication.deleteMany({userId});
                     res.json({otp:'expired',message:'otp code time limit exceeded, please try again later'});
 
                 }else{
                     const matchedOtp=await bcrypt.compare(otp,hashedOtp);
                     if(!matchedOtp){
-                        // throw new Error('please provide a valid code')
                         // res.render('otp',{message:'please provide a valid code'})
                         res.status(200).json({otp:'invalid',message:'please provide a valid code'});
                     }else{
                         await User.updateOne({_id:userId},{verified:true});
                         await userOtpVerfication.deleteMany({userId:userId});
+
+                        //acknowledgement for user loggedin
+                        req.session.userId=userId;
 
                         console.log('successfull otp verification');
                         // res.redirect('/home')
@@ -228,7 +241,7 @@ const verifyuserOtp=async (req,res)=>{
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('Error-500');
+        // res.status(500).render('Error-500');
     }
 }
 module.exports={
@@ -239,6 +252,7 @@ module.exports={
     insertUser,
     loadShop,
     loadOtpPage,
-    verifyuserOtp
+    verifyuserOtp,
+    loadProfile
     
 }
