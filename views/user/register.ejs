@@ -13,33 +13,33 @@
                             <a href="/login">Log in instead!</a>
                         </p>
 
-                        <form action="" id="form" method="post">
+                        <form action="" id="form" method="post" enctype="application/x-www-form-urlencoded">
                             <div class="single-form">
-                                <input  type="text" id="firstName" placeholder="First Name" oninput="validate(this)" name="firstname" required/>
-                                <span style="color: red;" id="firstNameErro msg0"></span>
+                                <input  type="text" id="firstName" placeholder="First Name" oninput="validate(this)" name="firstname"/>
+                                <span style="color: red;" id="firstNameError "></span>
                             </div>
                             <div class="single-form">
-                                <input  type="text" id="lastName" placeholder="Last Name" oninput="validate(this)" name="lastname" required/>
-                                <span style="color: red;" id="lastNameError msg1"></span>
+                                <input  type="text" id="lastName" placeholder="Last Name" oninput="validate(this)" name="lastname"/>
+                                <span style="color: red;" id="lastNameError"></span>
                             </div>
                             <div class="single-form">
-                                <input  type="email" id="email"placeholder="Email Address *" oninput="validate(this)" name="email" required/>
-                                <span style="color: red;" id="lastNameError msg1"></span>
+                                <input  type="email" id="email"placeholder="Email Address *" name="email" required/>
+                                <span style="color: red;" id="lastNameError"></span>
 
                             </div>
                             <div class="single-form">
                                 <input  type="text" id="userName" placeholder="Username *" oninput="validate(this)" name="username" required/>
-                                <span style="color: red;" id="lastNameError msg1"></span>
+                                <span style="color: red;" id="lastNameError"></span>
 
                             </div>
                             <div class="single-form">
                                 <input  type="password" id="password" placeholder="Password" oninput="validate(this)" name="password" required/>
-                                <span style="color: red;" id="lastNameError msg1"></span>
+                                <span style="color: red;" id="lastNameError"></span>
 
                             </div>
                             <div class="single-form">
                                 <input  type="password" id="confirmPassword" oninput="validate(this)" placeholder="Confirm Password" required/>
-                                <span style="color: red;" id="lastNameError msg1"></span>
+                                <span style="color: red;" id="lastNameError"></span>
 
                             </div>
                             <div class="single-form">

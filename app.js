@@ -1,6 +1,7 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const mongoose=require('mongoose');
 require('dotenv').config();
@@ -8,6 +9,9 @@ const session=require('express-session');
 
 mongoose.connect('mongodb://localhost:27017/project-furbar')
 const app = express();
+
+// Use Morgan middleware for logging requests
+app.use(morgan('dev'));
 
 //configuring express-session 
 app.use(session({
@@ -52,7 +56,7 @@ app.use('/',usersRouter);
 //   res.send('error someewhere')
 // });
 
-const port=4000
+const port=3855
 
 app.listen(port,()=>console.log(`server running on the port http://localhost:${port}`));
 

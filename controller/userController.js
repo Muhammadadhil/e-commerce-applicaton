@@ -85,6 +85,7 @@ const insertUser=async (req,res)=>{
         verified:false,
         
     })
+    console.log(`before saving userdetails:${user}`);
     const newUser=await user.save();
     console.log(newUser);
     if(newUser){
@@ -177,42 +178,51 @@ const loadOtpPage=async (req,res)=>{
 //verify otp post route
 const verifyuserOtp=async (req,res)=>{
     try {
+
         console.log('ok,reached post route');
         const userId=req.session.userId;
-        const {otp}=req.body;
-        console.log(`userid:${userId} , otp:${otp}`);
+        const {num1,num2,num3,num4}=req.body;
+        // console.log(num1,num2,num3,num4);
+        const otp=`${num1}${num2}${num3}${num4}`
+        console.log(otp);
+        
+
+        // console.log(`userid:${userId} , user entered otp:${otp}`);
         if(!userId || !otp){
             throw Error('no details')
         }else{
             const otpRecords=await userOtpVerfication.findOne({userId});
-            console.log(otpRecords);
+            // console.log(otpRecords);
 
             if(otpRecords.length<=0){
-                throw new Error("Account has been already verified or record is already exist .please sign up or login")
+                // throw new Error("Account has been already verified or record is already exist .please sign up or login");
+                res.json({otp:false,message:'Account has been already verified or record is already exist .please sign up or login'});
             }else{
                 const {expiresAt}=otpRecords;
                 const hashedOtp=otpRecords.otp;
-                console.log(`expiresAt:${expiresAt}
-                date.now:${Date.now()}`);
+                console.log(`expiresAt:${expiresAt} & date.now:${Date.now()}`);
                 
-
                 if(expiresAt<Date.now()){
                     //if time limit exceeded
+                    // throw new Error('otp code time limit exceeded, please try again later');
                     await userOtpVerfication.deleteMany({userId});
-                    throw new Error('otp code time limit exceeded, please try again later');
+                    res.json({otp:'expired',message:'otp code time limit exceeded, please try again later'});
 
                 }else{
                     const matchedOtp=await bcrypt.compare(otp,hashedOtp);
                     if(!matchedOtp){
-                        throw new Error('please provide a valid code')
+                        // throw new Error('please provide a valid code')
+                        // res.render('otp',{message:'please provide a valid code'})
+                        res.status(200).json({otp:'invalid',message:'please provide a valid code'});
                     }else{
                         await User.updateOne({_id:userId},{verified:true});
                         await userOtpVerfication.deleteMany({userId:userId});
+
+                        console.log('successfull otp verification');
+                        // res.redirect('/home')
+                        res.status(200).json({otp:true})
                     }
-                    console.log('successfull otp verification');
-                    res.redirect('/home')
-                }
-                
+                }  
             }
         }
 

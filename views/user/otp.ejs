@@ -1,79 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>OTP Verification</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f2f2f2;
+                margin: 0;
+                padding: 0;
+            }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Furbar</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .container {
-            margin-top: 50px;
-        }
-    </style>
-</head>
+            .container {
+                max-width: 400px;
+                margin: 50px auto;
+                background-color: #fff;
+                border-radius: 10px;
+                padding: 20px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
 
-<body>
-    <div class="container">
-        <div class="row justify-content-center ">
-            <div class="col-md-6 mt-5">
-                <div class="card mt-5 ">
-                    <div class="card-body">
-                        <h4 class="card-title text-center">OTP Verification</h4>
-                        <p class="card-text">Please enter the OTP sent to your email address.</p>
+            .otp-input-container {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
 
-                        <form id="otpForm" action="/verifyOtp" method="post">
-                            <div class="form-group text-center">
-                                <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter OTP" required>
-                            </div>
-                            <button type="submit" class="btn btn-success ">Verify OTP</button>
-                        </form>
-                        
-                    </div>
-                </div>
+            .otp-input {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+                text-align: center;
+                margin: 0 5px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            .otp-input:focus {
+                outline: none;
+                border-color: #007bff;
+            }
+
+            button {
+                margin-top: 20px;
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2 style="text-align: center">Enter OTP</h2>
+            <div class="otp-input-container" id="otpForm">
+                <input
+                    class="otp-input"
+                    type="text"
+                    id="num1"
+                    maxlength="1"
+                    oninput="focusNext(event)"
+                    onkeydown="focusPrevious(event)"
+                />
+                <input
+                    class="otp-input"
+                    type="text"
+                    id="num2"
+                    maxlength="1"
+                    oninput="focusNext(event)"
+                    onkeydown="focusPrevious(event)"
+                />
+                <input
+                    class="otp-input"
+                    type="text"
+                    id="num3"
+                    maxlength="1"
+                    oninput="focusNext(event)"
+                    onkeydown="focusPrevious(event)"
+                />
+                <input
+                    class="otp-input"
+                    type="text"
+                    id="num4"
+                    maxlength="1"
+                    oninput="focusNext(event)"
+                    onkeydown="focusPrevious(event)"
+                />
+                <br /><br />
+
+                <button onclick="verifyOTP()">Verify</button>
             </div>
         </div>
-    </div>
 
-    <!-- Bootstrap JS and jQuery (required for Bootstrap components) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+        <script>
+            function focusNext(event) {
+                const currentInput = event.target;
+                console.log(`currentINput: ${currentInput}`);
+                const nextInput = currentInput.nextElementSibling;
+                console.log(`next input: ${nextInput}`);
 
-</html>
+                if (currentInput.value.length === 1 && nextInput) {
+                    nextInput.focus();
+                }
+            }
 
-    <!-- Custom script for OTP verification -->
-    <!-- <script>
-        $(document).ready(function () {
-            $('#otpForm').submit(function (event) {
-                event.preventDefault(); // Prevent default form submission
+            function focusPrevious(event) {
+                const currentInput = event.target;
+                const previousInput = currentInput.previousElementSibling;
 
-                var otp = $('#otp').val(); // Get the entered OTP
+                if (event.key === "Backspace" && !currentInput.value && previousInput) {
+                    previousInput.focus();
+                }
+            }
 
-                // Send the OTP to the server for verification using AJAX
-                $.ajax({
-                    url: '/verify-otp',
-                    type: 'POST',
-                    data: {
-                        otp: otp
-                    },
-                    success: function (response) {
-                        // Handle success response from the server
-                        console.log(response);
-                        alert('OTP verified successfully!');
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle error response from the server
-                        console.error(xhr.responseText);
-                        alert('Error verifying OTP. Please try again.');
-                    }
+            function verifyOTP() {
+                // e.preventDefault();
+                //alerting the otp entered
+                const num1 = document.getElementById("num1").value;
+                const num2 = document.getElementById("num2").value;
+                const num3 = document.getElementById("num3").value;
+                const num4 = document.getElementById("num4").value;
+                let otp = "";
+                document.querySelectorAll(".otp-input").forEach(function (input) {
+                    otp += input.value;
                 });
-            });
-        });
-    </script> -->
+                alert("Entered OTP: " + otp);
+                //
+                // const formData=new FormData(document.getElementById('otpForm'));
+                // console.log(formData);
+                const otpErrorElement = document.getElementById("otp-error");
+
+                fetch("http://localhost:3855/verifyOtp", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        num1,
+                        num2,
+                        num3,
+                        num4,
+                    }),
+                    headers: {
+                        "content-type": "application/json;charset=utf-8",
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log("data : ", data);
+                        if (data.otp == false) {
+                            otpErrorElement.textContent = data.message;
+                        } else if (data.otp == "expired") {
+                            otpErrorElement.textContent = data.message;
+                        } else if (data.otp == "invalid") {
+                            otpErrorElement.textContent = data.message;
+                        } else if (data.otp == true) {
+                            window.location.href = "/";
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+        </script>
+    </body>
+</html>
