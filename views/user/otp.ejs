@@ -5,8 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Furbar</title>
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
             body {
-                font-family: Arial, sans-serif;
+                font-family: 'Poppins', sans-serif;
+                 font-weight: 400;
                 background-color: #f2f2f2;
                 margin: 0;
                 padding: 0;
@@ -69,6 +71,15 @@
                 display: flex;
                 justify-content: center;
             }
+            .timer-resend{
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+            }
+            .timer-resend p{
+                font-size: small;
+            }
+
         </style>
     </head>
     <body>
@@ -111,9 +122,14 @@
             <div class="verify-button">
                 <button onclick="verifyOTP()" class="verify-button">Verify</button>
             </div>
-            <button id="resendOtp-button" onclick="timer()"  disabled>resend otp</button>
-            <div id="timerDisplay" class="text-center " ></div>
-            <p id="otp-error" class="text-danger text-center "></p>
+            <div class="timer-resend"> 
+                <p id="resendOtp-button" onclick="timer()" hidden >didn't get the otp 
+                    <a style="text-decoration: none;" href="/resendOtp">resend otp</a>
+                </p>
+                <div id="timerDisplay" class="text-center " ></div>
+                <p id="otp-error" class="text-danger text-center "></p>
+            </div>
+            
         </div>
 
         <script>
@@ -155,7 +171,7 @@
                 // console.log(formData);
                 const otpErrorElement = document.getElementById("otp-error");
 
-                fetch("http://localhost:3855/verifyOtp", {
+                fetch("http://localhost:4005/verifyOtp", {
                     method: "POST",
                     body: JSON.stringify({
                         num1,
@@ -190,18 +206,18 @@
             }
             //timer for the otp 
             function timer(){
-                let secondsRemaining=60;
+                let secondsRemaining=10;
                 let display=document.getElementById('timerDisplay');
                 let resendOtpButton=document.getElementById('resendOtp-button');
 
 
                 let timerInterval=setInterval(()=>{
-                    display.innerHTML=`Expire within ${secondsRemaining} seconds`;
+                    display.innerHTML=`OTP e xpire within ${secondsRemaining} seconds`;
 
                     if(secondsRemaining <=0){
                         clearInterval(timerInterval);
                         display.innerHTML='';
-                        resendOtpButton.disabled=false;
+                        resendOtpButton.hidden=false;
 
                     }else{
                         secondsRemaining--;

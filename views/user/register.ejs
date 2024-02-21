@@ -1,172 +1,201 @@
-
 <%-include('../layouts/header.ejs')%>
 
-    <div class="section section-padding">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-6 mt-5 ">
-                    <!-- Login & Register Start -->
-                    <div class="login-register-wrapper">
-                        <h4 class="title">Create New Account</h4>
-                        <p>
-                            Already have an account?
-                            <a href="/login">Log in instead!</a>
-                        </p>
+<div class="section section-padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 mt-5">
+                <!-- Login & Register Start -->
+                <div class="login-register-wrapper">
+                    <h4 class="title">Create New Account</h4>
+                    <p>
+                        Already have an account?
+                        <a href="/login">Log in instead!</a>
+                    </p>
 
-                        <form action="" id="form" method="post" enctype="application/x-www-form-urlencoded">
-                            <div class="single-form">
-                                <input  type="text" id="firstName" placeholder="First Name" oninput="validate(this)" name="firstname"/>
-                                <span style="color: red;" id="firstNameError "></span>
-                            </div>
-                            <div class="single-form">
-                                <input  type="text" id="lastName" placeholder="Last Name" oninput="validate(this)" name="lastname"/>
-                                <span style="color: red;" id="lastNameError"></span>
-                            </div>
-                            <div class="single-form">
-                                <input  type="email" id="email"placeholder="Email Address *" name="email" required/>
-                                <span style="color: red;" id="lastNameError"></span>
-
-                            </div>
-                            <div class="single-form">
-                                <input  type="text" id="userName" placeholder="Username *" oninput="validate(this)" name="username" required/>
-                                <span style="color: red;" id="lastNameError"></span>
-
-                            </div>
-                            <div class="single-form">
-                                <input  type="password" id="password" placeholder="Password" oninput="validate(this)" name="password" required/>
-                                <span style="color: red;" id="lastNameError"></span>
-
-                            </div>
-                            <div class="single-form">
-                                <input  type="password" id="confirmPassword" oninput="validate(this)" placeholder="Confirm Password" required/>
-                                <span style="color: red;" id="lastNameError"></span>
-
-                            </div>
-                            <div class="single-form">
-                                <input  type="checkbox" id="receive" />
-                                <label for="receive">
-                                    <span></span>agree the privacy and policy</label>
-                            </div>
-                            <div class="single-form">
-                                <button type="submit" class="btn btn-primary btn-hover-dark" id="registerButton">
-                                    Register
-                                </button>
-                            </div>
-                        </form>
-
-                    </div>
-                    <!-- Login & Register End -->
+                    <form  id="form">
+                        <div class="single-form">
+                            <input type="text" id="firstName" placeholder="First Name"  required />
+                            <span style="color: red" id="firstNameError"></span>
+                        </div>
+                        <div class="single-form">
+                            <input type="text" id="lastName" placeholder="Last Name"  required />
+                            <span style="color: red" id="lastNameError"></span>
+                        </div>
+                        <div class="single-form">
+                            <input type="email" id="email" placeholder="Email Address *"  required />
+                            <span style="color: red" id="emailError"></span>
+                        </div>
+                        <div class="single-form">
+                            <input type="password" id="password" placeholder="Password" required />
+                            <span style="color: red" id="passwordError"></span>
+                        </div>
+                        <div class="single-form">
+                            <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
+                            <span style="color: red" id="confirmPasswordError"></span>
+                        </div>
+                        <div class="single-form">
+                            <input type="checkbox" id="receive" />
+                            <label for="receive"> <span></span>agree the privacy and policy</label>
+                        </div>
+                        <div class="single-form">
+                            <button type="button" class="btn btn-primary btn-hover-dark"  onclick="register()" id="registerButton">
+                                Register
+                            </button>
+                            <h1 id="test" ></h1>
+                        </div>
+                    </form>
                 </div>
+                <!-- Login & Register End -->
             </div>
         </div>
     </div>
-    <!-- Register Section End -->
+</div>
+<!-- Register Section End -->
 
+<script>
+    //abshar
+    // const form=document.getElementById('form');        // Prevent default form submission behavior
+    //     form.addEventListener('keydown',(e)=>{
+    //     if(e.key==='Enter'){
+    //         console.log(e);
+    //         e.preventDefault()
+    //     }
+    // })
 
-    <script> 
-        //abshar
-        // const form=document.getElementById('form');        // Prevent default form submission behavior
-        //     form.addEventListener('keydown',(e)=>{
-        //     if(e.key==='Enter'){
-        //         console.log(e);
-        //         e.preventDefault()
-        //     }
-        // })
-     
-        // const submit=document.getElementById('registerButton');
-        // function validate(name){
-            
-        //     if(name.value.trim()==""){
-        //         submit.style.opacity=0.6;
-        //         submit.style.pointerEvents='none';
-        //         name.nextElementSibling.textContent='input not empty';
+    // const submit=document.getElementById('registerButton');
+    // function validate(name){
 
-        //     }else if(name){
+    //     if(name.value.trim()==""){
+    //         submit.style.opacity=0.6;
+    //         submit.style.pointerEvents='none';
+    //         name.nextElementSibling.textContent='input not empty';
 
-        //     }
-        //     else{
-        //         submit.style.opacity=1;
-        //         submit.style.pointerEvents='all';
-        //         name.nextElementSibling.textContent=''
+    //     }else if(name){
 
-        //     }
+    //     }
+    //     else{
+    //         submit.style.opacity=1;
+    //         submit.style.pointerEvents='all';
+    //         name.nextElementSibling.textContent=''
 
-        // }
+    //     }
 
-    
-        
-        
+    // }
 
-        // document.addEventListener('DOMContentLoaded',()=>{
+    // const formdata=new FormData(document.getElementById('form'));
 
-            // let firstName=document.getElementById('firstName');
-            // let firstNameError=document.getElementById('firstNameError');
+    function register() {
 
-            // firstName.addEventListener('blur',()=>{
-            //     let inputFirstName=firstName.value.trim();
-            //     if(inputFirstName.length==0){
-            //         firstNameError.textContent='*firstname is required'
-            //     }else{
-            //         firstNameError.textContent='';
-            //     }
-            // })
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
 
-            // let lastname=document.getElementById('lastName');
-            // let lastNameError=document.getElementById('lastNameError');
+        const heading=document.getElementById('test');
 
-            // lastname.addEventListener('blur',()=>{
-            //     let inputlastName=lastName.value.trim();
-            //     if(inputlastName.length==0){
-            //         inputlastName.textContent='*lastname is required'
-            //     }else{
-            //         lastNameError.textContent='';
-            //     }
-            // })
+        fetch("http://localhost:4005/register", {
+            method: "POST",
+            body: JSON.stringify({
+                firstName,
+                lastName,
+                email,
+                password,
+                confirmPassword,
+            }),
+            headers: {
+                "content-type": "application/json;charset=utf-8",
+            }
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(`data:${data}`);
 
-            
+                if (data) {
+                    console.log(data.message);
+                    window.location.href = "/verifyOtp";
+                }else{
+                    heading.textContent=data.message;
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+    // function register(){
+    //     axios.post('http://localhost:3855/register',{
+    //         firstname:firstnameValue,
+    //         lastname:lastnameValue,
+    //         email:emailValue,
+    //         password:passwordValue,
+    //         confirmpassword:confirmpasswordValue
+    //     })
+    //     .then(response =>{
+    //         console.log('response:'+response);
+    //     })
+    //     .catch(error =>{
+    //         console.log('error:'+error);
+    //     })
 
+    // }
 
+    // document.addEventListener('DOMContentLoaded',()=>{
 
-            // const registerButton=document.getElementById('registerButton');
-            // registerButton.addEventListener('click',()=>{
-            //     validateForm()
-            // })
+    // let firstName=document.getElementById('firstName');
+    // let firstNameError=document.getElementById('firstNameError');
 
+    // firstName.addEventListener('blur',()=>{
+    //     let inputFirstName=firstName.value.trim();
+    //     if(inputFirstName.length==0){
+    //         firstNameError.textContent='*firstname is required'
+    //     }else{
+    //         firstNameError.textContent='';
+    //     }
+    // })
 
+    // let lastname=document.getElementById('lastName');
+    // let lastNameError=document.getElementById('lastNameError');
 
+    // lastname.addEventListener('blur',()=>{
+    //     let inputlastName=lastName.value.trim();
+    //     if(inputlastName.length==0){
+    //         inputlastName.textContent='*lastname is required'
+    //     }else{
+    //         lastNameError.textContent='';
+    //     }
+    // })
 
+    // const registerButton=document.getElementById('registerButton');
+    // registerButton.addEventListener('click',()=>{
+    //     validateForm()
+    // })
 
+    // function validateForm(){
+    //     console.log('etheeettund');
+    //     const firstname=document.getElementById('firstName').value;
+    //     const lastname=document.getElementById('lastName').value;
+    //     const email=document.getElementById('email').value;
+    //     const username=document.getElementById('userName').value;
+    //     const password=document.getElementById('password').value;
+    //     const confirmpassword=document.getElementById('confirmPassword').value;
 
-                
+    //     if(firstname.trim()==''){
+    //         document.getElementById('firstNameError').innerHTML='firstname should not be empty'
+    //         return false;
+    //     }
+    //     if(lastname===''){
+    //         displayError(lastname,'firstname field should not be empty');
+    //         document.getElementById('lastNameError').innerHTML='firstname should not be empty'
+    //         return false;
+    //     }
 
-            // function validateForm(){
-            //     console.log('etheeettund');
-            //     const firstname=document.getElementById('firstName').value;
-            //     const lastname=document.getElementById('lastName').value;
-            //     const email=document.getElementById('email').value;
-            //     const username=document.getElementById('userName').value;
-            //     const password=document.getElementById('password').value;
-            //     const confirmpassword=document.getElementById('confirmPassword').value;
-               
+    // function displayError(fieldId,errorMessage){
+    //     const errorContainer = document.getElementById(`${fieldId}Error`);
+    //     errorContainer.textContent = errorMessage;
+    // }
+    // }
 
-            //     if(firstname.trim()==''){
-            //         document.getElementById('firstNameError').innerHTML='firstname should not be empty'
-            //         return false;
-            //     }
-            //     if(lastname===''){
-            //         displayError(lastname,'firstname field should not be empty');
-            //         document.getElementById('lastNameError').innerHTML='firstname should not be empty'
-            //         return false;
-            //     }
-                
+    // });
+</script>
 
-                // function displayError(fieldId,errorMessage){
-                //     const errorContainer = document.getElementById(`${fieldId}Error`);
-                //     errorContainer.textContent = errorMessage;
-                // }
-            // }
-
-        // });
-    </script>
-    
-    <%-include('../layouts/footer.ejs')%>
+<%-include('../layouts/footer.ejs')%>

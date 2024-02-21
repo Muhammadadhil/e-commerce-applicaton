@@ -21,6 +21,8 @@ router.post('/register',userController.insertUser);
 router.get('/verifyOtp',userController.loadOtpPage);
 router.post('/verifyOtp',userController.verifyuserOtp);
 
+router.get('/resendOtp',userController.resendOtp);
+
 router.get('/profile',userController.loadProfile);
 
 

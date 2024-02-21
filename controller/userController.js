@@ -83,14 +83,17 @@ const loadShop=async (req,res)=>{
 
 //saving the user details
 const insertUser=async (req,res)=>{
-    const {firstname,lastname,email,username,password}=req.body;
+    const {firstName,lastName,email,username,password}=req.body;
+    console.log(`firstname:${firstName} lastname:${lastName} emial:${email}`);
+    console.log("body : ",req.body);
+
     //securing the password
-    const securePassword=await hashPassword(password);
+    const securePassword=await hashPassword(password,10);
     console.log(securePassword);
 
     const user=new User({
-        firstName:firstname,
-        lastname:lastname,
+        firstName:firstName,
+        lastname:lastName,
         email:email,
         username:username,
         password:securePassword,
@@ -101,29 +104,34 @@ const insertUser=async (req,res)=>{
     const newUser=await user.save();
     console.log(newUser);
     if(newUser){
+        // res.json({data:true, message:'succesfully saved details'});
+        res.json({data:true})
+        console.log('iooo');
         otpVerificationEmail(newUser,req,res); 
     }else{
-        res.send('error')
+        res.json({data:false,message:'not saved!'})
     }
 }
+
+//nodemailer-mail transporter
+const transpoter=nodemailer.createTransport({
+    host:'smtp.gmail.com',     //(Simple Mail Transfer Protocol) 
+    port:587,
+    secure:false,
+    requireTLS:true,
+    auth:{
+        user:'muhammadadhil934@gmail.com',
+        pass:'qjms zuog xjln fmdz'
+    }
+});
 
 //otp verification
 const otpVerificationEmail=async ({_id,email},req,res)=>{
     try {
+        console.log('reached otp verification email sending function');
+        console.log(`id:${_id} and email:${email}`);
         const otp=`${Math.floor(1000+Math.random()*900)}`
         console.log("otp:"+otp);
-
-        //transporter
-        const transpoter=nodemailer.createTransport({
-            host:'smtp.gmail.com',     //(Simple Mail Transfer Protocol) 
-            port:587,
-            secure:false,
-            requireTLS:true,
-            auth:{
-                user:'muhammadadhil934@gmail.com',
-                pass:'qjms zuog xjln fmdz'
-            }
-        });
 
         //mail option
         const mailOptions ={
@@ -167,7 +175,7 @@ const otpVerificationEmail=async ({_id,email},req,res)=>{
         //     }
         // })
         req.session.OtpUserId=_id;
-        res.redirect('/verifyOtp');
+        // res.redirect('/verifyOtp');
         
         
     } catch (error) {
@@ -241,9 +249,30 @@ const verifyuserOtp=async (req,res)=>{
 
     } catch (error) {
         console.log(error.message);
-        // res.status(500).render('Error-500');
+        res.status(500).render('Error-500');
     }
 }
+//resend the otp
+const resendOtp=async (req,res)=>{
+    try {
+        const id=req.session.OtpUserId;
+        console.log(id);
+        const userData=await User.findOne({_id:id});
+        console.log(userData);
+        if(userData){
+            await otpVerificationEmail(userData,req,res);
+        }else{
+            res.json({otp:'invalid'})
+        }
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+
+}
+
+
 module.exports={
     loadHomePage,
     loadAbout,
@@ -253,6 +282,8 @@ module.exports={
     loadShop,
     loadOtpPage,
     verifyuserOtp,
-    loadProfile
+    loadProfile,
+    resendOtp
+
     
 }
