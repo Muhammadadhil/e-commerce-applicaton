@@ -82,36 +82,40 @@ const loadShop=async (req,res)=>{
 }
 
 //saving the user details
-const insertUser=async (req,res)=>{
-    const {firstName,lastName,email,username,password}=req.body;
-    console.log(`firstname:${firstName} lastname:${lastName} emial:${email}`);
-    console.log("body : ",req.body);
+const insertUser = async (req, res) => {
+    try {
+        const { firstName, lastName, email, password} = req.body;
+        console.log(`firstname:${firstName} lastname:${lastName} emial:${email}`);
+        console.log("body : ", req.body);
 
-    //securing the password
-    const securePassword=await hashPassword(password,10);
-    console.log(securePassword);
+        //securing the password
+        const securePassword = await hashPassword(password, 10);
+        console.log(securePassword);
 
-    const user=new User({
-        firstName:firstName,
-        lastname:lastName,
-        email:email,
-        username:username,
-        password:securePassword,
-        verified:false,
-        
-    })
-    console.log(`before saving userdetails:${user}`);
-    const newUser=await user.save();
-    console.log(newUser);
-    if(newUser){
-        // res.json({data:true, message:'succesfully saved details'});
-        res.json({data:true})
-        console.log('iooo');
-        otpVerificationEmail(newUser,req,res); 
-    }else{
-        res.json({data:false,message:'not saved!'})
+        const user = new User({
+            firstName: firstName,
+            lastname: lastName,
+            email: email,
+            password: securePassword,
+            verified: false,
+        })
+        console.log(`before saving userdetails:${user}`);
+    
+        const newUser = await user.save();
+        console.log(newUser);
+        if (newUser) {
+            otpVerificationEmail(newUser, req, res);
+            const id=newUser._id
+            res.json({ data: true ,id});
+        } else {
+            res.json({ dataa: false, message: 'not saved!' });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ data: false, message: 'Error saving user details' });
     }
 }
+
 
 //nodemailer-mail transporter
 const transpoter=nodemailer.createTransport({
@@ -131,8 +135,8 @@ const otpVerificationEmail=async ({_id,email},req,res)=>{
         console.log('reached otp verification email sending function');
         console.log(`id:${_id} and email:${email}`);
         const otp=`${Math.floor(1000+Math.random()*900)}`
-        console.log("otp:"+otp);
-
+        console.log(" Generated OTP:"+otp);
+        
         //mail option
         const mailOptions ={
             from:'muhammadadhil934@gmail.com',
@@ -166,47 +170,48 @@ const otpVerificationEmail=async ({_id,email},req,res)=>{
         //send the mail
         await transpoter.sendMail(mailOptions);
         
-        // res.json({
-        //     status:"PENDING",
-        //     message:"verification otp email sent",
-        //     data:{
-        //         user_id:_id,
-        //         email
-        //     }
-        // })
-        req.session.OtpUserId=_id;
+
+        // req.session.user=_id;
+        // console.log("req.session :",req.session.user);
         // res.redirect('/verifyOtp');
         
         
     } catch (error) {
-        res.json({
-            status:"failed",
-            message:error.message
-        });
+        console.log("error : ",error);
+        // res.json({
+        //     status:"failed",
+        //     message:error.message
+        // });
     }
 };
 
 //load verification page
 const loadOtpPage=async (req,res)=>{
     try {
-        res.render('otp');
+        console.log(`params: ${req.params.id}`);
+        const OtpUserId=req.params.id;
+        res.render('otp',{OtpUserId});
     } catch (error) {
         console.log(error.message);  
+        res.status(500).render('Error-500');
     }
 };
 
 //verify otp post route
 const verifyuserOtp=async (req,res)=>{
     try {
+        console.log('ok,reached verifyOtp post route');
+        // console.log('userId of otp stored in session:'+JSON.stringify(req.session));
+        // const userId=req.session.user;
+        // const userId=req.params.id;
+        // console.log(`userId:${userId}`);
 
-        console.log('ok,reached post route');
-        const userId=req.session.OtpUserId;
-        const {num1,num2,num3,num4}=req.body;
+        const {num1,num2,num3,num4,otpUserId}=req.body;
         // console.log(num1,num2,num3,num4);
         const otp=`${num1}${num2}${num3}${num4}`
 
-        console.log(`userEntered OTP:${otp}`);
-        console.log(`userId:${userId}`);
+        console.log(`userEntered OTP through body:${otpUserId}`);
+        const userId=otpUserId;
 
         if(!userId || !otp){
             res.json({otp:'noRecord',message:'no records found'})

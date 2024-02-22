@@ -10,7 +10,7 @@ mongoose.connect('mongodb://localhost:27017/project-furbar')
 const app = express();
 
 // Use Morgan middleware for logging requests
-app.use(morgan('dev')); 
+// app.use(morgan('dev')); 
 
 //configuring express-session 
 app.use(session({
@@ -19,12 +19,18 @@ app.use(session({
     saveUninitialized:true
 }))
 
-const adminRouter = require('./routes/admin.Route');
+const adminRouter = require('./routes/adminRoute');
 const usersRouter = require('./routes/usersRoute');
 
 // view engine setup
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine','ejs');
+
+
+// app.set('views', {
+//     admin: path.join(__dirname, 'views', 'admin')
+//     user: path.join(__dirname, 'views', 'user')
+// });
 
 // app.use(logger('dev'));
 app.use(express.json());
@@ -33,7 +39,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/admin', adminRouter);
-app.use('/',usersRouter);
+app.use('/',usersRouter);   
 
 // catch 404 and forward to error handler
 // app.use(function(req, res, next) {

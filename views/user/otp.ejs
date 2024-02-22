@@ -5,10 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Furbar</title>
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+            @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
             body {
-                font-family: 'Poppins', sans-serif;
-                 font-weight: 400;
+                font-family: "Poppins", sans-serif;
+                font-weight: 400;
                 background-color: #f2f2f2;
                 margin: 0;
                 padding: 0;
@@ -21,8 +21,6 @@
                 border-radius: 10px;
                 padding: 20px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                
-                
             }
 
             .otp-input-container {
@@ -60,27 +58,27 @@
             button:hover {
                 background-color: #ffd350;
             }
-            
+
             #otp-error {
                 color: red;
                 font-size: 16px;
                 margin-top: 10px;
                 text-align: center;
             }
-            .verify-button{
+            .verify-button {
                 display: flex;
                 justify-content: center;
             }
-            .timer-resend{
+            .timer-resend {
                 margin-top: 20px;
                 display: flex;
                 justify-content: center;
             }
-            .timer-resend p{
+            .timer-resend p {
                 font-size: small;
             }
-
         </style>
+
     </head>
     <body>
         <div class="container">
@@ -119,17 +117,20 @@
                     onkeydown="focusPrevious(event)"
                 />
             </div>
+
+            <input class="userId" type="text" name="id" value="<%=OtpUserId%>" hidden>
+
             <div class="verify-button">
                 <button onclick="verifyOTP()" class="verify-button">Verify</button>
             </div>
-            <div class="timer-resend"> 
-                <p id="resendOtp-button" onclick="timer()" hidden >didn't get the otp 
-                    <a style="text-decoration: none;" href="/resendOtp">resend otp</a>
+            <div class="timer-resend">
+                <p id="resendOtp-button" onclick="timer()" hidden>
+                    didn't get the otp
+                    <a style="text-decoration: none" href="/resendOtp">resend otp</a>
                 </p>
-                <div id="timerDisplay" class="text-center " ></div>
-                <p id="otp-error" class="text-danger text-center "></p>
+                <div id="timerDisplay" class="text-center"></div>
+                <p id="otp-error" class="text-danger text-center"></p>
             </div>
-            
         </div>
 
         <script>
@@ -152,23 +153,27 @@
                     previousInput.focus();
                 }
             }
+            
+            const otpUserId=document.querySelector('.userId').value;
+                console.log('opt userid:'+otpUserId);
 
             function verifyOTP() {
                 // e.preventDefault();
                 //alerting the otp entered
+                console.log('verify OTP func reached!!');
                 const num1 = document.getElementById("num1").value;
                 const num2 = document.getElementById("num2").value;
                 const num3 = document.getElementById("num3").value;
                 const num4 = document.getElementById("num4").value;
+
+                
 
                 let otp = "";
                 document.querySelectorAll(".otp-input").forEach(function (input) {
                     otp += input.value;
                 });
                 alert("Entered OTP: " + otp);
-                //
-                // const formData=new FormData(document.getElementById('otpForm'));
-                // console.log(formData);
+               
                 const otpErrorElement = document.getElementById("otp-error");
 
                 fetch("http://localhost:4005/verifyOtp", {
@@ -178,10 +183,12 @@
                         num2,
                         num3,
                         num4,
+                        otpUserId
                     }),
                     headers: {
                         "content-type": "application/json;charset=utf-8",
                     },
+                    credentials: "include",
                 })
                     .then((response) => response.json())
                     .then((data) => {
@@ -202,33 +209,28 @@
                         // Handle errors
                         console.error('Error:', error.message);
                     });
-            
             }
-            //timer for the otp 
-            function timer(){
-                let secondsRemaining=10;
-                let display=document.getElementById('timerDisplay');
-                let resendOtpButton=document.getElementById('resendOtp-button');
+            //timer for the otp
+            function timer() {
+                let secondsRemaining = 60;
+                let display = document.getElementById("timerDisplay");
+                let resendOtpButton = document.getElementById("resendOtp-button");
 
+                let timerInterval = setInterval(() => {
+                    display.innerHTML = `OTP expire within ${secondsRemaining} seconds`;
 
-                let timerInterval=setInterval(()=>{
-                    display.innerHTML=`OTP e xpire within ${secondsRemaining} seconds`;
-
-                    if(secondsRemaining <=0){
+                    if (secondsRemaining <= 0) {
                         clearInterval(timerInterval);
-                        display.innerHTML='';
-                        resendOtpButton.hidden=false;
-
-                    }else{
+                        display.innerHTML = "";
+                        resendOtpButton.hidden = false;
+                    } else {
                         secondsRemaining--;
                     }
-                },1000)
-
-
+                }, 1000);
             }
             //load the timer when otp page loaded
             window.onload = function () {
-                timer(); 
+                timer();
             };
         </script>
     </body>

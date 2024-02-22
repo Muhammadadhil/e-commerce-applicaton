@@ -18,14 +18,12 @@ router.get('/login',userController.loginLoad);
 router.get('/register',userController.registerLoad);
 router.post('/register',userController.insertUser);
 
-router.get('/verifyOtp',userController.loadOtpPage);
+router.get('/verifyOtp/:id',userController.loadOtpPage);
 router.post('/verifyOtp',userController.verifyuserOtp);
 
 router.get('/resendOtp',userController.resendOtp);
 
 router.get('/profile',userController.loadProfile);
-
-
 
 
 module.exports = router;

@@ -12,21 +12,21 @@
                         <a href="/login">Log in instead!</a>
                     </p>
 
-                    <form  id="form">
+                    <form  id="form" >
                         <div class="single-form">
-                            <input type="text" id="firstName" placeholder="First Name"  required />
+                            <input type="text" id="firstName" placeholder="First Name" name="firstName" required />
                             <span style="color: red" id="firstNameError"></span>
                         </div>
                         <div class="single-form">
-                            <input type="text" id="lastName" placeholder="Last Name"  required />
+                            <input type="text" id="lastName" placeholder="Last Name" name="lastName" required />
                             <span style="color: red" id="lastNameError"></span>
                         </div>
                         <div class="single-form">
-                            <input type="email" id="email" placeholder="Email Address *"  required />
+                            <input type="email" id="email" placeholder="Email Address *" name="email" required />
                             <span style="color: red" id="emailError"></span>
                         </div>
                         <div class="single-form">
-                            <input type="password" id="password" placeholder="Password" required />
+                            <input type="password" id="password" placeholder="Password" name="password" required />
                             <span style="color: red" id="passwordError"></span>
                         </div>
                         <div class="single-form">
@@ -38,7 +38,7 @@
                             <label for="receive"> <span></span>agree the privacy and policy</label>
                         </div>
                         <div class="single-form">
-                            <button type="button" class="btn btn-primary btn-hover-dark"  onclick="register()" id="registerButton">
+                            <button type="button" class="btn btn-primary btn-hover-dark" onclick="register()"  id="registerButton">
                                 Register
                             </button>
                             <h1 id="test" ></h1>
@@ -105,15 +105,16 @@
             }),
             headers: {
                 "content-type": "application/json;charset=utf-8",
-            }
+            },
+            credentials: "include",
         })
             .then((response) => response.json())
             .then((data) => {
                 console.log(`data:${data}`);
 
                 if (data) {
-                    console.log(data.message);
-                    window.location.href = "/verifyOtp";
+                    console.log(`data:${data} and data id:${data.id}`);
+                    window.location.href = `/verifyOtp/${data.id}`;
                 }else{
                     heading.textContent=data.message;
                 }
@@ -122,6 +123,7 @@
                 console.log(error);
             });
     }
+    
     // function register(){
     //     axios.post('http://localhost:3855/register',{
     //         firstname:firstnameValue,
