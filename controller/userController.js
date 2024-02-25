@@ -70,7 +70,6 @@ const loadProfile=async (req,res)=>{
     }
 }
 
-
 //loading the shop page
 const loadShop=async (req,res)=>{
     try {
@@ -80,11 +79,43 @@ const loadShop=async (req,res)=>{
         
     }
 }
+//login post 
+const loginCheck=async (req,res)=>{
+    try {
+        const {email,password}=req.body;
+        console.log(`email:${email} & password:${password}`);
+        const userData=await User.findOne({email:email});
+        
+        if(userData){
+            const matchPassword=await bcrypt.compare(password,userData.password);
+            console.log('matchpassword',matchPassword);
+            
+            if(matchPassword){
+
+                req.session.userId=userData._id;
+                console.log("session :",req.session.userId);
+                res.json({user:true,message:'login successfull'})
+
+            }else{
+                return res.json({user:false,message:'Incorrect Password'});
+            }
+
+        }else{
+            res.json({user:false,message:'Your email or password is incorrect'});
+        }
+        // res.json({success:'succesfull bro'});
+        
+
+    } catch (error) {
+        console.log(error.message);
+        res.render('Error-500');
+    }
+}
 
 //saving the user details
 const insertUser = async (req, res) => {
     try {
-        const { firstName, lastName, email, password} = req.body;
+        const { firstName, lastName, email,mobile, password} = req.body;
         console.log(`firstname:${firstName} lastname:${lastName} emial:${email}`);
         console.log("body : ", req.body);
 
@@ -96,8 +127,11 @@ const insertUser = async (req, res) => {
             firstName: firstName,
             lastname: lastName,
             email: email,
+            mobile:mobile,
             password: securePassword,
             verified: false,
+            isAdmin:false,
+            isBlocked:false
         })
         console.log(`before saving userdetails:${user}`);
     
@@ -161,8 +195,6 @@ const otpVerificationEmail=async ({_id,email},req,res)=>{
         const newOtpVerification=await new userOtpVerfication({
             userId:_id,
             otp:hashedOtp,
-            createdAt:Date.now(),
-            expiresAt:Date.now()+60000
         })
 
         //save the otp in database
@@ -188,8 +220,8 @@ const otpVerificationEmail=async ({_id,email},req,res)=>{
 //load verification page
 const loadOtpPage=async (req,res)=>{
     try {
-        console.log(`params: ${req.params.id}`);
-        const OtpUserId=req.params.id;
+        console.log(`query id: ${req.query.id}`);
+        const OtpUserId=req.query.id;
         res.render('otp',{OtpUserId});
     } catch (error) {
         console.log(error.message);  
@@ -210,14 +242,14 @@ const verifyuserOtp=async (req,res)=>{
         // console.log(num1,num2,num3,num4);
         const otp=`${num1}${num2}${num3}${num4}`
 
-        console.log(`userEntered OTP through body:${otpUserId}`);
+        console.log(`userEntered OTP through body:${otp}`);
         const userId=otpUserId;
 
         if(!userId || !otp){
             res.json({otp:'noRecord',message:'no records found'})
         }else{
             const otpRecords=await userOtpVerfication.findOne({userId});
-            // console.log(otpRecords);
+            console.log("otpRecords: ",otpRecords);
 
             if(otpRecords.length<=0){
                 // throw new Error("Account has been already verified or record is already exist .please sign up or login");
@@ -230,7 +262,7 @@ const verifyuserOtp=async (req,res)=>{
                 if(expiresAt<Date.now()){
                     //if time limit exceeded
                     await userOtpVerfication.deleteMany({userId});
-                    res.json({otp:'expired',message:'otp code time limit exceeded, please try again later'});
+                    res.json({otp:'expired',message:'otp code time limit exceeded, please try again'});
 
                 }else{
                     const matchedOtp=await bcrypt.compare(otp,hashedOtp);
@@ -260,10 +292,12 @@ const verifyuserOtp=async (req,res)=>{
 //resend the otp
 const resendOtp=async (req,res)=>{
     try {
-        const id=req.session.OtpUserId;
-        console.log(id);
-        const userData=await User.findOne({_id:id});
-        console.log(userData);
+        console.log('ok, reached resend otp method');
+        const userId=req.query.id;
+        console.log("query id is here "+userId);
+
+        const userData=await User.findOne({_id:userId});
+        console.log("userData:"+userData);
         if(userData){
             await otpVerificationEmail(userData,req,res);
         }else{
@@ -288,7 +322,8 @@ module.exports={
     loadOtpPage,
     verifyuserOtp,
     loadProfile,
-    resendOtp
+    resendOtp,
+    loginCheck
 
     
 }

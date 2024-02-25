@@ -1,0 +1,99 @@
+<%-include('../layouts/adminHeader')%>
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Customers List</h2> 
+        </div>
+    </div>
+    <div class="card mb-4">
+        
+        <div class="card-body" >
+            <table class="table "id='reloadDiv'>
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Mobile</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <%if(users.length>0){%>
+                        <%users.forEach((user,i)=>{%>
+                            <tr>
+                                <td><%=i+1%></td>
+                                <td><%=`${user.firstName} ${user.lastname}`%></td>
+                                <td><b><%=user.email%></b></td>
+                                <td><%=user.mobile%></td>
+                                <td><span class="badge rounded-pill alert-warning"><%if(user.verified){%>
+                                    verified
+                                    <%}else{%>
+                                        not verified
+                                    <%}%>
+                                    </span></td>
+                                <td><%if(!user.isBlocked){%>
+                                        <a  onclick="blockUnblock('<%=user._id%>')">Block</a>
+                                    <%}else{%>
+                                        <a class="unBlock-user"onclick="blockUnblock('<%=user._id%>')">Unblock</a>
+                                    <%}%>
+                                </td> 
+                            </tr>
+                        <%})%>
+                       
+                    <%}%>
+                </tbody>
+            </table>
+            
+        </div>
+        <!-- card-body end// -->
+    </div>
+    <!-- card end// -->
+    <div class="pagination-area mt-30 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                <li class="page-item"><a class="page-link" href="#">02</a></li>
+                <li class="page-item"><a class="page-link" href="#">03</a></li>
+                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">16</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>
+<!-- content-main end// -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    function blockUnblock(user_id){
+
+        fetch('/admin/blockAndUnblock',{
+            method:'PATCH',
+            headers: {
+                "content-type": "application/json;charset=utf-8",
+            },
+            body:JSON.stringify({
+                user_id
+            })
+        })
+        .then(res=>res.json())  
+        .then(data =>{
+            if(data.res){
+                console.log('heyyyyyyyyyyyy');
+                // location.reload()
+                $('#reloadDiv').load('/admin/customers #reloadDiv')
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+        })   
+    }
+</script>
+
+<%-include('../layouts/adminFooter')%>

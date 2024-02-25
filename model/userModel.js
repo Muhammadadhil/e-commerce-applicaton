@@ -13,6 +13,10 @@ const userSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    mobile:{
+        type:Number,
+        required:true
+    },
     password:{
         type:String,
         required:true
@@ -22,8 +26,13 @@ const userSchema=new mongoose.Schema({
         default:false
     },
     isAdmin:{
-        type:Boolean
+        type:Boolean,
+        default:false
     },
+    isBlocked:{
+        type:Boolean,
+        default:false
+    }
     
 
 })

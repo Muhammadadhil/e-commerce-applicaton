@@ -74,11 +74,14 @@
                 display: flex;
                 justify-content: center;
             }
-            .timer-resend p {
-                font-size: small;
+            .timer {
+                display: flex;
+                justify-content: center;
+            }
+            .timer p {
+                font-size: smaller;
             }
         </style>
-
     </head>
     <body>
         <div class="container">
@@ -115,10 +118,11 @@
                     maxlength="1"
                     oninput="focusNext(event)"
                     onkeydown="focusPrevious(event)"
+                    
                 />
             </div>
 
-            <input class="userId" type="text" name="id" value="<%=OtpUserId%>" hidden>
+            <input class="userId" type="text" name="id" value="<%=OtpUserId%>" hidden />
 
             <div class="verify-button">
                 <button onclick="verifyOTP()" class="verify-button">Verify</button>
@@ -126,19 +130,21 @@
             <div class="timer-resend">
                 <p id="resendOtp-button" onclick="timer()" hidden>
                     didn't get the otp
-                    <a style="text-decoration: none" href="/resendOtp">resend otp</a>
+                    <button onclick="resendOtp()">resend otp</button>
                 </p>
-                <div id="timerDisplay" class="text-center"></div>
-                <p id="otp-error" class="text-danger text-center"></p>
             </div>
+            <div class="timer">
+                <p id="timerDisplay" class="text-center"></p>
+            </div>
+            <p id="otp-error" class="text-danger text-center"></p>
         </div>
 
         <script>
             function focusNext(event) {
                 const currentInput = event.target;
-                console.log(`currentINput: ${currentInput}`);
+                // console.log(`currentINput: ${currentInput}`);
                 const nextInput = currentInput.nextElementSibling;
-                console.log(`next input: ${nextInput}`);
+                // console.log(`next input: ${nextInput}`);
 
                 if (currentInput.value.length === 1 && nextInput) {
                     nextInput.focus();
@@ -153,37 +159,38 @@
                     previousInput.focus();
                 }
             }
-            
-            const otpUserId=document.querySelector('.userId').value;
-                console.log('opt userid:'+otpUserId);
+
+
+
+            const otpUserId = document.querySelector(".userId").value;
+            console.log("opt userid:" + otpUserId);
 
             function verifyOTP() {
                 // e.preventDefault();
                 //alerting the otp entered
-                console.log('verify OTP func reached!!');
+                console.log("verify OTP func reached!!");
                 const num1 = document.getElementById("num1").value;
                 const num2 = document.getElementById("num2").value;
                 const num3 = document.getElementById("num3").value;
                 const num4 = document.getElementById("num4").value;
 
-                
 
                 let otp = "";
                 document.querySelectorAll(".otp-input").forEach(function (input) {
                     otp += input.value;
                 });
                 alert("Entered OTP: " + otp);
-               
+
                 const otpErrorElement = document.getElementById("otp-error");
 
-                fetch("http://localhost:4005/verifyOtp", {
+                fetch("/verifyOtp", {
                     method: "POST",
                     body: JSON.stringify({
                         num1,
                         num2,
                         num3,
                         num4,
-                        otpUserId
+                        otpUserId,
                     }),
                     headers: {
                         "content-type": "application/json;charset=utf-8",
@@ -199,16 +206,20 @@
                             otpErrorElement.textContent = data.message;
                         } else if (data.otp == "invalid") {
                             otpErrorElement.textContent = data.message;
-                        }else if(data.otp =='noRecord'){
+                        } else if (data.otp == "noRecord") {
                             otpErrorElement.textContent = data.message;
-                        }else if (data.otp == true) {
+                        } else if (data.otp == true) {
                             window.location.href = "/";
                         }
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         // Handle errors
-                        console.error('Error:', error.message);
+                        console.error("Error:", error.message);
                     });
+
+                setTimeout(() => {
+                    otpErrorElement.textContent = "";
+                }, 6000);
             }
             //timer for the otp
             function timer() {
@@ -232,6 +243,24 @@
             window.onload = function () {
                 timer();
             };
+
+            function resendOtp() {
+                fetch(`/resendOtp?id=${otpUserId}`, {
+                    method: "GET",
+                    headers: {
+                        "content-type": "application/json;charset=utf-8",
+                    },
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                        }
+                    })
+                    .then((data) => {
+                        console.log("this is data come from the req:" + data);
+                    })
+                    .catch((error) => console.log("this is error from:" + error));
+            }
         </script>
     </body>
 </html>

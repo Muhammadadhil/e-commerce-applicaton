@@ -1,22 +1,5 @@
 <%-include('../layouts/header.ejs')%>
 
-    <!-- Page Banner Section Start -->
-    <!-- <div class="section page-banner-section" style="background-image: url(assets/images/page-banner.jpg)">
-        <div class="container">
-            <!-- Page Banner Content End -->
-            <!-- <div class="page-banner-content">
-                <h2 class="title ">Login</h2>
-
-                <ul class="breadcrumb">
-                    <li><a href="/">Home</a></li>
-                    <li class="active">Login</li>
-                </ul>
-            </div>
-            <!-- Page Banner Content End -->
-        <!-- </div> -->
-    <!-- </div> - -->
-    <!-- Page Banner Section End -->
-
     <!-- Login Section Start -->
     <div class="section section-padding">
         <div class="container">
@@ -25,24 +8,22 @@
                     <!-- Login & Register Start -->
                     <div class="login-register-wrapper mt-5">
                         <h4 class="title">Login to Your Account</h4>
-                        <form action="#">
+                        <form action="" >
                             <div class="single-form">
-                                <input type="text" placeholder="Username or email *" />
+                                <input id="email" type="text" placeholder="email "/>
                             </div>
                             <div class="single-form">
-                                <input type="password" placeholder="Password" />
+                                <input id="password" type="password" placeholder="Password" />
                             </div>
                             <div class="single-form">
-                                <input type="checkbox" id="remember" />
-                                <label for="remember"><span></span> Remember me</label>
+                                <p style="color: red;" id="error-message"></p>
                             </div>
                             <div class="single-form">
-                                <button class="btn btn-primary btn-hover-dark">
+                                <button class="btn btn-primary btn-hover-dark" type="button" onclick="login()">
                                     Login
                                 </button>
                             </div>
                         </form>
-                        <p><a href="#">forgot password?</a></p>
                         <p>
                             No account?
                             <a href="/register">Create one here.</a>
@@ -57,8 +38,42 @@
 
 
 <script>
+
+function login(){
+    const errorMessageElement=document.getElementById('error-message');
+
+    const email=document.getElementById('email').value;
+    const password=document.getElementById('password').value;
+
+    fetch('/login',{
+        method:'POST',
+        headers:{
+            "content-type": "application/json;charset=utf-8"
+        },
+        body:JSON.stringify({
+            email,
+            password
+        })
+    })
+    .then(res =>res.json())
+    .then(data =>{
+        if(data.user){
+            // console.log(data.message);
+            window.location.href='/'
+        }else{
+            errorMessageElement.innerHTML=data.message;
+        }
+    })
+    .catch(error =>{
+        console.log(error);
+    })
+
+
+    setTimeout(() => {
+        errorMessageElement.innerHTML='';
+    },7000);
+}
     
 </script>
-
 
 <%-include('../layouts/footer.ejs')%>

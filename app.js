@@ -26,7 +26,6 @@ const usersRouter = require('./routes/usersRoute');
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine','ejs');
 
-
 // app.set('views', {
 //     admin: path.join(__dirname, 'views', 'admin')
 //     user: path.join(__dirname, 'views', 'user')
@@ -59,7 +58,7 @@ app.use('/',usersRouter);
 //   res.send('error someewhere')
 // });
 
-const port=4005
+const port=4008
 
 app.listen(port,()=>console.log(`server running on the port http://localhost:${port}`));
 

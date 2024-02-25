@@ -26,6 +26,10 @@
                             <span style="color: red" id="emailError"></span>
                         </div>
                         <div class="single-form">
+                            <input type="text" id="mobile" placeholder="mobile" name="mobile" required />
+                            <span style="color: red" id="mobileError"></span>
+                        </div>
+                        <div class="single-form">
                             <input type="password" id="password" placeholder="Password" name="password" required />
                             <span style="color: red" id="passwordError"></span>
                         </div>
@@ -89,17 +93,19 @@
         const firstName = document.getElementById("firstName").value;
         const lastName = document.getElementById("lastName").value;
         const email = document.getElementById("email").value;
+        const mobile = document.getElementById("mobile").value;
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirmPassword").value;
 
         const heading=document.getElementById('test');
 
-        fetch("http://localhost:4005/register", {
+        fetch("/register", {
             method: "POST",
             body: JSON.stringify({
                 firstName,
                 lastName,
                 email,
+                mobile,
                 password,
                 confirmPassword,
             }),
@@ -114,7 +120,7 @@
 
                 if (data) {
                     console.log(`data:${data} and data id:${data.id}`);
-                    window.location.href = `/verifyOtp/${data.id}`;
+                    window.location.href = `/verifyOtp?id=${data.id}`;
                 }else{
                     heading.textContent=data.message;
                 }

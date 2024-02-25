@@ -14,11 +14,12 @@ router.get('/about',userController.loadAbout);
 router.get('/shop',userController.loadShop);
 
 router.get('/login',userController.loginLoad);
+router.post('/login',userController.loginCheck);
 
 router.get('/register',userController.registerLoad);
 router.post('/register',userController.insertUser);
 
-router.get('/verifyOtp/:id',userController.loadOtpPage);
+router.get('/verifyOtp',userController.loadOtpPage);
 router.post('/verifyOtp',userController.verifyuserOtp);
 
 router.get('/resendOtp',userController.resendOtp);

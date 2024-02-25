@@ -1,0 +1,171 @@
+<%-include('../layouts/adminHeader')%>
+
+<section class="content-main">
+    
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Categories</h2>
+            <p>Add, edit or delete a category</p>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategory">add category</button>
+        </div>
+    </div>
+
+    <!-- Modal for add category -->
+    <div class="modal fade" id="addCategory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color: green; font-family: sans-serif" id="staticBackdropLabel">Add Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-4">
+                            <label for="product_name" class="form-label">Name</label>
+                            <input type="text" placeholder="Type here" class="form-control" id="categoryName" />
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Description</label>
+                            <textarea placeholder="Type here" class="form-control" id="description"></textarea>
+                        </div>
+                        <div class="">
+                            <button class="btn btn-primary" onclick="addCategory()" data-bs-dismiss="modal" data-bs-target="#confirmation" data-bs-dismiss="modal" data-bs-toggle="modal">Create category</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- confirmation modal -->
+    <div class="modal fade" id="confirmation" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body d-flex justify-content-center mt-4">
+                    <h3 id="responseMessage" style="color: rgb(26, 26, 26); font-family: sans-serif"></h3>
+                </div>
+                <div class="d-flex justify-content-center mb-4">
+                    <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="reloadDiv">
+                            <thead>
+                                <tr>
+                                    <th>#id</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Edit</th>
+                                    <th>Offer</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody >
+                                <%if(categories.length>0){%>
+                                    <%categories.forEach((category,i)=>{%>
+                                        <tr>
+                                            <td><%=i+1%></td>
+                                            <td><b><%=category.name%></b></td>
+                                            <td><%=category.description%></td>
+                                            <td><a href="/admin/editCategory?id=<%=category._id%>" class="badge rounded-pill alert-warning">edit</a></td>
+                                            <td></td>
+                                            <td class="text-end"></td>
+                                        </tr>
+                                    <%})%>
+                                <%}else{%>
+                                    <tr>
+                                        <td><b class="text-center ">there is no categories in database</b></td>
+                                    </tr>
+                                <%}%>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- .col// -->
+            </div>
+            <!-- .row // -->
+        </div>
+        <!-- card body .// -->
+    </div>
+    <!-- card .// -->
+</section>
+    <!-- toast-message -->
+    <div class="toast" id="successToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+        <div class="toast-header">
+            <strong class="me-auto">Success</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Category updated successfully!
+        </div>
+    </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded',function(){
+        let toast=new bootstrap.Toast(document.getElementById('successToast'));
+        toast.show();
+    })
+
+    function addCategory() {
+        const name = document.getElementById("categoryName").value;
+        const description = document.getElementById("description").value;
+        const responseElement = document.getElementById("responseMessage");
+
+        fetch("/admin/addCategory", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({
+                name,
+                description,
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.added) {
+                    responseElement.innerHTML = data.message;
+                     $('#reloadDiv').load('/admin/category #reloadDiv')
+                    // const confirmationModal=new bootstrap.Modal(document.getElementById('confirmation'));
+                    // confirmationModal.show();
+                } else {
+                    responseElement.innerHTML = data.message;
+                }
+            })
+            .catch((err) => {
+                console.log("error:", err);
+            });
+    }
+
+    // function editCategory(categoryId){
+    //     fetch("/admin/editCategory", {
+    //         method: "POST",
+    //         headers: {
+    //             "content-type": "application/json;charset=utf-8",
+    //         },
+    //         body: JSON.stringify({
+    //             categoryId
+    //         }),
+    //     })
+    //         .then((response) => response.json())
+    //         .then((data) => {
+                
+    //         })
+    //         .catch((err) => {
+    //             console.log("error:", err);
+    //         });
+    // }
+</script>
+
+<%-include('../layouts/adminFooter')%>
