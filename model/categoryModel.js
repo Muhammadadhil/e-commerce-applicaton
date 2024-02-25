@@ -1,5 +1,6 @@
 const mongoose=require('mongoose');
 
+
 const categorySchema=new mongoose.Schema({
     name:{
         type:String,
@@ -13,6 +14,10 @@ const categorySchema=new mongoose.Schema({
         type:Boolean,
         default:false
 
+    },
+    isDeleted:{
+        type:Boolean,
+        default:false
     }
 
 })

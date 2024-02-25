@@ -91,6 +91,12 @@ const loadCategory=async (req,res)=>{
 const addCategory=async (req,res)=>{
     try {
         const {name,description}=req.body;
+        const existingName= await Category.findOne({name:name});
+
+        console.log('already exist in db:',existingName);
+        if(existingName){
+            return res.json({added:false,message:'category already exist'})
+        }
         console.log('name and description:',name,description);
         const newCategory=new Category({
             name:name,
@@ -144,6 +150,23 @@ const updateCategory=async (req,res)=>{
     }
 }
 
+//soft delete the category
+const deleteCategory=async (req,res)=>{
+    try {
+        const {categoryId}=req.body;
+        const deletedCategory=await Category.findByIdAndUpdate({_id:categoryId},{$set:{isDeleted:true}})
+        if(deletedCategory){
+            res.json({deleted:true});
+        }else{
+            res.json({deleted:false})
+        }
+
+    } catch (error) {
+        console.log(error.message);
+        
+    }
+}
+
 
 module.exports={
     loginLoad,
@@ -154,5 +177,6 @@ module.exports={
     loadCategory,
     addCategory,
     editCategory,
-    updateCategory
+    updateCategory,
+    deleteCategory
 }

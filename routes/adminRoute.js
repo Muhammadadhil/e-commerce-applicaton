@@ -23,6 +23,9 @@ router.post('/addCategory',adminController.addCategory);
 router.get('/editCategory',adminController.editCategory);
 router.post('/editCategory',adminController.updateCategory);
 
+router.post('/deleteCategory',adminController.deleteCategory);
+
+
 
 
 

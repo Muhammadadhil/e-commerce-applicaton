@@ -43,7 +43,9 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body d-flex justify-content-center mt-4">
-                    <h3 id="responseMessage" style="color: rgb(26, 26, 26); font-family: sans-serif"></h3>
+                    <h3 id="responseMessage-success" style="color: rgb(26, 26, 26); font-family: sans-serif"></h3>
+                    <h3 id="responseMessage-failure" style="color: rgb(248, 3, 3); font-family: sans-serif"></h3>
+
                 </div>
                 <div class="d-flex justify-content-center mb-4">
                     <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">ok</button>
@@ -71,14 +73,25 @@
                             <tbody >
                                 <%if(categories.length>0){%>
                                     <%categories.forEach((category,i)=>{%>
-                                        <tr>
-                                            <td><%=i+1%></td>
-                                            <td><b><%=category.name%></b></td>
-                                            <td><%=category.description%></td>
-                                            <td><a href="/admin/editCategory?id=<%=category._id%>" class="badge rounded-pill alert-warning">edit</a></td>
-                                            <td></td>
-                                            <td class="text-end"></td>
-                                        </tr>
+                                        <%if(category.isDeleted){%>
+                                            <tr data-category-id="<%=category._id%>" style="background-color:#ffecee"> 
+                                                <td><%=i+1%></td>
+                                                <td><b><%=category.name%></b></td>
+                                                <td><%=category.description%></td>
+                                                <td><a href="/admin/editCategory?id=<%=category._id%>" class="badge rounded-pill alert-dark ">edit</a></td>
+                                                <td></td>
+                                                <td><a onclick="deleteCategory('<%=category._id%>')" class="badge rounded-pill btn-danger ">Delete</a></td>
+                                            </tr>
+                                        <%}else{%>  
+                                            <tr data-category-id="<%=category._id%>">
+                                                <td><%=i+1%></td>
+                                                <td><b><%=category.name%></b></td>
+                                                <td><%=category.description%></td>
+                                                <td><a href="/admin/editCategory?id=<%=category._id%>" class="badge rounded-pill alert-dark ">edit</a></td>
+                                                <td></td>
+                                                <td><a onclick="deleteCategory('<%=category._id%>')" class="badge rounded-pill btn-danger ">Delete</a></td>
+                                            </tr>
+                                        <%}%>
                                     <%})%>
                                 <%}else{%>
                                     <tr>
@@ -120,7 +133,9 @@
     function addCategory() {
         const name = document.getElementById("categoryName").value;
         const description = document.getElementById("description").value;
-        const responseElement = document.getElementById("responseMessage");
+        const successMessage= document.getElementById("responseMessage-success");
+        const failureMessage= document.getElementById("responseMessage-failure");
+
 
         fetch("/admin/addCategory", {
             method: "POST",
@@ -134,13 +149,12 @@
         })
             .then((response) => response.json())
             .then((data) => {
+                console.log('ivde ehteeeeeeeeeen');
                 if (data.added) {
-                    responseElement.innerHTML = data.message;
-                     $('#reloadDiv').load('/admin/category #reloadDiv')
-                    // const confirmationModal=new bootstrap.Modal(document.getElementById('confirmation'));
-                    // confirmationModal.show();
+                    successMessage.innerHTML = data.message;
+                     $('#reloadDiv').load('/admin/category #reloadDiv');
                 } else {
-                    responseElement.innerHTML = data.message;
+                    failureMessage.innerHTML = data.message;
                 }
             })
             .catch((err) => {
@@ -148,24 +162,30 @@
             });
     }
 
-    // function editCategory(categoryId){
-    //     fetch("/admin/editCategory", {
-    //         method: "POST",
-    //         headers: {
-    //             "content-type": "application/json;charset=utf-8",
-    //         },
-    //         body: JSON.stringify({
-    //             categoryId
-    //         }),
-    //     })
-    //         .then((response) => response.json())
-    //         .then((data) => {
-                
-    //         })
-    //         .catch((err) => {
-    //             console.log("error:", err);
-    //         });
-    // }
+    function deleteCategory(categoryId){
+        console.log(categoryId);
+        fetch("/admin/deleteCategory", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({
+                categoryId
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if(data.deleted){
+                    const deletedCategory=document.querySelector(`tr[data-category-id="${categoryId}"]`);
+                    if(deletedCategory){
+                        deletedCategory.style.backgroundColor="#ffecee";
+                    }
+                }
+            })
+            .catch((err) => {
+                console.log("error:", err);
+            });
+    }
 </script>
 
 <%-include('../layouts/adminFooter')%>
