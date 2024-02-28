@@ -13,6 +13,8 @@ router.get('/',userController.loadHomePage)
 router.get('/about',userController.loadAbout);
 router.get('/shop',userController.loadShop);
 
+router.get('/productDetails',userController.loadProductDetails);
+
 router.get('/login',userController.loginLoad);
 router.post('/login',userController.loginCheck);
 

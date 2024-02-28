@@ -21,6 +21,7 @@
                     <a href="/admin/category" class="btn btn-primary ">Back</a>
                     <button type="button" class="btn btn-primary" onclick="EditCategory()">Edit Category</button>
                 </div>
+                <p style="color: red;" id="error-message"></p>
             </form>
         </div>
     </div>
@@ -31,6 +32,7 @@
         const name = document.getElementById("categoryName").value;
         const description = document.getElementById("description").value;
         const categoryId = document.getElementById("categoryId").value;
+        const errorElement=document.getElementById('error-message');
 
         
 
@@ -50,7 +52,7 @@
                 if(data.update){
                     window.location.href='/admin/category'
                 }else{
-                    console.log('not updated');
+                    errorElement.textContent=data.message;
                 }
             })
             .catch((err) => {

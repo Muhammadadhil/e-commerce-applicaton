@@ -43,8 +43,8 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body d-flex justify-content-center mt-4">
-                    <h3 id="responseMessage-success" style="color: rgb(26, 26, 26); font-family: sans-serif"></h3>
-                    <h3 id="responseMessage-failure" style="color: rgb(248, 3, 3); font-family: sans-serif"></h3>
+                    <h3 id="responseMessage" style="color: rgb(26, 26, 26); font-family: sans-serif"></h3>
+                    <!-- <h3 id="responseMessage-failure" style="color: rgb(248, 3, 3); font-family: sans-serif"></h3> -->
 
                 </div>
                 <div class="d-flex justify-content-center mb-4">
@@ -133,7 +133,7 @@
     function addCategory() {
         const name = document.getElementById("categoryName").value;
         const description = document.getElementById("description").value;
-        const successMessage= document.getElementById("responseMessage-success");
+        const successMessage= document.getElementById("responseMessage");
         const failureMessage= document.getElementById("responseMessage-failure");
 
 
@@ -149,12 +149,13 @@
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log('ivde ehteeeeeeeeeen');
                 if (data.added) {
                     successMessage.innerHTML = data.message;
                      $('#reloadDiv').load('/admin/category #reloadDiv');
                 } else {
-                    failureMessage.innerHTML = data.message;
+                    successMessage.innerHTML = data.message;
+
+                    // failureMessage.innerHTML = data.message;
                 }
             })
             .catch((err) => {

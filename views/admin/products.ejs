@@ -1,0 +1,95 @@
+<%-include('../layouts/adminHeader')%>
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Products</h2>
+            <p>here are products</p>
+        </div>
+        <div>
+            <a type="button" class="btn btn-primary" href="/admin/addProducts">add Products</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table id="reloadPart" class="table table-hover">
+                            <%if(products.length>0){%>
+                                <thead>
+                                    <tr>
+                                        <th>no.</th>
+                                        <th>Image</th>
+                                        <th>Product Name</th>
+                                        <th>Quantity</th>
+                                        <th>Category</th>
+                                        <th>Price</th>
+                                        <!-- offer in future -->
+                                        <th>Edit</th>
+                                        <th>Update</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%products.forEach((product,i)=>{%>
+                                        <tr>
+                                            <td><%=i+1%></td>
+                                            <td><img width="90px" class="rounded-3 " src="/multer/products/<%=product.images.image1%>" alt=""/></td>
+                                            <td><%=product.name%></td>
+                                            <td><%=product.quantity%></td>
+                                            <td><%=product.categoryId.name%></td>
+                                            <td><%=product.price%></td>
+                                            <td><a href="/admin/editProducts?id=<%=product._id%>" class="badge rounded-pill alert-dark">edit</a></td>
+                                            <td><%if(!product.isDeleted){%>
+                                                <a  onclick="productBlock('<%=product._id%>')">Block</a>
+                                            <%}else{%>
+                                                <a class="unBlock-user"onclick="productBlock('<%=product._id%>')">Unblock</a>
+                                            <%}%>
+                                            </td>
+                                        </tr>
+                                    <%})%>
+                                </tbody>
+                            <%}else{%>
+                                <h4 class="text-center">No products to ist</h4>
+                            <%}%>
+                        </table>
+                    </div>
+                </div>
+                <!-- .col// -->
+            </div>
+            <!-- .row // -->
+        </div>
+        <!-- card body .// -->
+    </div>
+    <!-- card .// -->
+</section>
+
+<%-include('../layouts/adminFooter')%>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    function productBlock(productId){
+
+        fetch('/admin/productBlockUnblock',{
+            method:'PATCH',
+            headers: {
+                "content-type": "application/json;charset=utf-8",
+            },
+            body:JSON.stringify({
+                productId
+            })
+        })
+        .then(res=>res.json())  
+        .then(data =>{
+            if(data.result){
+                console.log("yeah reacched here :success");
+                $('#reloadPart').load('/admin/products #reloadPart')
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+        })   
+    }
+</script>

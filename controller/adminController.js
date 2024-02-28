@@ -2,6 +2,7 @@ const User=require('../model/userModel');
 const Category=require('../model/categoryModel');
 const bcrypt=require('bcrypt');
 
+
 //load admin login page
 const loginLoad=async (req,res)=>{
     try {
@@ -127,15 +128,22 @@ const editCategory=async (req,res)=>{
 
     } catch (error) {
         console.log(error.message);
-        
     }
 }
-
+//edit category post
 const updateCategory=async (req,res)=>{
     try {
         console.log('reached update category');
         const {name,description,categoryId}=req.body;
-        const updatedCategory=await Category.findByIdAndUpdate({_id:categoryId},{$set:{name:name,description:description}});
+        const existingName= await Category.findOne({name:name});
+
+        console.log('already exist in db:',existingName);
+        if(existingName){
+            return res.json({update:false,message:'category already exist'})
+        }else{
+            const updatedCategory=await Category.findByIdAndUpdate({_id:categoryId},{$set:{name:name,description:description}});
+
+        }
         if(updatedCategory){
             res.json({update:true});
             console.log('data updated');
@@ -163,10 +171,144 @@ const deleteCategory=async (req,res)=>{
 
     } catch (error) {
         console.log(error.message);
-        
     }
 }
 
+// //load the products page
+// const loadProducts=async (req,res)=>{
+//     try {
+//         const products=await Products.find().populate('categoryId');
+//         res.render('products',{products});
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+// }
+// //load add products page
+// const loadAddProducts=async (req,res)=>{
+//     try {
+//         const categories=await Category.find({})
+//         res.render('addProducts',{categories});
+     
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+// }
+// //add products post 
+// const addProducts=async (req,res)=>{
+//     try {
+        
+//         const details=req.body;
+//         const files=req.files;
+        
+//         const category=await Category.findOne({name:details.category});
+ 
+//         console.log("req.files:",req.files);
+//         console.log("files:",files);
+
+//         const newProduct=new Products({
+//             name:details.productName,
+//             price:details.price,
+//             quantity:details.quantity,
+//             categoryId:category._id,
+//             description:details.description,
+//             images:{
+//                 image1:files[0].filename,
+//                 image2:files[1].filename,
+//                 image3:files[2].filename,
+//                 image4:files[3].filename
+//             }
+//         })
+
+//        const savedProduct=await newProduct.save()
+//        if(savedProduct){
+//             res.redirect('/admin/products')
+//        }else{
+//             res.render('addProducts');
+//        }
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+// }
+
+// const loadEditProduct=async (req,res)=>{
+//     try {
+//         console.log(':::::::::::::welcome to edit product::::::::::::::');
+
+//         const productId=req.query.id;    
+//         console.log('productId:',productId);
+
+//         const productData=await Products.findOne({_id:productId}).populate('categoryId');
+//         const categories=await Category.find({});
+//         console.log('products data for edit pagge:',productData);
+//         res.render('editProducts',{productData,categories})
+
+//     } catch (error) {
+//         console.log(error.message);
+        
+//     }
+// }
+
+// const updateProducts=async (req,res)=>{
+//     try {
+
+//         console.log(':::::::::welcome to edit product Post::::::::');
+
+//         const productId=req.query.id;
+//         console.log('productId:',productId);
+//         const details=req.body;
+//         const files=req.files;
+
+//         console.log('details from edit product page:',details);
+//         console.log("files:::::",files);
+
+//         const existingDetails=await Products.findById({_id:productId});
+//         const hasNewFiles=files.length>0;
+
+//         //check there is new files added , if not adding defult ones
+//         const images=hasNewFiles?[
+//             files[0]?.filename || existingDetails.images.image1,
+//             files[1]?.filename || existingDetails.images.image2,
+//             files[2]?.filename || existingDetails.images.image3,
+//             files[3]?.filename || existingDetails.images.image4  
+//         ]:[
+//             existingDetails.images.image1,
+//             existingDetails.images.image2,
+//             existingDetails.images.image3,
+//             existingDetails.images.image4
+//         ]
+        
+//         //finding the category of edited product
+//         const category=await Category.findOne({name:details.category});
+//         const newCategoryId=category._id;
+
+//         const editedProduct={
+//             name:details.productName,
+//             quantity:details.quantity,
+//             price:details.price,
+//             categoryId:newCategoryId,
+//             description:details.description,
+//             images:{
+//                 image1:images[0],
+//                 image2:images[1],
+//                 image3:images[2],
+//                 image4:images[3]
+//             }
+//         }
+
+//         const updatedProduct=await Products.findByIdAndUpdate({_id:productId},editedProduct,{new:true});
+
+    
+//        if(updatedProduct){
+//             res.redirect('/admin/products')
+//        }else{
+//             res.render('editProducts');
+//        }
+        
+//     } catch (error) {
+//         console.log(error.message);
+        
+//     }
+// }
 
 module.exports={
     loginLoad,

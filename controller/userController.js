@@ -1,14 +1,10 @@
-//importing models
+
 const User=require('../model/userModel');
+const Products=require('../model/productsModel');
 const userOtpVerfication=require('../model/userOtpVerfication');
-
-//importing bcrupt-for hashing
 const bcrypt=require('bcrypt');
-
-//importing nodemailer
 const nodemailer=require('nodemailer');
 // const dotenv=require('')
-
 
 
 //loading home page
@@ -73,7 +69,20 @@ const loadProfile=async (req,res)=>{
 //loading the shop page
 const loadShop=async (req,res)=>{
     try {
-        res.render('shop');
+
+        const products=await Products.find({})
+        console.log('products:',products);
+        res.render('shop',{products});
+    } catch (error) {
+        console.log(error.message);
+        
+    }
+}
+
+//
+const loadProductDetails=async (req,res)=>{
+    try {
+        res.render('productDetails');
     } catch (error) {
         console.log(error.message);
         
@@ -323,7 +332,8 @@ module.exports={
     verifyuserOtp,
     loadProfile,
     resendOtp,
-    loginCheck
+    loginCheck,
+    loadProductDetails
 
     
 }
