@@ -1,41 +1,57 @@
 <%-include('../layouts/header.ejs')%>
+ <!-- <style>
+    .image-container {
+  position: relative;
+  overflow: hidden;
+}
 
+.image-container img {
+  transition: transform 0.9s ease;
+}
+
+.image-container:hover img {
+  transform: scale(2.2); /* Adjust the scale factor as needed */
+}
+</style>
+<div class="image-container">
+    <img src="" alt="Image">
+  </div> -->
 
 <div class="" id="quickView">
-    <div class="" style="margin-top: 150px;">
+    <div class="" style="margin-top: 150px; margin-bottom: 150px;">
         <div class="">
             <div class="container mt-3 mx-auto ">
                 <div class="row">
-                    <div class="d-flex align-content-center  col-md-4">
+                    <div class="d-flex align-content-center col-md-4 ">
                         <!-- Quick View Images Start -->
                         <div class="quick-view-images">
                             <!-- Quick Gallery Images Start -->
-                            <div class="quick-gallery-images">
+                            <div class="quick-gallery-images text-start ">
                                 <div class="swiper-container">
                                     <div class="swiper-wrapper">
                                         <div class="swiper-slide">
                                             <div class="single-img">
-                                                <img src="user/assets/images/product-details/product-details-1.jpg" alt="Product Image" />
+                                                <img src="/multer/products/<%=productData.images.image1%>" alt="Product Image" />
                                             </div>
                                         </div>
                                         <div class="swiper-slide">
                                             <div class="single-img">
-                                                <img src="user/assets/images/product-details/product-details-2.jpg" alt="Product Image" />
+                                                <img src="/multer/products/<%=productData.images.image2%>" alt="Product Image" />
                                             </div>
                                         </div>
                                         <div class="swiper-slide">
                                             <div class="single-img">
-                                                <img src="user/assets/images/product-details/product-details-3.jpg" alt="Product Image" />
+                                                <img src="/multer/products/<%productData.images.image1%>" alt="Product Image" />
                                             </div>
                                         </div>
                                         <div class="swiper-slide">
                                             <div class="single-img">
-                                                <img src="user/assets/images/product-details/product-details-4.jpg" alt="Product Image" />
+                                                <img src="/multer/products/<%productData.images.image1%>" alt="Product Image" />
                                             </div>
                                         </div>
                                         <div class="swiper-slide">
                                             <div class="single-img">
-                                                <img src="user/assets/images/product-details/product-details-5.jpg" alt="Product Image" />
+                                                <img src="/multer/products/<%productData.images.image1%>" alt="Product Image" />
                                             </div>
                                         </div>
                                     </div>
@@ -44,23 +60,20 @@
                             <!-- Quick Gallery Images End -->
 
                             <!-- Quick Gallery Thumbs Start -->
-                            <div class="quick-gallery-thumbs">
+                            <div class="quick-gallery-thumbs text-end">
                                 <div class="swiper-container">
                                     <div class="swiper-wrapper">
                                         <div class="swiper-slide">
-                                            <img src="user/assets/images/product-details/product-details-1.jpg" alt="Product Thumbnail" />
+                                            <img src="/multer/products/<%=productData.images.image1%>" alt="Product Thumbnail" />
                                         </div>
                                         <div class="swiper-slide">
-                                            <img src="user/assets/images/product-details/product-details-2.jpg" alt="Product Thumbnail" />
+                                            <img src="/multer/products/<%=productData.images.image2%>" alt="Product Thumbnail" />
                                         </div>
                                         <div class="swiper-slide">
-                                            <img src="user/assets/images/product-details/product-details-3.jpg" alt="Product Thumbnail" />
+                                            <img src="/multer/products/<%=productData.images.image3%>" alt="Product Thumbnail" />
                                         </div>
                                         <div class="swiper-slide">
-                                            <img src="user/assets/images/product-details/product-details-4.jpg" alt="Product Thumbnail" />
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <img src="user/assets/images/product-details/product-details-5.jpg" alt="Product Thumbnail" />
+                                            <img src="/multer/products/<%=productData.images.image4%>" alt="Product Thumbnail" />
                                         </div>
                                     </div>
                                 </div>
@@ -80,17 +93,17 @@
                         <!-- Quick View Description Start -->
                         <div class="quick-view-description">
                             <h4 class="product-name">
-                                Your Products Name Here.
+                                <%=productData.name%>
                             </h4>
-                            <div class="price">
-                                <span class="sale-price">$240.00</span>
-                                <span class="old-price">$290.00</span>
+                            <div class="price mt-2">
+                                <span class="sale-price">₹<%=productData.price%></span>
+                                <span class="old-price">₹<%=productData.price+10000%></span>
                             </div>
                             <div class="review-wrapper">
                                 <div class="review-star">
                                     <div class="star" style="width: 80%"></div>
                                 </div>
-                                <p>( 1 Customer Review )</p>
+                                <p>( 10 Customer Review )</p>
                             </div>
                             <div class="product-color">
                                 <span class="lable">Color:</span>
@@ -117,23 +130,32 @@
                                     </li>
                                 </ul>
                             </div>
+                            <div class="single-info mt-3">
+                                <span class="lable">Category:</span>
+                                <span class="value">
+                                <a href="#"><%=productData.categoryId.name%></a>
+                                </span>
+                            </div>
 
                             <p>
-                                Lorem ipsum dolor sit amet, consectet
-                                adipisicing elit, sed do eiusmod temporf
-                                incididunt ut labore et dolore magna aliqua. Ut
-                                enim ad minim veniam, quis tyu nostrud
-                                exercitation ullamco laboris nisi ut aliquip ex
-                                ea commodo consequat. Duis aute irure dolor in
-                                reprehenderit in voluptate.
+                                <%=productData.description%>
                             </p>
 
+                            <div class="single-info mt-3">
+                                <span class="lable">Stock:</span>
+                                    <%if(productData.quantity<11){%>
+                                        <span class="value text-danger">hurry! only few left</span>
+                                    <%}else if(productData.quantity>11){%>
+                                        <span class="value">Available</span>
+                                    <%}else if(productData.quantity<1){%>
+                                        <span class="value text-danger ">Out of Stock</span>
+                                    <%}%>
+                                
+                            </div>
+
+
+
                             <div class="product-meta">
-                                <div class="product-quantity d-inline-flex">
-                                    <button type="button" class="sub">-</button>
-                                    <input type="text" value="1" />
-                                    <button type="button" class="add">+</button>
-                                </div>
                                 <div class="meta-action">
                                     <button class="btn btn-dark btn-hover-primary">
                                         Add To Cart
@@ -149,12 +171,6 @@
 
                             <div class="product-info">
                                
-                                <div class="single-info">
-                                    <span class="lable">Categories:</span>
-                                    <span class="value"
-                                    ><a href="#">Office,</a>
-                                    <a href="#">Home</a></span>
-                                </div>
                                 <div class="single-info">
                                     <span class="lable">tag:</span>
                                     <span class="value"

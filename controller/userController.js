@@ -69,7 +69,6 @@ const loadProfile=async (req,res)=>{
 //loading the shop page
 const loadShop=async (req,res)=>{
     try {
-
         const products=await Products.find({})
         console.log('products:',products);
         res.render('shop',{products});
@@ -79,10 +78,13 @@ const loadShop=async (req,res)=>{
     }
 }
 
-//
+//product details page load
 const loadProductDetails=async (req,res)=>{
     try {
-        res.render('productDetails');
+        const productId=req.query.id;
+        const productData=await Products.findOne({_id:productId}).populate('categoryId');
+        console.log('productDAta:',productData);
+        res.render('productDetails',{productData});
     } catch (error) {
         console.log(error.message);
         
@@ -96,17 +98,21 @@ const loginCheck=async (req,res)=>{
         const userData=await User.findOne({email:email});
         
         if(userData){
-            const matchPassword=await bcrypt.compare(password,userData.password);
-            console.log('matchpassword',matchPassword);
-            
-            if(matchPassword){
-
-                req.session.userId=userData._id;
-                console.log("session :",req.session.userId);
-                res.json({user:true,message:'login successfull'})
-
+            if(userData.isBlocked){
+                res.json({user:false,message:'your account is blocked by admin'})
             }else{
-                return res.json({user:false,message:'Incorrect Password'});
+                const matchPassword=await bcrypt.compare(password,userData.password);
+                console.log('matchpassword',matchPassword);
+                
+                if(matchPassword){
+    
+                    req.session.userId=userData._id;
+                    console.log("session :",req.session.userId);
+                    res.json({user:true,message:'login successfull'})
+    
+                }else{
+                    return res.json({user:false,message:'Incorrect Password'});
+                }
             }
 
         }else{
@@ -211,10 +217,6 @@ const otpVerificationEmail=async ({_id,email},req,res)=>{
         //send the mail
         await transpoter.sendMail(mailOptions);
         
-
-        // req.session.user=_id;
-        // console.log("req.session :",req.session.user);
-        // res.redirect('/verifyOtp');
         
         
     } catch (error) {
@@ -319,6 +321,23 @@ const resendOtp=async (req,res)=>{
     }
 
 }
+//logout route
+const userLogout=async (req,res)=>{
+    try {
+        req.session.destroy((err)=>{
+            if(err){
+                console.log(err.message);
+            }else{
+                console.log('user session destroyed');
+            }
+        })
+        res.redirect('/');
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
 
 
 module.exports={
@@ -333,7 +352,8 @@ module.exports={
     loadProfile,
     resendOtp,
     loginCheck,
-    loadProductDetails
+    loadProductDetails,
+    userLogout
 
     
 }
