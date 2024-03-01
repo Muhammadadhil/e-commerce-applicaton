@@ -5,6 +5,7 @@ const userOtpVerfication=require('../model/userOtpVerfication');
 const bcrypt=require('bcrypt');
 const nodemailer=require('nodemailer');
 // const dotenv=require('')
+const {registerationSchema}=require('../middleware/validate');
 
 
 //loading home page
@@ -130,9 +131,25 @@ const loginCheck=async (req,res)=>{
 //saving the user details
 const insertUser = async (req, res) => {
     try {
+        // // Validate request body against Joi schema
+        // const { error, value } = registerationSchema.validate(req.body, { abortEarly: false });
+
+        // // If there are validation errors, send error response
+        // if (error) {
+        //     const errors = error.details.reduce((acc, curr) => {
+        //         acc[curr.path[0] + 'Error'] = curr.message;
+        //         return acc;
+        //     }, {});
+        //     return res.status(400).json(errors);
+        // }
+        console.log('::::::reached insert user::::::');
+
+        
         const { firstName, lastName, email,mobile, password} = req.body;
         console.log(`firstname:${firstName} lastname:${lastName} emial:${email}`);
         console.log("body : ", req.body);
+
+
 
         //securing the password
         const securePassword = await hashPassword(password, 10);

@@ -42,7 +42,7 @@
                             <label for="receive"> <span></span>agree the privacy and policy</label>
                         </div>
                         <div class="single-form">
-                            <button type="button" class="btn btn-primary btn-hover-dark" onclick="register()"  id="registerButton">
+                            <button type="button" class="btn btn-primary btn-hover-dark" id="registerButton">
                                 Register
                             </button>
                             <h1 id="test" ></h1>
@@ -57,7 +57,160 @@
 <!-- Register Section End -->
 
 <script>
-    //abshar
+
+    const submitButton=document.getElementById('registerButton');
+    submitButton.addEventListener('click',(event)=>{
+        event.preventDefault();
+        
+        if(validateForm()){
+            register()
+        }
+    })
+
+    function validateForm(){
+        
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        const email = document.getElementById("email").value;
+        const mobile = document.getElementById("mobile").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        
+        let isValid = true;
+
+        const firstNameError = document.getElementById("firstNameError");
+        if (!firstName.trim() || firstName==="") {
+            firstNameError.textContent = "First Name is required";
+            return;
+        } else {
+            firstNameError.textContent = "";
+        }
+
+        const lastNameError = document.getElementById("lastNameError");
+        if (!lastName.trim() ) {
+            lastNameError.textContent = "Last Name is required";
+            return;
+        } else {
+            lastNameError.textContent = "";
+        }
+
+        const emailError = document.getElementById("emailError");
+        if (!email.trim()) {
+            emailError.textContent = "Email Address is required";
+            return;
+        } else if (!isValidEmail(email)) {
+            emailError.textContent = "Invalid Email Address";
+            return;
+        } else {
+            emailError.textContent = "";
+        }
+
+        const mobileError = document.getElementById("mobileError");
+        if (!mobile.trim()) {
+            mobileError.textContent = "Mobile is required";
+            return;
+        } else {
+            mobileError.textContent = "";
+        }
+
+        const passwordError = document.getElementById("passwordError");
+        if (!password.trim()) {
+            passwordError.textContent = "Password is required";
+            return;
+        } else if (password.length < 6) {
+            passwordError.textContent = "Password must be at least 6 characters long";
+            return;
+        } else {
+            passwordError.textContent = "";
+        }
+
+        const confirmPasswordError = document.getElementById("confirmPasswordError");
+        if (!confirmPassword.trim()) {
+            confirmPasswordError.textContent = "Confirm Password is required";
+            return;
+        } else if (confirmPassword !== password) {
+            confirmPasswordError.textContent = "Passwords do not match";
+            return;
+        } else {
+            confirmPasswordError.textContent = "";
+        }
+
+        return true;
+
+        function isValidEmail(email) {
+        return /\S+@\S+\.\S+/.test(email);
+    }
+
+    };
+    function register() {
+
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        const email = document.getElementById("email").value;
+        const mobile = document.getElementById("mobile").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+    console.log('reached register func!!1');
+     const heading=document.getElementById('test');
+
+    fetch("/register", {
+         method: "POST",
+         body: JSON.stringify({
+             firstName,
+             lastName,
+             email,
+             mobile,
+             password,
+            confirmPassword,
+         }),
+         headers: {
+             "content-type": "application/json;charset=utf-8",
+         },
+         credentials: "include",
+     })
+         .then((response) => response.json())
+         .then((data) => {
+             console.log(`data:${data}`);
+
+             if (data) {
+                 console.log(`data:${data} and data id:${data.id}`);
+                window.location.href = `/verifyOtp?id=${data.id}`;
+             }else{
+                 heading.textContent=data.message;
+             }
+         })
+         .catch((error) => {
+             console.log(error);
+         });
+}
+</script>
+
+
+         <!-- if(firstName==='' || firstName.trim()===false){
+        //    showError('firstName','first name should not be empty');
+        //     console.log('error undd');
+        //     isValid=false;
+        // }else if (/^[]/.test(firstName)){
+        //     console.log('error undd');
+        //     showError('name', 'Invalid name entered');
+        //         isValid = false;
+        // }
+
+        // return isValid;
+    }
+
+    function showError(fieldId, errorMessage) {
+        const errorContainer = document.getElementById(`${fieldId}Error`);
+        errorContainer.textContent = errorMessage;
+    }
+
+    function clearErrorMessages() {
+        const errorMessages = document.querySelectorAll('.error-message');
+        errorMessages.forEach(error => error.textContent = '');
+    }
+    
     // const form=document.getElementById('form');        // Prevent default form submission behavior
     //     form.addEventListener('keydown',(e)=>{
     //     if(e.key==='Enter'){
@@ -86,51 +239,11 @@
 
     // }
 
-    // const formdata=new FormData(document.getElementById('form'));
+    // const formdata=new FormData(document.getElementById('form')); -->
 
-    function register() {
-
-        const firstName = document.getElementById("firstName").value;
-        const lastName = document.getElementById("lastName").value;
-        const email = document.getElementById("email").value;
-        const mobile = document.getElementById("mobile").value;
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
-
-        const heading=document.getElementById('test');
-
-        fetch("/register", {
-            method: "POST",
-            body: JSON.stringify({
-                firstName,
-                lastName,
-                email,
-                mobile,
-                password,
-                confirmPassword,
-            }),
-            headers: {
-                "content-type": "application/json;charset=utf-8",
-            },
-            credentials: "include",
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(`data:${data}`);
-
-                if (data) {
-                    console.log(`data:${data} and data id:${data.id}`);
-                    window.location.href = `/verifyOtp?id=${data.id}`;
-                }else{
-                    heading.textContent=data.message;
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+     
     
-    // function register(){
+    <!-- // function register(){
     //     axios.post('http://localhost:3855/register',{
     //         firstname:firstnameValue,
     //         lastname:lastnameValue,
@@ -203,7 +316,7 @@
     // }
     // }
 
-    // });
+    // }); --> -->
 </script>
 
 <%-include('../layouts/footer.ejs')%>
