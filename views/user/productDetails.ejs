@@ -1,21 +1,14 @@
 <%-include('../layouts/header.ejs')%>
- <!-- <style>
-    .image-container {
-  position: relative;
-  overflow: hidden;
+
+  <style>
+    .single-img img {
+  transition: transform .3s ease;
 }
 
-.image-container img {
-  transition: transform 0.9s ease;
+.single-img img:hover {
+  transform: scale(1.5);
 }
-
-.image-container:hover img {
-  transform: scale(2.2); /* Adjust the scale factor as needed */
-}
-</style>
-<div class="image-container">
-    <img src="" alt="Image">
-  </div> -->
+  </style>
 
 <div class="" id="quickView">
     <div class="" style="margin-top: 150px; margin-bottom: 150px;">
@@ -133,22 +126,22 @@
                             <div class="single-info mt-3">
                                 <span class="lable">Category:</span>
                                 <span class="value">
-                                <a href="#"><%=productData.categoryId.name%></a>
+                                <a href="#"><% if(productData.categoryId) { %><%= productData.categoryId.name %><% } else { %>NA<% } %></a>
                                 </span>
                             </div>
 
                             <p>
                                 <%=productData.description%>
                             </p>
-
+                            
                             <div class="single-info mt-3">
                                 <span class="lable">Stock:</span>
-                                    <%if(productData.quantity<11){%>
-                                        <span class="value text-danger">hurry! only few left</span>
+                                    <%if(productData.quantity<1){%>
+                                        <span class="value text-danger ">Sold Out</span>
                                     <%}else if(productData.quantity>11){%>
                                         <span class="value">Available</span>
-                                    <%}else if(productData.quantity<1){%>
-                                        <span class="value text-danger ">Out of Stock</span>
+                                    <%}else if(productData.quantity<11) {%>
+                                        <span class="value text-danger">hurry! only few left</span>
                                     <%}%>
                                 
                             </div>

@@ -11,15 +11,17 @@
                         <form action="" >
                             <div class="single-form">
                                 <input id="email" type="text" placeholder="email "/>
+                                <span style="color: red;" id="emailError"></span>
                             </div>
                             <div class="single-form">
                                 <input id="password" type="password" placeholder="Password" />
+                                <span style="color: red;" id="passwordError"></span>
                             </div>
                             <div class="single-form">
                                 <p style="color: red;" id="error-message"></p>
                             </div>
                             <div class="single-form">
-                                <button class="btn btn-primary btn-hover-dark" type="button" onclick="login()">
+                                <button id="submitButton" class="btn btn-primary btn-hover-dark" type="button">
                                     Login
                                 </button>
                             </div>
@@ -38,6 +40,43 @@
 
 
 <script>
+
+    const submitButton=document.getElementById('submitButton');
+    submitButton.addEventListener('click',(event)=>{
+        event.preventDefault;
+        if(validateForm()){
+            login();
+        }
+    })
+
+function validateForm(){
+
+    const email=document.getElementById('email').value;
+    const password=document.getElementById('password').value;
+
+    const emailError=document.getElementById('emailError');
+    if(!email.trim()){
+        console.log('trim:',!email.trim());
+        emailError.textContent='email should not be empty';
+        return false;
+    }else{
+        emailError.textContent='';
+    }
+
+    const passwordError=document.getElementById('passwordError');
+
+    if(!password.trim()){
+        passwordError.textContent='password should not be empty';
+        return false;
+    }else if(password.length < 6){
+        passwordError.textContent = "Password must be at least 6 characters long";
+        return false; 
+    }else{
+        passwordError.textContent='';
+    }
+    return true;
+}
+
 
 function login(){
     const errorMessageElement=document.getElementById('error-message');
@@ -67,6 +106,8 @@ function login(){
     .catch(error =>{
         console.log(error);
     })
+
+
     setTimeout(() => {
         errorMessageElement.innerHTML='';
     },7000);

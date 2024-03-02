@@ -15,37 +15,33 @@
                     <form  id="form" >
                         <div class="single-form">
                             <input type="text" id="firstName" placeholder="First Name" name="firstName" required />
-                            <span style="color: red" id="firstNameError"></span>
+                            <span style="color: red" id="firstNameError" class="error-message"></span>
                         </div>
                         <div class="single-form">
                             <input type="text" id="lastName" placeholder="Last Name" name="lastName" required />
-                            <span style="color: red" id="lastNameError"></span>
+                            <span style="color: red" id="lastNameError" class="error-message"></span>
                         </div>
                         <div class="single-form">
                             <input type="email" id="email" placeholder="Email Address *" name="email" required />
-                            <span style="color: red" id="emailError"></span>
+                            <span style="color: red" id="emailError" class="error-message"></span>
                         </div>
+                        <span id="common-error" style="color: red;"></span> 
                         <div class="single-form">
                             <input type="text" id="mobile" placeholder="mobile" name="mobile" required />
-                            <span style="color: red" id="mobileError"></span>
+                            <span style="color: red" id="mobileError" class="error-message"></span>
                         </div>
                         <div class="single-form">
                             <input type="password" id="password" placeholder="Password" name="password" required />
-                            <span style="color: red" id="passwordError"></span>
+                            <span style="color: red" id="passwordError" class="error-message"></span>
                         </div>
                         <div class="single-form">
                             <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
-                            <span style="color: red" id="confirmPasswordError"></span>
-                        </div>
-                        <div class="single-form">
-                            <input type="checkbox" id="receive" />
-                            <label for="receive"> <span></span>agree the privacy and policy</label>
+                            <span style="color: red" id="confirmPasswordError" class="error-message"></span>
                         </div>
                         <div class="single-form">
                             <button type="button" class="btn btn-primary btn-hover-dark" id="registerButton">
                                 Register
                             </button>
-                            <h1 id="test" ></h1>
                         </div>
                     </form>
                 </div>
@@ -74,6 +70,7 @@
         const email = document.getElementById("email").value;
         const mobile = document.getElementById("mobile").value;
         const password = document.getElementById("password").value;
+        const receiveCheckbox = document.getElementById("receive");
         const confirmPassword = document.getElementById("confirmPassword").value;
 
         
@@ -140,6 +137,7 @@
 
         function isValidEmail(email) {
         return /\S+@\S+\.\S+/.test(email);
+
     }
 
     };
@@ -152,8 +150,8 @@
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirmPassword").value;
 
-    console.log('reached register func!!1');
-     const heading=document.getElementById('test');
+        console.log('reached register func!!1');
+        const validateError=document.getElementById('common-error');
 
     fetch("/register", {
          method: "POST",
@@ -173,12 +171,14 @@
          .then((response) => response.json())
          .then((data) => {
              console.log(`data:${data}`);
+             console.log('data.status',data.status);
 
-             if (data) {
+             if (data.status) {
                  console.log(`data:${data} and data id:${data.id}`);
-                window.location.href = `/verifyOtp?id=${data.id}`;
+                 window.location.href = `/verifyOtp?id=${data.id}`;
              }else{
-                 heading.textContent=data.message;
+                console.log('reached error display part ');
+                validateError.textContent=data.message;
              }
          })
          .catch((error) => {

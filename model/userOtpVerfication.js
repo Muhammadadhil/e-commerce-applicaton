@@ -4,9 +4,6 @@ const Schema=mongoose.Schema;
 const userOtpVerificationSchema=new Schema({
     userId:String,
     otp:String,
-    expiresAt:{
-        type:Date,
-        default:Date.now()+60*1000},
 },{
     timestamps:true
 });

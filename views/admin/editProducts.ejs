@@ -7,75 +7,76 @@
                 <h2 class="content-title">Edit Product Details</h2>
             </div>
         </div>
-        <form action="/admin/editProducts?id=<%=productData._id%>" method="post" enctype="multipart/form-data">
-            <div class="col-lg-6">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="mb-2">
-                            <label for="product_title" class="form-label">Product Name</label>
-                            <input type="text" placeholder="Type here" class="form-control" name="productName" value="<%=productData.name%>" />
-                        </div>
-                        <div class="row gx-3">
-                            <div class="mb-3">
-                                <label for="product_sku" class="form-label">Quantity</label>
-                                <input type="text" placeholder="Type here" class="form-control" name="quantity" value="<%=productData.quantity%>" />
+            <form action="/admin/editProducts?id=<%=productData._id%>" method="post" enctype="multipart/form-data">
+                <div class="col-lg-6">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label for="product_title" class="form-label">Product Name</label>
+                                <input type="text" placeholder="Type here" class="form-control" name="productName" value="<%=productData.name%>" />
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="mb-3">
-                                <label for="product_sku" class="form-label">Category</label>
-                                
-                                <select type="text" placeholder="Type here" class="form-control" name="category" >
-                                   <option selected><%=productData.categoryId.name%></option>
-                                   <%categories.forEach((category)=>{%>
-                                    <%if(category.isDeleted===false){%>
-                                        <option value="<%=category.name%>"><%=category.name%></option>
-                                    <%}%>
-                                    <%})%>
-                                </select>
+                            <div class="row gx-3">
+                                <div class="mb-3">
+                                    <label for="product_sku" class="form-label">Quantity</label>
+                                    <input type="text" placeholder="Type here" class="form-control" name="quantity" value="<%=productData.quantity%>" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="row ">
-                            <div class="mb-3">
-                                <label for="product_sku" class="form-label">Price</label>
-                                <input type="number" placeholder="Type here" class="form-control" name="price" value="<%=productData.price%>"/>
+                            <div class="row">
+                                <div class="mb-3">
+                                    <label for="product_sku" class="form-label">Category</label>
+                                    
+                                    <select type="text" placeholder="Type here" class="form-control" name="category" >
+                                    <option selected><% if(productData.categoryId) { %><%= productData.categoryId.name %><% } else { %>NA<% } %></option>
+                                    <%categories.forEach((category)=>{%>
+                                        <%if(category.isDeleted===false){%>
+                                            <option value="<%=category.name%>"><%=category.name%></option>
+                                        <%}%>
+                                        <%})%>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="mb-3">
+                                    <label for="product_sku" class="form-label">Price</label>
+                                    <input type="number" placeholder="Type here" class="form-control" name="price" value="<%=productData.price%>"/>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- card end -->
-                <div class="card ">
-                    <div class="card-body">
-                        <div>
-                            <label class="form-label">Description</label>
-                            <input placeholder="Type here" class="form-control" rows="4" name="description" value="<%=productData.description%>" />
+                    <!-- card end -->
+                    <div class="card ">
+                        <div class="card-body">
+                            <div>
+                                <label class="form-label">Description</label>
+                                <input placeholder="Type here" class="form-control" rows="4" name="description" value="<%=productData.description%>" />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- card end// -->
-                <div class="card ">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label">Images</label>
-                            <input id="images" name="images" class="form-control" onchange="previewImage(event)" accept="image/*" type="file" multiple />
-                            <p id="image-Error" style="color: red"></p>
+                    <!-- card end// -->
+                    <div class="card ">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Images</label>
+                                <input id="images" name="images" class="form-control" onchange="previewImage(event)" accept="image/*" type="file" multiple />
+                                <p id="image-Error" style="color: red"></p>
+                            </div>
+                            <img class="rounded-2 " style="width: 150px;" id="preview-1" src="/multer/products/<%=productData.images.image1%>" alt="">
+                            <img class="rounded-2 " style="width: 150px;" id="preview-2" src="/multer/products/<%=productData.images.image2%>" alt="">
+                            <img class="rounded-2 " style="width: 150px;" id="preview-3" src="/multer/products/<%=productData.images.image3%>" alt="">
+                            <img class="rounded-2 " style="width: 150px;" id="preview-4" src="/multer/products/<%=productData.images.image4%>" alt="">
                         </div>
-                        <img class="rounded-2 " style="width: 150px;" id="preview-1" src="/multer/products/<%=productData.images.image1%>" alt="">
-                        <img class="rounded-2 " style="width: 150px;" id="preview-2" src="/multer/products/<%=productData.images.image2%>" alt="">
-                        <img class="rounded-2 " style="width: 150px;" id="preview-3" src="/multer/products/<%=productData.images.image3%>" alt="">
-                        <img class="rounded-2 " style="width: 150px;" id="preview-4" src="/multer/products/<%=productData.images.image4%>" alt="">
+                    
                     </div>
-                   
                 </div>
-            </div>
-            <div>
-                <a href="/admin/products" class="btn btn-primary ">Back</a>
-                <button type="submit" class="btn btn-md rounded font-sm hover-up">Edit Products</button>
-            </div>
-        </form> 
+                <div>
+                    <a href="/admin/products" class="btn btn-primary ">Back</a>
+                    <button type="submit" class="btn btn-md rounded font-sm hover-up">Edit Products</button>
+                </div>
+            </form> 
     </div>
 </section>
 
+<script defer src="https://cdn.crop.guide/loader/l.js?c=DJNDTB"></script>
 <script>
 
     

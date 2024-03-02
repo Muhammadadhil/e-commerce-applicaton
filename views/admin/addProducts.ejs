@@ -7,94 +7,93 @@
                 <h2 class="content-title">Add New Product</h2>
             </div>
         </div>
-        <form action="/admin/addproducts" method="post" enctype="multipart/form-data">
+        <form action="/admin/addproducts" onsubmit="return validateForm()" method="post" enctype="multipart/form-data">
             <div class="col-lg-6">
                 <div class="card mb-3">
                     <div class="card-body">
                         <div class="mb-2">
                             <label for="product_title" class="form-label">Product Name</label>
                             <input type="text" placeholder="Type here" class="form-control" name="productName" id="productName" />
+                            <p id="error-name" style="color: red"></p>
                         </div>
                         <div class="row gx-3">
                             <div class="mb-3">
                                 <label for="product_sku" class="form-label">Quantity</label>
                                 <input type="text" placeholder="Type here" class="form-control" name="quantity" id="quantity" />
+                                <p id="error-quantity" style="color: red"></p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="mb-3">
                                 <label for="product_sku" class="form-label">Category</label>
                                 <select type="text" placeholder="Type here" class="form-control" name="category" id="category">
-                                    <%categories.forEach((category,i)=>{%>
-                                        <%if(category.isDeleted===false){%>
-                                            <option value="<%=category.name%>"><%=category.name%></option>
-                                        <%}%>
-                                    <%})%>
+                                    <%categories.forEach((category,i)=>{%> <%if(category.isDeleted===false){%>
+                                    <option value="<%=category.name%>"><%=category.name%></option>
+                                    <%}%> <%})%>
                                 </select>
+                                <p id="error-category" style="color: red"></p>
                             </div>
                         </div>
-                        <div class="row ">
+                        <div class="row">
                             <div class="mb-3">
                                 <label for="product_sku" class="form-label">Price</label>
                                 <input type="number" placeholder="Type here" class="form-control" name="price" id="price" />
+                                <p id="error-price" style="color: red"></p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- card end -->
-                <div class="card ">
+                <div class="card">
                     <div class="card-body">
                         <div>
                             <label class="form-label">Description</label>
                             <input placeholder="Type here" class="form-control" rows="4" name="description" id="description" />
+                            <p id="error-description" style="color: red"></p>
                         </div>
                     </div>
                 </div>
                 <!-- card end// -->
-                <div class="card ">
+                <div class="card">
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label">Images</label>
-                            <input id="images" name="images" class="form-control" onchange="previewImage(event)" accept="image/*" type="file" multiple />
+                            <input id="imageInput" name="images" class="form-control" onchange="previewImage(event)" accept="image/*" type="file" multiple />
                             <p id="image-Error" style="color: red"></p>
                         </div>
-                        <img class="rounded-2 " style="width: 150px;" id="preview-1" alt="">
-                        <img class="rounded-2 " style="width: 150px;" id="preview-2" alt="">
-                        <img class="rounded-2 " style="width: 150px;" id="preview-3" alt="">
-                        <img class="rounded-2 " style="width: 150px;" id="preview-4" alt="">
+                        <img class="rounded-2" style="width: 150px" id="preview-1" alt="" />
+                        <img class="rounded-2" style="width: 150px" id="preview-2" alt="" />
+                        <img class="rounded-2" style="width: 150px" id="preview-3" alt="" />
+                        <img class="rounded-2" style="width: 150px" id="preview-4" alt="" />
                     </div>
-                   
                 </div>
-                
             </div>
+            
             <div>
                 <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
                 <button type="submit" class="btn btn-md rounded font-sm hover-up">Add Products</button>
             </div>
-        </form> 
+        </form>
     </div>
 </section>
-
+<script defer src="https://cdn.crop.guide/loader/l.js?c=DJNDTB"></script>
 <script>
-    function previewImage(event){
-        let input=event.target;
+    function previewImage(event) {
+        let input = event.target;
         let images = document.querySelectorAll('[id^="preview-"]');
-        
-        if(input.files ){
-            for(let i=0;i<input.files.length;i++){
 
-                let reader= new FileReader();
-                let image=images[i];
-                
-                reader.onload=function(e){
-                     image.src=e.target.result;
-                }
+        if (input.files) {
+            for (let i = 0; i < input.files.length; i++) {
+                let reader = new FileReader();
+                let image = images[i];
+
+                reader.onload = function (e) {
+                    image.src = e.target.result;
+                };
                 reader.readAsDataURL(input.files[i]);
             }
-            
         }
     }
-
 
     const imageElement = document.getElementById("images");
     const imageError = document.getElementById("image-Error");
@@ -113,29 +112,86 @@
         }
     });
 
-    function addProducts() {
-        // const name=document.getElementById('productName').value;
-        // const quantity=document.getElementById('quantity').value;
-        // const category=document.getElementById('category').value;
-        // const price=document.getElementById('price').value;
-        // const description=document.getElementById('description').value;
+    function validateForm() {
+        const name = document.getElementById("productName").value;
+        const quantity = document.getElementById("quantity").value;
+        const category = document.getElementById("category").value;
+        const price = document.getElementById("price").value;
+        const description = document.getElementById("description").value;
+        const imageInput = document.getElementById("imageInput");
 
-        // const image1=document.getElementById('image-1').value;
+        
 
-        fetch("/admin/addProducts", {
-            method: "POST",
-            headers: {
-                "content-type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({
-                formData,
-            }),
-        })
-            .then((response) => response.json())
-            .then((data) => {})
-            .catch((err) => {
-                console.log("error:", err);
-            });
+        const errorName = document.getElementById("error-name");
+        if (/^\s*$/.test(name)) {
+            errorName.innerHTML = "product name should not be empty";
+            return false;
+        } else {
+            errorName.innerHTML = "";
+        }
+
+        const errorQuantity = document.getElementById("error-quantity");
+        if (/^\s*$/.test(quantity)) {
+            errorQuantity .innerHTML = "quantity should not be empty";
+            return false;
+        } else {
+            errorQuantity .innerHTML = "";
+        }
+
+        const errorCategory = document.getElementById("error-category");
+        if (/^\s*$/.test(category)) {
+            errorCategory.innerHTML = "chooose one category";
+            return false;
+        } else {
+            errorCategory.innerHTML = "";
+        }
+
+        const errorPrice = document.getElementById("error-price");
+        if (/^\s*$/.test(price)) {
+            errorPrice.innerHTML = "price should not be empy";
+            return false;
+        } else {
+            errorPrice .innerHTML = "";
+        }
+
+        const errordescription = document.getElementById("error-description");
+        if (/^\s*$/.test(description)) {
+            errordescription.innerHTML = "description should not be empy";
+            return false;
+        } else {
+            errordescription.innerHTML = "";
+        }
+
+
+        const errorImage = document.getElementById("image-Error");
+        if (imageInput.files.length === 0) {
+            errorImage.innerHTML = "images should not be empy";
+            return false
+        }else{
+            errorImage.innerHTML = "";
+        }
+
+
+        return true;
     }
+
+    // function addProducts() {
+    //     // const image1=document.getElementById('image-1').value;
+
+    //     fetch("/admin/addProducts", {
+    //         method: "POST",
+    //         headers: {
+    //             "content-type": "application/json;charset=utf-8",
+    //         },
+    //         body: JSON.stringify({
+    //             formData,
+    //         }),
+    //     })
+    //         .then((response) => response.json())
+    //         .then((data) => {})
+    //         .catch((err) => {
+    //             console.log("error:", err);
+    //         });
+    // }
 </script>
 <%-include('../layouts/adminFooter')%>

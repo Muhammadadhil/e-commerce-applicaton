@@ -9,6 +9,7 @@ const loginLoad=async (req,res)=>{
         res.render('login');
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('user/error-500')
     }
 }
 //login post
@@ -17,6 +18,8 @@ const verifyAdmin=async (req,res)=>{
         const {email,password}=req.body;
         console.log(`email:${email} & password:${password}`);
         const adminData=await User.findOne({email:email});
+
+
         
         if(adminData){
             const matchPassword=await bcrypt.compare(password,adminData.password);
@@ -189,6 +192,7 @@ const adminLogout=async (req,res)=>{
         
     } catch (error) {
         console.log(error.message);
+        
     }
 }
 

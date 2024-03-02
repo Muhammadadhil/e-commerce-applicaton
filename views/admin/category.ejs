@@ -1,7 +1,6 @@
 <%-include('../layouts/adminHeader')%>
 
 <section class="content-main">
-    
     <div class="content-header">
         <div>
             <h2 class="content-title card-title">Categories</h2>
@@ -21,7 +20,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="myform">
                         <div class="mb-4">
                             <label for="product_name" class="form-label">Name</label>
                             <input type="text" placeholder="Type here" class="form-control" id="categoryName" />
@@ -30,14 +29,16 @@
                             <label class="form-label">Description</label>
                             <textarea placeholder="Type here" class="form-control" id="description"></textarea>
                         </div>
+                        <p id="category-Error" style="color: red"></p>
                         <div class="">
-                            <button class="btn btn-primary" onclick="addCategory()" data-bs-dismiss="modal" data-bs-target="#confirmation" data-bs-dismiss="modal" data-bs-toggle="modal">Create category</button>
+                            <button class="btn btn-primary" onclick="addCategory()" data-bs-dismiss="modal">Create category</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    <!-- data-bs-target="#confirmation" data-bs-toggle="modal" -->
     <!-- confirmation modal -->
     <div class="modal fade" id="confirmation" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -45,7 +46,6 @@
                 <div class="modal-body d-flex justify-content-center mt-4">
                     <h3 id="responseMessage" style="color: rgb(26, 26, 26); font-family: sans-serif"></h3>
                     <!-- <h3 id="responseMessage-failure" style="color: rgb(248, 3, 3); font-family: sans-serif"></h3> -->
-
                 </div>
                 <div class="d-flex justify-content-center mb-4">
                     <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">ok</button>
@@ -70,35 +70,30 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody >
-                                <%if(categories.length>0){%>
-                                    <%categories.forEach((category,i)=>{%>
-                                        <%if(category.isDeleted){%>
-                                            <tr data-category-id="<%=category._id%>" style="background-color:#ffecee"> 
-                                                <td><%=i+1%></td>
-                                                <td><b><%=category.name%></b></td>
-                                                <td><%=category.description%></td>
-                                                <td><a href="/admin/editCategory?id=<%=category._id%>" class="badge rounded-pill alert-dark ">edit</a></td>
-                                                <td></td>
-                                                <td><a onclick="deleteCategory('<%=category._id%>')" class="badge rounded-pill btn-danger ">Delete</a></td>
-                                            </tr>
-                                        <%}else{%>  
-                                            <tr data-category-id="<%=category._id%>">
-                                                <td><%=i+1%></td>
-                                                <td><b><%=category.name%></b></td>
-                                                <td><%=category.description%></td>
-                                                <td><a href="/admin/editCategory?id=<%=category._id%>" class="badge rounded-pill alert-dark ">edit</a></td>
-                                                <td></td>
-                                                <td><a onclick="deleteCategory('<%=category._id%>')" class="badge rounded-pill btn-danger ">Delete</a></td>
-                                            </tr>
-                                        <%}%>
-                                    <%})%>
+                            <tbody>
+                                <%if(categories.length>0){%> <%categories.forEach((category,i)=>{%> <%if(category.isDeleted){%>
+                                <tr data-category-id="<%=category._id%>" style="background-color: #ffecee">
+                                    <td><%=i+1%></td>
+                                    <td><b><%=category.name%></b></td>
+                                    <td><%=category.description%></td>
+                                    <td><a href="/admin/editCategory?id=<%=category._id%>" class="badge rounded-pill alert-dark">edit</a></td>
+                                    <td></td>
+                                    <td><a onclick="deleteCategory('<%=category._id%>')" class="badge rounded-pill btn-danger">Delete</a></td>
+                                </tr>
                                 <%}else{%>
-                                    <tr>
-                                        <td><b class="text-center ">there is no categories in database</b></td>
-                                    </tr>
+                                <tr data-category-id="<%=category._id%>">
+                                    <td><%=i+1%></td>
+                                    <td><b><%=category.name%></b></td>
+                                    <td><%=category.description%></td>
+                                    <td><a href="/admin/editCategory?id=<%=category._id%>" class="badge rounded-pill alert-dark">edit</a></td>
+                                    <td></td>
+                                    <td><a onclick="deleteCategory('<%=category._id%>')" class="badge rounded-pill btn-danger">Delete</a></td>
+                                </tr>
+                                <%}%> <%})%> <%}else{%>
+                                <tr>
+                                    <td><b class="text-center">there is no categories in database</b></td>
+                                </tr>
                                 <%}%>
-                                
                             </tbody>
                         </table>
                     </div>
@@ -111,59 +106,77 @@
     </div>
     <!-- card .// -->
 </section>
-    <!-- toast-message -->
-    <div class="toast" id="successToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
-        <div class="toast-header">
-            <strong class="me-auto">Success</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            Category updated successfully!
-        </div>
+<!-- toast-message -->
+<div class="toast" id="successToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+    <div class="toast-header">
+        <strong class="me-auto">Success</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
+    <div class="toast-body">Category updated successfully!</div>
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    function validateForm() {
+        // const name=document.getElementById('categoryName').value;
+        // const description=document.getElementById('description').value;
+        // let isvalid=true
+        // if(!name.trim()){
+        //     errorElement.textContent='name should not be empty'
+        //     isvalid=false;
+        // }else{
+        //     errorElement.textContent='';
+        // }
+        // if(isvalid){
+        //     addCategory()
+        // }
+    }
+</script>
 
 <script>
-    document.addEventListener('DOMContentLoaded',function(){
-        let toast=new bootstrap.Toast(document.getElementById('successToast'));
+    document.addEventListener("DOMContentLoaded", function () {
+        let toast = new bootstrap.Toast(document.getElementById("successToast"));
         toast.show();
-    })
+    });
 
     function addCategory() {
+        
         const name = document.getElementById("categoryName").value;
         const description = document.getElementById("description").value;
-        const successMessage= document.getElementById("responseMessage");
-        const failureMessage= document.getElementById("responseMessage-failure");
+        const successMessage = document.getElementById("responseMessage");
+        const failureMessage = document.getElementById("responseMessage-failure");
+        const errorElement=document.getElementById('category-Error');
 
 
-        fetch("/admin/addCategory", {
-            method: "POST",
-            headers: {
-                "content-type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({
-                name,
-                description,
-            }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.added) {
-                    successMessage.innerHTML = data.message;
-                     $('#reloadDiv').load('/admin/category #reloadDiv');
-                } else {
-                    successMessage.innerHTML = data.message;
-
-                    // failureMessage.innerHTML = data.message;
-                }
+        if (name.trim() != "" && description.trim() != "") {
+            fetch("/admin/addCategory", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify({
+                    name,
+                    description,
+                }),
             })
-            .catch((err) => {
-                console.log("error:", err);
-            });
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.added) {
+                        successMessage.innerHTML = data.message;
+                        $("#reloadDiv").load("/admin/category #reloadDiv");
+                    } else {
+                        successMessage.innerHTML = data.message;
+
+                        // failureMessage.innerHTML = data.message;
+                    }
+                })
+                .catch((err) => {
+                    console.log("error:", err);
+                });
+        }
     }
 
-    function deleteCategory(categoryId){
+    function deleteCategory(categoryId) {
         console.log(categoryId);
         fetch("/admin/deleteCategory", {
             method: "POST",
@@ -171,15 +184,15 @@
                 "content-type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({
-                categoryId
+                categoryId,
             }),
         })
             .then((response) => response.json())
             .then((data) => {
-                if(data.deleted){
-                    const deletedCategory=document.querySelector(`tr[data-category-id="${categoryId}"]`);
-                    if(deletedCategory){
-                        deletedCategory.style.backgroundColor="#ffecee";
+                if (data.deleted) {
+                    const deletedCategory = document.querySelector(`tr[data-category-id="${categoryId}"]`);
+                    if (deletedCategory) {
+                        deletedCategory.style.backgroundColor = "#ffecee";
                     }
                 }
             })

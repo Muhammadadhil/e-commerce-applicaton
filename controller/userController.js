@@ -91,6 +91,7 @@ const loadProductDetails=async (req,res)=>{
         
     }
 }
+
 //login post 
 const loginCheck=async (req,res)=>{
     try {
@@ -106,7 +107,7 @@ const loginCheck=async (req,res)=>{
                 console.log('matchpassword',matchPassword);
                 
                 if(matchPassword){
-    
+
                     req.session.userId=userData._id;
                     console.log("session :",req.session.userId);
                     res.json({user:true,message:'login successfull'})
@@ -131,17 +132,6 @@ const loginCheck=async (req,res)=>{
 //saving the user details
 const insertUser = async (req, res) => {
     try {
-        // // Validate request body against Joi schema
-        // const { error, value } = registerationSchema.validate(req.body, { abortEarly: false });
-
-        // // If there are validation errors, send error response
-        // if (error) {
-        //     const errors = error.details.reduce((acc, curr) => {
-        //         acc[curr.path[0] + 'Error'] = curr.message;
-        //         return acc;
-        //     }, {});
-        //     return res.status(400).json(errors);
-        // }
         console.log('::::::reached insert user::::::');
 
         
@@ -149,8 +139,11 @@ const insertUser = async (req, res) => {
         console.log(`firstname:${firstName} lastname:${lastName} emial:${email}`);
         console.log("body : ", req.body);
 
-
-
+        const existingEmail=await User.findOne({email:email});
+        console.log('existing email:',existingEmail);
+        if(existingEmail){
+            return res.json({status:false,message:'Email already taken'})
+        }
         //securing the password
         const securePassword = await hashPassword(password, 10);
         console.log(securePassword);
@@ -172,13 +165,13 @@ const insertUser = async (req, res) => {
         if (newUser) {
             otpVerificationEmail(newUser, req, res);
             const id=newUser._id
-            res.json({ data: true ,id});
+            res.json({ status: true ,id});
         } else {
-            res.json({ dataa: false, message: 'not saved!' });
+            res.json({ status: false, message: 'not saved!' });
         }
     } catch (error) {
         console.log(error);
-        res.status(500).json({ data: false, message: 'Error saving user details' });
+        res.status(500).json({ status: false, message: 'Error saving user details' });
     }
 }
 
@@ -190,8 +183,8 @@ const transpoter=nodemailer.createTransport({
     secure:false,
     requireTLS:true,
     auth:{
-        user:'muhammadadhil934@gmail.com',
-        pass:'qjms zuog xjln fmdz'
+        user:process.env.user_email,
+        pass:process.env.user_password
     }
 });
 
@@ -248,7 +241,7 @@ const otpVerificationEmail=async ({_id,email},req,res)=>{
 //load verification page
 const loadOtpPage=async (req,res)=>{
     try {
-        console.log(`query id: ${req.query.id}`);
+        console.log(`query id before rendering otp page: ${req.query.id}`);
         const OtpUserId=req.query.id;
         res.render('otp',{OtpUserId});
     } catch (error) {
@@ -260,7 +253,7 @@ const loadOtpPage=async (req,res)=>{
 //verify otp post route
 const verifyuserOtp=async (req,res)=>{
     try {
-        console.log('ok,reached verifyOtp post route');
+        console.log('::::::::ok,reached verifyOtp post route:::::');
         // console.log('userId of otp stored in session:'+JSON.stringify(req.session));
         // const userId=req.session.user;
         // const userId=req.params.id;
@@ -320,9 +313,12 @@ const verifyuserOtp=async (req,res)=>{
 //resend the otp
 const resendOtp=async (req,res)=>{
     try {
-        console.log('ok, reached resend otp method');
+
+        console.log(':::::::::::ok, reached resend otp method::::::::::::::');
         const userId=req.query.id;
         console.log("query id is here "+userId);
+
+        await userOtpVerfication.deleteMany({userId:userId});
 
         const userData=await User.findOne({_id:userId});
         console.log("userData:"+userData);
