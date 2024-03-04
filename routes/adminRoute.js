@@ -23,14 +23,15 @@ router.get('/category',auth.isAdminLogin,adminController.loadCategory);
 router.post('/addCategory',adminController.addCategory);
 router.get('/editCategory',auth.isAdminLogin,adminController.editCategory);
 router.post('/editCategory',adminController.updateCategory);
-router.post('/deleteCategory',adminController.deleteCategory);
+router.post('/blockUnblock',adminController.deleteCategory);
 
 //product routes
 router.get('/products',auth.isAdminLogin,productController.loadProducts);
 router.get('/addProducts',auth.isAdminLogin,productController.loadAddProducts);
 router.post('/addProducts',upload.array('images',4),productController.addProducts);
 router.get('/editProducts',auth.isAdminLogin,productController.loadEditProduct);
-router.post('/editProducts',upload.array('images',4),productController.updateProducts);
+const imgUploads=upload.fields([{name:'image1'},{name:'image2'},{name:'image3'},{name:'image4'}]);
+router.post('/editProducts',imgUploads,productController.updateProducts);
 router.patch('/productBlockUnblock',productController.blockProduct);
 
 

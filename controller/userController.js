@@ -6,6 +6,7 @@ const bcrypt=require('bcrypt');
 const nodemailer=require('nodemailer');
 // const dotenv=require('')
 const {registerationSchema}=require('../middleware/validate');
+const { date } = require('joi');
 
 
 //loading home page
@@ -70,7 +71,8 @@ const loadProfile=async (req,res)=>{
 //loading the shop page
 const loadShop=async (req,res)=>{
     try {
-        const products=await Products.find({})
+        const products=await Products.find({}).populate('categoryId');
+        
         console.log('products:',products);
         res.render('shop',{products});
     } catch (error) {
@@ -220,6 +222,7 @@ const otpVerificationEmail=async ({_id,email},req,res)=>{
         const newOtpVerification=await new userOtpVerfication({
             userId:_id,
             otp:hashedOtp,
+            expiresAt:Date.now()+60000
         })
 
         //save the otp in database
@@ -276,7 +279,7 @@ const verifyuserOtp=async (req,res)=>{
                 // throw new Error("Account has been already verified or record is already exist .please sign up or login");
                 res.json({otp:false,message:'Account has been already verified or record is already exist .please sign up or login'});
             }else{
-                const {expiresAt}=otpRecords;
+                const {expiresAt}=otpRecords; 
                 const hashedOtp=otpRecords.otp;
                 console.log(`expiresAt:${expiresAt} & date.now:${Date.now()}`);
                 

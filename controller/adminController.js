@@ -19,8 +19,6 @@ const verifyAdmin=async (req,res)=>{
         console.log(`email:${email} & password:${password}`);
         const adminData=await User.findOne({email:email});
 
-
-        
         if(adminData){
             const matchPassword=await bcrypt.compare(password,adminData.password);
             console.log('matchpassword',matchPassword);
@@ -42,8 +40,7 @@ const verifyAdmin=async (req,res)=>{
         
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('error500');
-        
+        res.status(500).render('user/error-500') 
     }
 }
 //load the home page
@@ -52,7 +49,7 @@ const loadHome=async (req,res)=>{
         res.render('adminDashboard')
     } catch (error) {
         console.log(error.message);
-        
+        res.status(500).render('user/error-500') 
     }
 }
 //load the users page
@@ -63,7 +60,8 @@ const loadCustomers=async (req,res)=>{
         res.render('customers',{users:customers})
     } catch (error) {
         console.log(error.message);
-        
+        res.status(500).render('user/error-500') 
+
     }
 }
 
@@ -80,7 +78,8 @@ const userBlock=async (req,res)=>{
         res.json({res:true})
 
     } catch (error) {
-        console.log(error.message);   
+        console.log(error.message);
+        res.status(500).render('user/error-500') 
     }
 }
 //load the category page
@@ -90,7 +89,7 @@ const loadCategory=async (req,res)=>{
         res.render('category',{categories});
     } catch (error) {
         console.log(error.message);
-        
+        res.status(500).render('user/error-500') 
     }
 }
 //add category
@@ -119,7 +118,7 @@ const addCategory=async (req,res)=>{
         }
     } catch (error) {
         console.log(error.message);
-        
+        res.status(500).render('user/error-500') 
     }
 }
 //edit category
@@ -133,6 +132,7 @@ const editCategory=async (req,res)=>{
 
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('user/error-500') 
     }
 }
 //edit category post
@@ -140,26 +140,34 @@ const updateCategory=async (req,res)=>{
     try {
         console.log('reached update category');
         const {name,description,categoryId}=req.body;
-        const existingName= await Category.findOne({name:name});
+        const currentCategory= await Category.findOne({_id:categoryId});
 
-        console.log('already exist in db:',existingName);
-        if(existingName){
-            return res.json({update:false,message:'category already exist'})
-        }else{
-            const updatedCategory=await Category.findByIdAndUpdate({_id:categoryId},{$set:{name:name,description:description}});
-
+        if(!currentCategory){
+            return res.json({update:false,message:"category not found"})
         }
+
+        console.log('name ,currentCategory.name:',name,currentCategory.name);
+        if(name !== currentCategory.name){
+            console.log('reached here');
+            const existingName=await Category.findOne({name:name})
+            console.log('existingname:',existingName);
+            if(existingName){
+                return res.json({update:false,message:'Category name already exist'})
+            }
+        }
+        const updatedCategory=await Category.findByIdAndUpdate({_id:categoryId},{$set:{name:name,description:description}});
+
         if(updatedCategory){
-            res.json({update:true});
+            res.json({update:true,message:'updated successfully'});
             console.log('data updated');
         }else{
-            res.json({update:false});
+            res.json({update:false,message:'there is a problem while updating your data'});
         }
         // console.log("id:",req.query.id);
         
     } catch (error) {
         console.log(error.message);
-        
+        res.status(500).render('user/error-500') 
     }
 }
 
@@ -167,15 +175,17 @@ const updateCategory=async (req,res)=>{
 const deleteCategory=async (req,res)=>{
     try {
         const {categoryId}=req.body;
-        const deletedCategory=await Category.findByIdAndUpdate({_id:categoryId},{$set:{isDeleted:true}})
-        if(deletedCategory){
-            res.json({deleted:true});
+        const categoryData=await Category.findOne({_id:categoryId})
+        if(categoryData.isBlocked){
+            await Category.findByIdAndUpdate({_id:categoryId},{$set:{isBlocked:false}})
         }else{
-            res.json({deleted:false})
+            await Category.findByIdAndUpdate({_id:categoryId},{$set:{isBlocked:true}})
         }
-
+        res.json({updated:true});
+        
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('user/error-500') 
     }
 }
 
@@ -192,7 +202,7 @@ const adminLogout=async (req,res)=>{
         
     } catch (error) {
         console.log(error.message);
-        
+        res.status(500).render('user/error-500') 
     }
 }
 

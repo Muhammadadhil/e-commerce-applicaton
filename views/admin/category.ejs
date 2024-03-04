@@ -29,16 +29,16 @@
                             <label class="form-label">Description</label>
                             <textarea placeholder="Type here" class="form-control" id="description"></textarea>
                         </div>
-                        <p id="category-Error" style="color: red"></p>
+                        <p id="category-Error" class="text-danger "></p>
                         <div class="">
-                            <button class="btn btn-primary" onclick="addCategory()" data-bs-dismiss="modal">Create category</button>
+                            <button class="btn btn-primary" id="addCategory-submit" >Create category</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <!-- data-bs-target="#confirmation" data-bs-toggle="modal" -->
+    <!--data-bs-dismiss="modal"  data-bs-target="#confirmation" data-bs-toggle="modal" -->
     <!-- confirmation modal -->
     <div class="modal fade" id="confirmation" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -71,25 +71,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <%if(categories.length>0){%> <%categories.forEach((category,i)=>{%> <%if(category.isDeleted){%>
-                                <tr data-category-id="<%=category._id%>" style="background-color: #ffecee">
-                                    <td><%=i+1%></td>
-                                    <td><b><%=category.name%></b></td>
-                                    <td><%=category.description%></td>
-                                    <td><a href="/admin/editCategory?id=<%=category._id%>" class="badge rounded-pill alert-dark">edit</a></td>
-                                    <td></td>
-                                    <td><a onclick="deleteCategory('<%=category._id%>')" class="badge rounded-pill btn-danger">Delete</a></td>
-                                </tr>
+                                <%if(categories.length>0){%> 
+                                    <%categories.forEach((category,i)=>{%> 
+                                        <tr data-category-id="<%=category._id%>">
+                                            <td><%=i+1%></td>
+                                            <td><b><%=category.name%></b></td>
+                                            <td><%=category.description%></td>
+                                            <td><a href="/admin/editCategory?id=<%=category._id%>" class="badge rounded-pill alert-dark">edit</a></td>
+                                            <td></td>
+                                            <%if(category.isBlocked){%>
+                                                <td><a onclick="blockUnblock('<%=category._id%>')" class="badge rounded-pill btn-info">Unblock</a></td>
+                                            <%}else{%>
+                                                <td><a onclick="blockUnblock('<%=category._id%>')" class="badge rounded-pill btn-danger">block</a></td>
+                                            <%}%>                                        
+                                        </tr>
+                                    <%})%> 
                                 <%}else{%>
-                                <tr data-category-id="<%=category._id%>">
-                                    <td><%=i+1%></td>
-                                    <td><b><%=category.name%></b></td>
-                                    <td><%=category.description%></td>
-                                    <td><a href="/admin/editCategory?id=<%=category._id%>" class="badge rounded-pill alert-dark">edit</a></td>
-                                    <td></td>
-                                    <td><a onclick="deleteCategory('<%=category._id%>')" class="badge rounded-pill btn-danger">Delete</a></td>
-                                </tr>
-                                <%}%> <%})%> <%}else{%>
                                 <tr>
                                     <td><b class="text-center">there is no categories in database</b></td>
                                 </tr>
@@ -117,20 +114,23 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-    function validateForm() {
-        // const name=document.getElementById('categoryName').value;
-        // const description=document.getElementById('description').value;
-        // let isvalid=true
-        // if(!name.trim()){
-        //     errorElement.textContent='name should not be empty'
-        //     isvalid=false;
-        // }else{
-        //     errorElement.textContent='';
-        // }
-        // if(isvalid){
-        //     addCategory()
-        // }
-    }
+
+    document.getElementById('addCategory-submit').addEventListener('click',(event)=>{
+        event.preventDefault();
+        const name=document.getElementById('categoryName').value;
+        const description=document.getElementById('description').value;
+        const errorElement=document.getElementById('category-Error');
+
+        if(name.trim()==""){
+            console.log('hey error');
+            errorElement.innerHTML='name should not be empty'
+        }else if(description.trim()==""){
+            errorElement.innerHTML='description should not be empty'
+        }else{
+            errorElement.innerHTML=''
+            addCategory();
+        }
+    })
 </script>
 
 <script>
@@ -140,15 +140,13 @@
     });
 
     function addCategory() {
-        
         const name = document.getElementById("categoryName").value;
         const description = document.getElementById("description").value;
         const successMessage = document.getElementById("responseMessage");
         const failureMessage = document.getElementById("responseMessage-failure");
-        const errorElement=document.getElementById('category-Error');
+        const errorElement = document.getElementById("category-Error");
 
-
-        if (name.trim() != "" && description.trim() != "") {
+        // if (name.trim() != "" && description.trim() != "") {
             fetch("/admin/addCategory", {
                 method: "POST",
                 headers: {
@@ -163,9 +161,10 @@
                 .then((data) => {
                     if (data.added) {
                         successMessage.innerHTML = data.message;
+                        $('#addCategory').modal('hide')
                         $("#reloadDiv").load("/admin/category #reloadDiv");
                     } else {
-                        successMessage.innerHTML = data.message;
+                        errorElement.innerHTML = data.message;
 
                         // failureMessage.innerHTML = data.message;
                     }
@@ -173,12 +172,12 @@
                 .catch((err) => {
                     console.log("error:", err);
                 });
-        }
+        // }
     }
 
-    function deleteCategory(categoryId) {
+    function blockUnblock(categoryId) {
         console.log(categoryId);
-        fetch("/admin/deleteCategory", {
+        fetch("/admin/blockUnblock", {
             method: "POST",
             headers: {
                 "content-type": "application/json;charset=utf-8",
@@ -189,11 +188,8 @@
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.deleted) {
-                    const deletedCategory = document.querySelector(`tr[data-category-id="${categoryId}"]`);
-                    if (deletedCategory) {
-                        deletedCategory.style.backgroundColor = "#ffecee";
-                    }
+                if (data.updated) {
+                    $('#reloadDiv').load('/admin/category #reloadDiv')
                 }
             })
             .catch((err) => {

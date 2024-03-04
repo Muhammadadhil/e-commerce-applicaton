@@ -43,7 +43,8 @@
                         <div class="shop-product-wrapper">
                             <div class="row">
                                 <%products.forEach((product)=>{%>
-                                    <%if(!product.isDeleted){%>
+                                    
+                                    <%if(!product.isDeleted && !product.categoryId.isBlocked){%>
                                         <div class="col-lg-4 col-sm-6">
                                             <!-- Single Product Start -->
                                             <div class="single-product">

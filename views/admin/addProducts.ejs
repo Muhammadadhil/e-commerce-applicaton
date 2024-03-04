@@ -85,7 +85,7 @@
         if (input.files) {
             for (let i = 0; i < input.files.length; i++) {
                 let reader = new FileReader();
-                let image = images[i];
+                let image = images[i];  
 
                 reader.onload = function (e) {
                     image.src = e.target.result;

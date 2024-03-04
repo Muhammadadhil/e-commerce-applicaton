@@ -9,6 +9,8 @@ const loadProducts=async (req,res)=>{
         res.render('products',{products});
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('user/error-500') 
+
     }
 }
 //load add products page
@@ -19,6 +21,7 @@ const loadAddProducts=async (req,res)=>{
      
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('user/error-500'); 
     }
 }
 //add products post 
@@ -55,6 +58,7 @@ const addProducts=async (req,res)=>{
        }
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('user/error-500') 
     }
 }
 
@@ -72,7 +76,7 @@ const loadEditProduct=async (req,res)=>{
 
     } catch (error) {
         console.log(error.message);
-        
+        res.status(500).render('user/error-500'); 
     }
 }
 
@@ -90,14 +94,15 @@ const updateProducts=async (req,res)=>{
         console.log("files:::::",files);
 
         const existingDetails=await Products.findById({_id:productId});
-        const hasNewFiles=files.length>0;
+        const hasNewFiles=!!files  //converts to boolean
+        console.log('hasnew files:',hasNewFiles);
 
         //check there is new files added , if not adding defult ones
         const images=hasNewFiles?[
-            files[0]?.filename || existingDetails.images.image1,
-            files[1]?.filename || existingDetails.images.image2,
-            files[2]?.filename || existingDetails.images.image3,
-            files[3]?.filename || existingDetails.images.image4  
+            files.image1?.[0]?.filename || existingDetails.images.image1,
+            files.image2?.[0]?.filename || existingDetails.images.image2,
+            files.image3?.[0]?.filename || existingDetails.images.image3,
+            files.image4?.[0]?.filename || existingDetails.images.image4  
         ]:[
             existingDetails.images.image1,
             existingDetails.images.image2,
@@ -122,19 +127,16 @@ const updateProducts=async (req,res)=>{
                 image4:images[3]
             }
         }
-
         const updatedProduct=await Products.findByIdAndUpdate({_id:productId},editedProduct,{new:true});
 
-    
        if(updatedProduct){
             res.redirect('/admin/products')
        }else{
             res.render('editProducts');
        }
-        
     } catch (error) {
         console.log(error.message);
-        
+        res.status(500).render('error-500');
     }
 }
 
@@ -154,6 +156,7 @@ const blockProduct=async (req,res)=>{
 
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('user/error-500');
     }
 }
 module.exports={
