@@ -19,7 +19,7 @@
                         <div class="row gx-3">
                             <div class="mb-3">
                                 <label for="product_sku" class="form-label">Quantity</label>
-                                <input type="text" placeholder="Type here" class="form-control" name="quantity" id="quantity" />
+                                <input type="text" placeholder="Type here" class="form-control" name="quantity" id="quantity" min="0"/>
                                 <p id="error-quantity" style="color: red"></p>
                             </div>
                         </div>
@@ -79,8 +79,10 @@
 <script defer src="https://cdn.crop.guide/loader/l.js?c=DJNDTB"></script>
 <script>
     function previewImage(event) {
+        
         let input = event.target;
         let images = document.querySelectorAll('[id^="preview-"]');
+
 
         if (input.files) {
             for (let i = 0; i < input.files.length; i++) {
@@ -95,23 +97,7 @@
         }
     }
 
-    const imageElement = document.getElementById("images");
-    const imageError = document.getElementById("image-Error");
-
-    imageElement.addEventListener("change", () => {
-        inputFiles = imageElement.files;
-        console.log("input Files:", inputFiles);
-
-        if (inputFiles.length > 4) {
-            imageError.textContent = "images should be upto 4";
-            imageElement.value = null;
-
-            setTimeout(() => {
-                imageError.textContent = "";
-            }, 5000);
-        }
-    });
-
+  
     function validateForm() {
         const name = document.getElementById("productName").value;
         const quantity = document.getElementById("quantity").value;
@@ -126,6 +112,9 @@
         if (/^\s*$/.test(name)) {
             errorName.innerHTML = "product name should not be empty";
             return false;
+        }else if(!/^[a-zA-Z\s]+$/.test(name)){
+            errorName.innerHTML = "Product name should contain only alphabetic characters";
+            return false;
         } else {
             errorName.innerHTML = "";
         }
@@ -133,6 +122,9 @@
         const errorQuantity = document.getElementById("error-quantity");
         if (/^\s*$/.test(quantity)) {
             errorQuantity .innerHTML = "quantity should not be empty";
+            return false;
+        }else if(quantity<0){
+            errorQuantity.innerHTML='quntity should be a postitive number'
             return false;
         } else {
             errorQuantity .innerHTML = "";
@@ -150,6 +142,9 @@
         if (/^\s*$/.test(price)) {
             errorPrice.innerHTML = "price should not be empy";
             return false;
+        }else if(price<0){
+            errorPrice.innerHTML='price should be a postitive number'
+            return false;
         } else {
             errorPrice .innerHTML = "";
         }
@@ -162,36 +157,56 @@
             errordescription.innerHTML = "";
         }
 
-
+        //check for the image input is empty or not
         const errorImage = document.getElementById("image-Error");
         if (imageInput.files.length === 0) {
-            errorImage.innerHTML = "images should not be empy";
-            return false
+            errorImage.innerHTML = "images should not be empty";
+            return false;
         }else{
             errorImage.innerHTML = "";
         }
 
+        //check for the image input files count
+        let inputFiles = imageInput.files;
+        console.log("input Files:", inputFiles);
+
+        if (inputFiles.length > 4 || inputFiles.length < 4) {
+            errorImage.textContent = "images should be upto 4";
+            imageInput.value = null;
+            
+            setTimeout(() => {
+                errorImage.textContent = "";
+            }, 5000);
+            return false;
+        }
+
+        //check for the input files are image file
+        const fileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+
+        for(let i=0;i<inputFiles.length;i++){
+            const file=inputFiles[i]
+            if(!fileTypes.includes(file.type)){
+                errorImage.textContent = `file ${file.name} is not an image file`;
+                imageInput.value=null;
+                return false;
+            }
+        }
+
+        // for (const file of inputFiles) {
+        //    const fileType=file.type;
+        //    console.log('filetype:',fileType);
+        //    if(!fileType.startsWith('image/')){
+
+        //         errorImage=textContent=`file ${file.name} is not an image file`;
+        //         event.target.value='';
+        //         return false
+        //    }else{
+        //     errorImage.textContent="";
+        //    }
+        // }
 
         return true;
     }
 
-    // function addProducts() {
-    //     // const image1=document.getElementById('image-1').value;
-
-    //     fetch("/admin/addProducts", {
-    //         method: "POST",
-    //         headers: {
-    //             "content-type": "application/json;charset=utf-8",
-    //         },
-    //         body: JSON.stringify({
-    //             formData,
-    //         }),
-    //     })
-    //         .then((response) => response.json())
-    //         .then((data) => {})
-    //         .catch((err) => {
-    //             console.log("error:", err);
-    //         });
-    // }
 </script>
 <%-include('../layouts/adminFooter')%>

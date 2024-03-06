@@ -7,25 +7,27 @@
                 <h2 class="content-title">Edit Product Details</h2>
             </div>
         </div>
-            <form action="/admin/editProducts?id=<%=productData._id%>"   method="post" enctype="multipart/form-data">
+            <form action="/admin/editProducts?id=<%=productData._id%>"  onsubmit="return validateForm()" method="post" enctype="multipart/form-data">
                 <div class="col-md-6">
                     <div class="card mb-3">
                         <div class="card-body">
                             <div class="mb-2">
                                 <label for="product_title" class="form-label">Product Name</label>
-                                <input type="text" placeholder="Type here" class="form-control" name="productName" value="<%=productData.name%>" />
+                                <input type="text" placeholder="Type here" class="form-control" name="productName" id="productName" value="<%=productData.name%>" />
+                                <p id="error-name" style="color: red"></p>
                             </div>
                             <div class="row gx-3">
                                 <div class="mb-3">
                                     <label for="product_sku" class="form-label">Quantity</label>
-                                    <input type="text" placeholder="Type here" class="form-control" name="quantity" value="<%=productData.quantity%>" />
+                                    <input type="text" placeholder="Type here" class="form-control" name="quantity" id="quantity" value="<%=productData.quantity%>" />
+                                    <p id="error-quantity" style="color: red"></p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="mb-3">
                                     <label for="product_sku" class="form-label">Category</label>
                                     
-                                    <select type="text" placeholder="Type here" class="form-control" name="category" >
+                                    <select type="text" placeholder="Type here" class="form-control" name="category" id="category">
                                     <option selected><%= productData.categoryId.name%></option>
                                     <%categories.forEach((category)=>{%>
                                         <%if(category.isDeleted===false){%>
@@ -33,12 +35,14 @@
                                         <%}%>
                                         <%})%>
                                     </select>
+                                <p id="error-category" style="color: red"></p>
                                 </div>
                             </div>
                             <div class="row ">
                                 <div class="mb-3">
                                     <label for="product_sku" class="form-label">Price</label>
-                                    <input type="number" placeholder="Type here" class="form-control" name="price" value="<%=productData.price%>"/>
+                                    <input type="number" placeholder="Type here" class="form-control" name="price" id="price" value="<%=productData.price%>"/>
+                                    <p id="error-price" style="color: red"></p>
                                 </div>
                             </div>
                         </div>
@@ -48,7 +52,8 @@
                         <div class="card-body">
                             <div>
                                 <label class="form-label">Description</label>
-                                <input placeholder="Type here" class="form-control" rows="4" name="description" value="<%=productData.description%>" />
+                                <input placeholder="Type here" class="form-control" rows="4" name="description" id="description" value="<%=productData.description%>" />
+                                <p id="error-description" style="color: red"></p>
                             </div>
                         </div>
                     </div>
@@ -58,20 +63,20 @@
                             
                             <div class="col-md-3">
                                 <img class="rounded-2 " style="width: 150px;" id="preview-1" src="/multer/products/<%=productData.images.image1%>" alt="">
-                                <input type="file" name="image1" onchange="previewImage(event,1)">
+                                <input type="file" name="image1" id="imageInput" onchange="previewImage(event,1)">
                             </div>
                             <div class="col-md-3">
                                 <img class="rounded-2 " style="width: 150px;" id="preview-2" src="/multer/products/<%=productData.images.image2%>" alt="">
-                                <input type="file" name="image2" onchange="previewImage(event,2)">
+                                <input type="file" name="image2" id="imageInput" onchange="previewImage(event,2)">
                             </div>
                             <div class="col-md-3">
                                 <img class="rounded-2 " style="width: 150px;" id="preview-3" src="/multer/products/<%=productData.images.image3%>" alt="">
-                                <input type="file" name="image3" onchange="previewImage(event,3)">
+                                <input type="file" name="image3" id="imageInput" onchange="previewImage(event,3)">
 
                             </div>
                             <div class="col-md-3">
                                 <img class="rounded-2 " style="width: 150px;" id="preview-4" src="/multer/products/<%=productData.images.image4%>" alt="">
-                                <input type="file" name="image4" onchange="previewImage(event,4)">
+                                <input type="file" name="image4" id="imageInput" onchange="previewImage(event,4)">
 
                             </div>
                         </div>
@@ -107,6 +112,102 @@
             reader.readAsDataURL(input.files[0]);
         
         }
+    }
+    function validateForm() {
+        const name = document.getElementById("productName").value;
+        const quantity = document.getElementById("quantity").value;
+        const category = document.getElementById("category").value;
+        const price = document.getElementById("price").value;
+        const description = document.getElementById("description").value;
+        const imageInput = document.getElementById("imageInput");
+
+        
+        const alphabet=/^[a-zA-Z]+$/
+        const errorName = document.getElementById("error-name");
+        if (/^\s*$/.test(name)) {
+            errorName.innerHTML = "product name should not be empty";
+            return false;
+        }else if(!/^[a-zA-Z\s]+$/.test(name)){
+            errorName.innerHTML = "Product name should contain only alphabetic characters";
+            return false;
+        } else {
+            errorName.innerHTML = "";
+        }
+
+        const errorQuantity = document.getElementById("error-quantity");
+        if (/^\s*$/.test(quantity)) {
+            errorQuantity .innerHTML = "quantity should not be empty";
+            return false;
+        }else if(quantity<0){
+            errorQuantity.innerHTML='quntity should be a postitive number'
+            return false;
+        } else {
+            errorQuantity .innerHTML = "";
+        }
+
+        const errorCategory = document.getElementById("error-category");
+        if (/^\s*$/.test(category)) {
+            errorCategory.innerHTML = "chooose one category";
+            return false;
+        } else {
+            errorCategory.innerHTML = "";
+        }
+
+        const errorPrice = document.getElementById("error-price");
+        if (/^\s*$/.test(price)) {
+            errorPrice.innerHTML = "price should not be empy";
+            return false;
+        }else if(price<0){
+            errorPrice.innerHTML='price should be a postitive number'
+            return false;
+        } else {
+            errorPrice .innerHTML = "";
+        }
+
+        const errordescription = document.getElementById("error-description");
+        if (/^\s*$/.test(description)) {
+            errordescription.innerHTML = "description should not be empy";
+            return false;
+        } else {
+            errordescription.innerHTML = "";
+        }
+
+        //check for the image input is empty or not
+        const errorImage = document.getElementById("image-Error");
+        if (imageInput.files.length === 0) {
+            errorImage.innerHTML = "images should not be empty";
+            return false;
+        }else{
+            errorImage.innerHTML = "";
+        }
+
+
+        //check for the input files are image file
+        const fileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+
+        for(let i=0;i<inputFiles.length;i++){
+            const file=inputFiles[i]
+            if(!fileTypes.includes(file.type)){
+                errorImage.textContent = `file ${file.name} is not an image file`;
+                imageInput.value=null;
+                return false;
+            }
+        }
+
+        // for (const file of inputFiles) {
+        //    const fileType=file.type;
+        //    console.log('filetype:',fileType);
+        //    if(!fileType.startsWith('image/')){
+
+        //         errorImage=textContent=`file ${file.name} is not an image file`;
+        //         event.target.value='';
+        //         return false
+        //    }else{
+        //     errorImage.textContent="";
+        //    }
+        // }
+
+        return true;
     }
 
     const imageElement = document.getElementById("images");

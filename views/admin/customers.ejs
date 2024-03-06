@@ -25,25 +25,31 @@
                     <%if(users.length>0){%>
                         <%users.forEach((user,i)=>{%>
                             <tr>
-                                <td><%=i+1%></td>
-                                <td><%=`${user.firstName} ${user.lastname}`%></td>
-                                <td><b><%=user.email%></b></td>
-                                <td><%=user.mobile%></td>
-                                <td><span class="badge rounded-pill alert-warning"><%if(user.verified){%>
-                                    verified
-                                    <%}else{%>
-                                        not verified
-                                    <%}%>
-                                    </span></td>
-                                <td><%if(!user.isBlocked){%>
-                                        <a  onclick="blockUnblock('<%=user._id%>')">Block</a>
-                                    <%}else{%>
-                                        <a class="unBlock-user"onclick="blockUnblock('<%=user._id%>')">Unblock</a>
-                                    <%}%>
-                                </td> 
+                                <%if(!user.isAdmin){%>
+                                    <td><%=i+1%></td>
+                                    <td><%=`${user.firstName} ${user.lastname}`%></td>
+                                    <td><b><%=user.email%></b></td>
+                                    <td><%=user.mobile%></td>
+                                    <td><span class="badge rounded-pill alert-warning"><%if(user.verified){%>
+                                        verified
+                                        <%}else{%>
+                                            not verified
+                                        <%}%>
+                                        </span></td>
+                                    <td><%if(!user.isBlocked){%>
+                                            <a  onclick="blockUnblock('<%=user._id%>')">Block</a>
+                                        <%}else{%>
+                                            <a class="unBlock-user"onclick="blockUnblock('<%=user._id%>')">Unblock</a>
+                                        <%}%>
+                                    </td> 
+                                <%}%>    
                             </tr>
                         <%})%>
                        
+                    <%}else{%>
+                        <tr>
+                            <td rowspan="4">no users found</td>
+                        </tr>
                     <%}%>
                 </tbody>
             </table>

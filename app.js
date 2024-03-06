@@ -11,7 +11,7 @@ mongoose.connect('mongodb://localhost:27017/project-furbar')
 const app = express();
 
 // Use Morgan middleware for logging requests
-// app.use(morgan('dev')); 
+app.use(morgan('dev')); 
 
 app.use(nocache());
 

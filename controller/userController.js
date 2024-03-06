@@ -36,8 +36,7 @@ const loadAbout=async (req,res)=>{
         res.render('about')
     } catch (error) {
         console.log(error.message);
-    }
-    
+    }  
 }
 
 //loading the login page
@@ -138,8 +137,6 @@ const insertUser = async (req, res) => {
 
         
         const { firstName, lastName, email,mobile, password} = req.body;
-        console.log(`firstname:${firstName} lastname:${lastName} emial:${email}`);
-        console.log("body : ", req.body);
 
         const existingEmail=await User.findOne({email:email});
         console.log('existing email:',existingEmail);
@@ -193,7 +190,7 @@ const transpoter=nodemailer.createTransport({
 //otp verification
 const otpVerificationEmail=async ({_id,email},req,res)=>{
     try {
-        console.log('reached otp verification email sending function');
+        console.log('::::::reached otp verification email sending function::::::');
         console.log(`id:${_id} and email:${email}`);
         const otp=`${Math.floor(1000+Math.random()*900)}`
         console.log(" Generated OTP:"+otp);
@@ -230,14 +227,9 @@ const otpVerificationEmail=async ({_id,email},req,res)=>{
         //send the mail
         await transpoter.sendMail(mailOptions);
         
-        
-        
     } catch (error) {
         console.log("error : ",error);
-        // res.json({
-        //     status:"failed",
-        //     message:error.message
-        // });
+        res.status(500).render('Error-500');
     }
 };
 
