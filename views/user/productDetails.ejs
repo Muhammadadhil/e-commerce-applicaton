@@ -122,6 +122,8 @@
                                 <%}%>
                             </div>
                         </div>
+                        <span id="addToCartError" class="value text-danger"> <i id="error-icon" class=" fas fa-exclamation-circle" hidden></i></span>
+                        
 
                         <div class="product-info">
                             <div class="single-info">
@@ -774,57 +776,85 @@
       </div>
     </div>
   </div>
+
   
-  
+  <script>
+    // document.addEventListener('DOMContentLoaded', function() {
+        function showCartAlert() {
+            Swal.fire({
+                title: "You need to log in!",
+                text: "Please log in to view your cart.",
+                icon: "warning",
+                confirmButtonText: "login",
+                showCancelButton: true,
+                // confirmButtonClass: 'btn btn-success',
+                customClass: {
+                    confirmButton: "custom-confirm-button",
+                    cancelButton: "custom-cancel-button",
+                },
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "/login";
+                    }
+                });
+        }
+    
+        function addToCart(productId) {
+            let count=1;
+            fetch("/addToCart", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify({
+                    productId,
+                    count
+                }),
+            })
+            .then(response => response.json())
+            .then((data)=>{
+                console.log('data from the server:',data);
+                if(data.added){
+    
+                    const addToExisting = document.getElementById("addToExisting");
+                    const toast = new bootstrap.Toast(addToExisting);
+                        toast.show();
+                        
+                }else if(data.addedToCart=='not done'){
+                    console.log('reached productDetails page error part : failed to add item');
 
-<script>
-    function showCartAlert() {
-        Swal.fire({
-            title: "You need to log in!",
-            text: "Please log in to view your cart.",
-            icon: "warning",
-            confirmButtonText: "login",
-            showCancelButton: true,
-            // confirmButtonClass: 'btn btn-success',
-            customClass: {
-                confirmButton: "custom-confirm-button",
-                cancelButton: "custom-cancel-button",
-            },
-        })
-            .then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "/login";
-                }
-            });
-    }
+                    const addToCartError=document.getElementById('addToCartError');
+                    // // const icon=document.getElementById('error-icon');
+                    // // icon.hidden=false;
+                    addToCartError.innerHTML='failed to add item';
+                    setTimeout(()=>{
+                        addToCartError.innerHTML='';
+                    },5000)
 
-    function addToCart(productId) {
-        let count=1;
-        fetch("/addToCart", {
-            method: "POST",
-            headers: {
-                "content-type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({
-                productId,
-                count
-            }),
-        })
-        .then(response => response.json())
-        .then((data)=>{
-            console.log('reached here in response part!!!!');
-            if(data.added){
-
-                const addToExisting = document.getElementById("addToExisting");
-                const toast = new bootstrap.Toast(addToExisting);
+                }else if(data.addedNew){
+    
+                    const addedToCart = document.getElementById("addedTocart");
+                    const toast=new bootstrap.Toast(addedToCart);
                     toast.show();
-            }else if(data.addedNew){
 
-                const addedToCart = document.getElementById("addedTocart");
-                const toast=new bootstrap.Toast(addedToCart);
-                toast.show();
-            }
-        })
-    }
-</script>
+                }else if(!data.added){
+                    //if total quantity exceeded
+                    window.location.href='/cart'
+
+                }else{
+                    console.log('Unknown resssssponse from the servver!!');
+                }
+            })
+            .catch((err)=>{
+                console.error('Errrror:',err);
+            })
+        }
+    // });
+    </script>
+
+
 <%-include('../layouts/footer.ejs')%>
+
+
+

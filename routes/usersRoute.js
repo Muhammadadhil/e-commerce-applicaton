@@ -30,6 +30,8 @@ router.get('/contact',auth.isUserBlocled,userController.loadContactPage);
 //cart
 router.get('/cart',auth.isUserBlocled,auth.isLogin,cartController.loadCartPage);
 router.post('/addToCart',cartController.addProductsToCart);
+router.patch('/removeFromCart',cartController.removeProduct);
+
 
 //login
 router.get('/login',auth.isUserBlocled,userController.loginLoad);
