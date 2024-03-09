@@ -80,6 +80,9 @@
         if (!firstName.trim() || firstName==="") {
             firstNameError.textContent = "First Name is required";
             return;
+        }else if(!/^[a-zA-Z\s]+$/.test(firstName)){
+            firstNameError.innerHTML = "firstname should contain only alphabetic characters";
+            return ;
         } else {
             firstNameError.textContent = "";
         }
@@ -87,6 +90,9 @@
         const lastNameError = document.getElementById("lastNameError");
         if (!lastName.trim() ) {
             lastNameError.textContent = "Last Name is required";
+            return;
+        }else if(!/^[a-zA-Z\s]+$/.test(lastName)){
+            lastNameError.innerHTML = "lastname should contain only alphabetic characters";
             return;
         } else {
             lastNameError.textContent = "";
@@ -118,7 +124,10 @@
         } else if (password.length < 6) {
             passwordError.textContent = "Password must be at least 6 characters long";
             return;
-        } else {
+        }else if(!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)){
+            passwordError.textContent = "Password must contain at least one uppercase letter, one lowercase letter, one number";
+            return;
+        }else {
             passwordError.textContent = "";
         }
 
@@ -127,7 +136,7 @@
             confirmPasswordError.textContent = "Confirm Password is required";
             return;
         } else if (confirmPassword !== password) {
-            confirmPasswordError.textContent = "Passwords do not match";
+            confirmPasswordError.textContent = "Passwords does not match";
             return;
         } else {
             confirmPasswordError.textContent = "";
@@ -136,9 +145,8 @@
         return true;
 
         function isValidEmail(email) {
-        return /\S+@\S+\.\S+/.test(email);
-
-    }
+            return /\S+@\S+\.\S+/.test(email);
+        }   
 
     };
     function register() {

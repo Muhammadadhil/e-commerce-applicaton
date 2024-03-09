@@ -1,0 +1,213 @@
+<%-include('../layouts/header')%>
+
+<!-- Shopping Cart Section Start -->
+<div class="section section-padding mt-5">
+    <div class="container">
+        <%if(cartDetails){%>
+            <%if(cartDetails.product){%>
+                <div class="cart-wrapper">
+                    <!-- Cart Wrapper Start -->
+                    <div class="cart-table table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="product-thumb">Image</th>
+                                    <th class="product-info">product Information</th>
+                                    <th class="product-quantity">Quantity</th>
+                                    <th class="product-total-price">Total Price</th>
+                                    <th class="product-action">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <%cartDetails.product.forEach((product,i)=>{%>
+
+                                <tr>
+                                    <td class="product-thumb">
+                                        <img src="/multer/products/<%=product.productId.images.image1%>" alt="**" />
+                                    </td>
+                                    <td class="product-info">
+                                        <h6 class="name">
+                                            <a href="product-details.html"><%=product.productId.name%></a>
+                                        </h6>
+                                        <div class="product-prices">
+                                            <span class="old-price">$35.90</span>
+                                            <span class="sale-price">₹<%=product.productId.price%></span>
+                                        </div>
+                                        <div class="product-size-color">
+                                            <p>Size <span>S</span></p>
+                                            <p>Color <span>White</span></p>
+                                        </div>
+                                    </td>
+                                    <td class="quantity">
+                                        <div class="product-quantity d-inline-flex">
+                                            <button type="button" class="sub">-</button>
+                                            <input type="text" value="1" />
+                                            <button type="button" class="add">+</button>
+                                        </div>
+                                    </td>
+                                    <td class="product-total-price">
+                                        <span class="price">$28.72</span>
+                                    </td>
+                                    <td class="product-action">
+                                        <button class="remove">
+                                            <i class="pe-7s-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <%})%>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Cart Wrapper End -->
+                    <!-- Cart btn Start -->
+                    <div
+                    class="cart-btn">
+                        <div class="left-btn">
+                            <a href="shop-grid-left-sidebar.html" class="btn btn-outline-primary btn-hover-primary">Continue Shopping</a>
+                        </div>
+                        <div class="right-btn">
+                            <a href="#" class="btn btn-outline-dark">Clear Cart</a>
+                            <a href="#" class="btn btn-outline-dark">Update Cart</a>
+                        </div>
+                    </div>
+                    <!-- Cart btn Start -->
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <!-- Cart Shipping Start -->
+                        <div class="cart-shipping">
+                            <div class="cart-title">
+                                <h4 class="title">Calculate Shipping</h4>
+                                <p>Estimate your shipping fee *</p>
+                            </div>
+                            <div class="cart-form">
+                                <p>Calculate shipping</p>
+                                <form action="#">
+                                    <div class="single-select2">
+                                        <div class="form-select2">
+                                            <select class="select2">
+                                                <option value="0">Select a country…</option>
+                                                <option value="1">Bangladesh</option>
+                                                <option value="2">Canada</option>
+                                                <option value="3">Colombia</option>
+                                                <option value="4">Indonesia</option>
+                                                <option value="5">Italy</option>
+                                                <option value="6">Pakistan</option>
+                                                <option value="7">Turkey</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="single-select2">
+                                        <div class="form-select2">
+                                            <select class="select2">
+                                                <option value="">Select an option…</option>
+                                                <option value="BAG">Bagerhat</option>
+                                                <option value="BAN">Bandarban</option>
+                                                <option value="BAR">Barguna</option>
+                                                <option value="BARI">Barisal</option>
+                                                <option value="BHO">Bhola</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="single-form">
+                                        <input class="form-control" type="text" placeholder="Postcode/ziip" />
+                                    </div>
+                                    <div class="single-form">
+                                        <button class="btn btn-dark btn-hover-primary">Update totals</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- Cart Shipping End -->
+                    </div>
+                    <div class="col-lg-4">
+                        <!-- Cart Shipping Start -->
+                        <div class="cart-shipping">
+                            <div class="cart-title">
+                                <h4 class="title">Coupon Code</h4>
+                                <p>Enter your coupon code if you have one.</p>
+                            </div>
+                            <div class="cart-form">
+                                <form action="#">
+                                    <div class="single-form">
+                                        <input class="form-control" type="text" placeholder="Enter your coupon code.." />
+                                    </div>
+                                    <div class="single-form">
+                                        <button class="btn btn-dark btn-hover-primary">Apply Coupon</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- Cart Shipping End -->
+                    </div>
+                    <div class="col-lg-4">
+                        <!-- Cart Totals Start -->
+                        <div class="cart-totals">
+                            <div class="cart-title">
+                                <h4 class="title">Cart totals</h4>
+                            </div>
+                            <div class="cart-total-table">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p class="value">Subtotal</p>
+                                            </td>
+                                            <td>
+                                                <p class="price">£600.00</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="value">Shipping</p>
+                                            </td>
+                                            <td>
+                                                <ul class="shipping-list">
+                                                    <li class="radio">
+                                                        <input type="radio" name="shipping" id="radio1" checked="" />
+                                                        <label for="radio1"><span></span> Flat Rate</label>
+                                                    </li>
+                                                    <li class="radio">
+                                                        <input type="radio" name="shipping" id="radio2" />
+                                                        <label for="radio2"><span></span> Free Shipping</label>
+                                                    </li>
+                                                    <li class="radio">
+                                                        <input type="radio" name="shipping" id="radio3" />
+                                                        <label for="radio3"><span></span> Local Pickup</label>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="value">Total</p>
+                                            </td>
+                                            <td>
+                                                <p class="price">£600.00</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="cart-total-btn">
+                                <a href="#" class="btn btn-dark btn-hover-primary btn-block">Proceed To Checkout</a>
+                            </div>
+                        </div>
+                        <!-- Cart Totals End -->
+                    </div>
+                </div>
+            <%}else{%>
+                <h4>no items in your cart</h4>
+                
+            <%}%>    
+        <%}else{%>
+            <div class="d-flex align-content-center ">
+                <h4>no items in your cart</h4>
+
+            </div>
+        <%}%>
+    </div>
+</div>
+<!-- Shopping Cart Section End -->
+
+<%-include('../layouts/footer')%>

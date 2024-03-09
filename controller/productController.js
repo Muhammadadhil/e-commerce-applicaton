@@ -10,7 +10,6 @@ const loadProducts=async (req,res)=>{
     } catch (error) {
         console.log(error.message);
         res.status(500).render('user/error-500') 
-
     }
 }
 //load add products page

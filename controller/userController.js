@@ -8,12 +8,12 @@ const nodemailer=require('nodemailer');
 const {registerationSchema}=require('../middleware/validate');
 const { date } = require('joi');
 
-
 //loading home page
 const loadHomePage=(req,res)=>{
     try {
         const user=req.session.userId;
         console.log(`hello aadhi,this is user : ${user}`);
+        // const blockedMessage=req.flash('blocked')
         res.render('home',{user})
     } catch (error) {
         console.log(error.message);
@@ -33,9 +33,11 @@ const hashPassword=async(password)=>{
 //login the about page
 const loadAbout=async (req,res)=>{
     try {
-        res.render('about')
+        const user=req.session.userId;
+        res.render('about',{user})
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('Error-500')
     }  
 }
 
@@ -45,6 +47,7 @@ const loginLoad=async (req,res)=>{
         res.render('login');
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('Error-500')
     }
 }
 
@@ -54,29 +57,55 @@ const registerLoad=async (req,res)=>{
         res.render('register');
     } catch (error) {
         console.log(error.message);
+        res.status(500).render('Error-500')
     }
-    
 }
 //load profle
 const loadProfile=async (req,res)=>{
     try {
-        res.render('profile');
+        const user=req.session.userId;
+        console.log('user:',user);
+        const userData=await User.findById({_id:user});
+        console.log('userData:',userData);
+        res.render('profile',{user,userData});
     } catch (error) {
         console.log(error.message);
         
     }
 }
 
+const loadBlogPage=async (req,res)=>{
+    try {
+        const user=req.session.userId;
+        res.render('blog',{user});
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500')
+    }
+}
+
+const loadContactPage=async (req,res)=>{
+    try {
+        const user=req.session.userId;
+        res.render('contact',{user});
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500')
+    }
+}
+
+
 //loading the shop page
 const loadShop=async (req,res)=>{
     try {
         const products=await Products.find({}).populate('categoryId');
-        
-        console.log('products:',products);
-        res.render('shop',{products});
+        const user=req.session.userId;
+        res.render('shop',{products,user});
     } catch (error) {
         console.log(error.message);
-        
+        res.status(500).render('Error-500')
     }
 }
 
@@ -84,12 +113,12 @@ const loadShop=async (req,res)=>{
 const loadProductDetails=async (req,res)=>{
     try {
         const productId=req.query.id;
+        const user=req.session.userId;
         const productData=await Products.findOne({_id:productId}).populate('categoryId');
-        console.log('productDAta:',productData);
-        res.render('productDetails',{productData});
+        res.render('productDetails',{productData,user});
     } catch (error) {
         console.log(error.message);
-        
+        res.status(500).render('Error-500')
     }
 }
 
@@ -126,7 +155,7 @@ const loginCheck=async (req,res)=>{
 
     } catch (error) {
         console.log(error.message);
-        res.render('Error-500');
+        res.status(500).render('Error-500')
     }
 }
 
@@ -138,7 +167,11 @@ const insertUser = async (req, res) => {
         
         const { firstName, lastName, email,mobile, password} = req.body;
 
+        await User.findOneAndDelete({email:email,verified:false});
         const existingEmail=await User.findOne({email:email});
+
+
+
         console.log('existing email:',existingEmail);
         if(existingEmail){
             return res.json({status:false,message:'Email already taken'})
@@ -361,7 +394,8 @@ module.exports={
     resendOtp,
     loginCheck,
     loadProductDetails,
-    userLogout
-
+    userLogout,
+    loadBlogPage,
+    loadContactPage
     
 }

@@ -13,7 +13,10 @@
 
         <!-- CSS
 	============================================ -->
-
+        <!-- fast bootstrap for toast-->
+        <link href="https://cdn.jsdelivr.net/npm/fastbootstrap@2.2.0/dist/css/fastbootstrap.min.css" rel="stylesheet" integrity="sha256-V6lu+OdYNKTKTsVFBuQsyIlDiRWiOmtC8VQ8Lzdm2i4=" crossorigin="anonymous">
+            
+    
         <!-- Icon Font CSS -->
         <link rel="stylesheet" href="user/assets/css/plugins/pe-icon-7-stroke.css" />
         <link rel="stylesheet" href="user/assets/css/plugins/font-awesome.min.css" />
@@ -26,10 +29,17 @@
         <link rel="stylesheet" href="user/assets/css/plugins/select2.min.css" />
         <link rel="stylesheet" href="user/assets/css/plugins/ion.rangeSlider.min.css" />
 
-
         <!-- Main Style CSS -->
         <!-- <link rel="stylesheet" href="user/assets/css/style.css"> -->
         <link rel="stylesheet" href="user/assets/css/style.min.css" />
+        <link rel="stylesheet" href="user/assets/css/style.css" />
+
+        <!-- fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+        
     </head>
 
     <body>
@@ -57,10 +67,10 @@
                                     <a href="/shop">Shop</a>
                                 </li>
                                 <li>
-                                    <a href="">Blog</a>
+                                    <a href="/blog">Blog</a>
                                 </li>
                                 <li>
-                                    <a href="">Contact</a>
+                                    <a href="/contact">Contact</a>
                                 </li>
                             </ul>
                         </div>
@@ -68,22 +78,22 @@
                     <div class="col-lg-3">
                         <!-- Header Meta Start -->
                         <div class="header-meta">
-                            
-
                             <div class="dropdown">
-                                
                                 <%if(locals.user){%>
-                                    <a class="action" href="/profile" role="button"><i class="pe-7s-user"></i></a>    
+
+                                <a class="action" href="/profile" role="button"><i class="pe-7s-user"></i></a>
                                 <%}else{%>
-                                    <a class="action" href="/login" role="button"><i class="pe-7s-user"></i></a>    
+                                <a class="action" href="/login" role="button"><i class="pe-7s-user bg-light "></i></a>
                                 <%}%>
                             </div>
 
-                            <a class="action" href="#"><i class="pe-7s-like"></i></a>
-                            <a class="action" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="pe-7s-shopbag"></i>
-                                <span class="number">3</span>
-                            </a>
+                            <a class="action" href=""><i class="pe-7s-like"></i></a>
+                            <%if(locals.user){%>
+                                <a class="action" href="/cart"><i class="pe-7s-shopbag"></i><span class="number">3</span></a>
+                            <%}else{%>
+                                <a class="action" onclick="showCartAlert()"><i class="pe-7s-shopbag"></i><span class="number">3</span></a>
+                                
+                            <%}%>
                         </div>
                         <!-- Header Meta End -->
                     </div>
@@ -112,9 +122,7 @@
                         <div class="col">
                             <!-- Header Logo Start -->
                             <div class="header-logo text-center">
-                                <a href="index.html"
-                                    ><img src="user/assets/images/logo.png" width="154" height="46" alt="Logo"
-                                /></a>
+                                <a href="index.html"><img src="user/assets/images/logo.png" width="154" height="46" alt="Logo" /></a>
                             </div>
                             <!-- Header Logo End -->
                         </div>
@@ -122,9 +130,7 @@
                             <!-- Header Action Start -->
                             <div class="header-meta">
                                 <div class="dropdown">
-                                    <a class="action" href="#" role="button" data-bs-toggle="dropdown"
-                                        ><i class="pe-7s-user"></i
-                                    ></a>
+                                    <a class="action" href="#" role="button" data-bs-toggle="dropdown"><i class="pe-7s-user"></i></a>
 
                                     <ul class="dropdown-menu dropdown-profile">
                                         <li>
@@ -150,7 +156,7 @@
             <div class="header-mobile-bottom">
                 <div class="container">
                     <!-- Header Search Start -->
-                    
+
                     <!-- Header Search End -->
                 </div>
             </div>
@@ -161,7 +167,6 @@
         <!-- off Canvas Start -->
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu">
             <div class="offcanvas-header">
-        
                 <!-- Canvas Close bar Start -->
                 <div class="canvas-close-bar">
                     <span>Menu</span>
@@ -180,20 +185,52 @@
                             <li>
                                 <a href="/">Home</a>
                             </li>
-                            <li><a href="about.html">About</a></li>
+                            <li><a href="/about">About</a></li>
                             <li>
-                                <a href="#">Shop</a> 
+                                <a href="/shop">Shop</a>
                             </li>
                             <li>
-                                <a href="#">Blog</a>
+                                <a href="/blog">Blog</a>
                             </li>
-                            <li><a href="contact.html">Contact</a></li>
+                            <li><a href="/contact">Contact</a></li>
                         </ul>
                     </nav>
                 </div>
                 <!-- Canvas Menu End -->
             </div>
         </div>
+        <!-- <script src="sweetalert2.all.min.js"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+            function showCartAlert() {
+                Swal.fire({
+                    title: "You need to log in!",
+                    text: "Please log in to view your cart.",
+                    icon: "warning",
+                    confirmButtonText:"login",
+                    showCancelButton: true,
+                    // confirmButtonClass: 'btn btn-success',
+                    customClass: {
+                        confirmButton: 'custom-confirm-button',
+                        cancelButton: 'custom-cancel-button'
+                    }
+                })
+                // Swal.fire({
+                //     title: "You need to log in!",
+                //     text: "Please log in to view your cart.",
+                //     type: "warning",
+                //     showCancelButton: true,
+                //     confirmButtonColor: "#DD6B55",
+                //     confirmButtonText: "login"
+                // })
+                .then((result)=>{
+                    if(result.isConfirmed){
+                        window.location.href='/login';
+                    }
+                });
+            }
+        </script>
         <!-- off Canvas End -->
         <!-- </body>
 </html> -->

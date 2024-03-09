@@ -6,21 +6,24 @@ const mongoose=require('mongoose');
 require('dotenv').config();
 const session=require('express-session');
 const nocache=require('nocache');
+const flash=require('express-flash');
 
 mongoose.connect('mongodb://localhost:27017/project-furbar')
 const app = express();
 
 // Use Morgan middleware for logging requests
-app.use(morgan('dev')); 
+// app.use(morgan('dev')); 
 
 app.use(nocache());
-
 //configuring express-session 
 app.use(session({
     secret:process.env.SECRET_KEY,
     resave:false,
     saveUninitialized:true
 }))
+
+app.use(flash());
+
 
 const adminRouter = require('./routes/adminRoute');
 const usersRouter = require('./routes/usersRoute');

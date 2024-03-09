@@ -38,8 +38,8 @@
                                             <td><img width="90px" class="rounded-3 " src="/multer/products/<%=product.images.image1%>" alt=""/></td>
                                             <td><%=product.name%></td>
                                             <td><%=product.quantity%></td>
-                                            <td><% if(product.categoryId) { %><%= product.categoryId.name %><% } else { %>NA<% } %></td>
-                                            <td><%=product.price%></td>
+                                            <td><%= product.categoryId.name %></td>
+                                            <td>₹<%=product.price%></td>
                                             <td><a href="/admin/editProducts?id=<%=product._id%>" class="badge rounded-pill alert-dark">edit</a></td>
                                             <td><%if(!product.isDeleted){%>
                                                 <a  onclick="productBlock('<%=product._id%>')">Block</a>

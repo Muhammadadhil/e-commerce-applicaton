@@ -4,6 +4,12 @@
 <!-- Slider Section Start -->
 <div class="section slider-section">
     <div class="slider-shape"></div>
+    <%if(typeof blockedMessage!== 'undefined'){%>
+        <script>
+            showBlockedMessage();
+        </script>
+    <%}%>
+        
 
     <div class="container">
         <div class="slider-active">
@@ -1869,6 +1875,11 @@
     </div>
 </div>
 <!-- Blog Section End -->
+<script>
+    function showBlockedMessage(){
+        alert('you are blocked by admin')
+    }
+</script>
 
 
 <%-include('../layouts/footer.ejs')%>

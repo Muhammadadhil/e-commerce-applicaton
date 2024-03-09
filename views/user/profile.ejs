@@ -1,343 +1,323 @@
 <%- include('../layouts/header.ejs') -%>
 <!-- <a href="/logout" class="btn btn-close mt-5"> Logout</a> -->
-    <!-- My Account Section Start -->
-    <div class="section section-padding mt-5">
-        <div class="container">
-            <div class="row gy-4 mt-5">
-                <div class="col-xl-3 col-md-4">
-                    <!-- My Account Menu Start -->
-                    <div class="my-account-menu">
-                        <ul class="nav account-menu-list flex-column">
-                            <li>
-                                <a class="active" data-bs-toggle="pill" href="#pills-dashboard"><i
-                                        class="fa fa-tachometer"></i>
-                                    Dashboard</a>
-                            </li>
-                            <li>
-                                <a data-bs-toggle="pill" href="#pills-order"><i class="fa fa-shopping-cart"></i>
-                                    Order</a>
-                            </li>
-                            <li>
-                                <a data-bs-toggle="pill" href="#pills-download"><i class="fa fa-cloud-download"></i>
-                                    Wallet</a>
-                            </li>
-                            <li>
-                                <a data-bs-toggle="pill" href="#pills-address"><i class="fa fa-map-marker"></i>
-                                    Address</a>
-                            </li>
-                            <li>
-                                <a data-bs-toggle="pill" href="#pills-account"><i class="fa fa-user"></i>Password</a>
-                            </li>
-                            <li>
-                                <a href="/logout"><i class="fa fa-sign-out"></i>Logout</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- My Account Menu End -->
+<!-- My Account Section Start -->
+
+<!-- Button trigger modal -->
+
+
+<div class="section section-padding mt-5  rounded-5">
+    <div class="container">
+        <div class="row gy-4 mt-5 ">
+            <div class="col-md-4">
+                <!-- My Account Menu Start -->
+                <div class="my-account-menu ">
+                    <ul class="nav account-menu-list flex-column">
+                        <li>
+                            <a class="active" data-bs-toggle="pill" href="#pills-dashboard"><i class="fa fa-tachometer"></i> Dashboard</a>
+                        </li>
+                        <li>
+                            <a data-bs-toggle="pill" href="#pills-order"><i class="fa fa-shopping-cart"></i> Order</a>
+                        </li>
+                        <li>
+                            <a data-bs-toggle="pill" href="#pills-download"><i class="fa fa-cloud-download"></i> Wallet</a>
+                        </li>
+                        <li>
+                            <a data-bs-toggle="pill" href="#pills-address"><i class="fa fa-map-marker"></i> Address</a>
+                        </li>
+                        <li>
+                            <a data-bs-toggle="pill" href="#pills-account"><i class="fa fa-user"></i>Password</a>
+                        </li>
+                        <li>
+                            <a href="/logout"><i class="fa fa-sign-out"></i>Logout</a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="col-xl-9 col-md-8">
-                    <!-- Tab content start -->
-                    <div class="tab-content my-account-tab">
-                        <div class="tab-pane fade show active" id="pills-dashboard">
-                            <div class="my-account-dashboard account-wrapper">
-                                <h4 class="account-title">User Dashboard</h4>
-                                <div class="account-card card">
-                                    <div class="card-body text-center">
-                                        <img src="asset/images/profile-circle-icon-2048x2048-cqe5466q.png" alt="User Profile"
-                                            class="profile-image">
-                                            <div class="card user-info-card">
-                                                <div class="card-body">
-                                                    <p class="user-info">
-                                                        <span class="info-label">Name:</span> <br>
-                                                        <span class="info-label">Email:</span> <br>
-                                                        <span class="info-label">Phone:</span> <br>
-                                                        <span class="info-label">Referral Code:</span><span id="referralCode"></span>&nbsp;&nbsp;<a id="copyLink"><i  onclick="copyToClipboard()" class="fa-regular fa-copy"></i></a>
-                                                    </p>
-                                                </div>
-                                            </div>
-
-
-                                        <button type="button" onclick="showusereditmodal()" class="user-btn"
-                                            data-toggle="modal" data-target="#editProfileModal">
-                                            Edit Profile
-                                        </button>
+                <!-- My Account Menu End -->
+            </div>
+            
+            <div class="col-md-7">
+                <!-- Tab content start -->
+                <div class="tab-content my-account-tab">
+                    <div class="tab-pane fade show active" id="pills-dashboard">
+                        <div class="my-account-dashboard account-wrapper">
+                            <div class="account-card card">
+                                <div class="card-body text-center">
+                                    <h3 class="account-title text-center">Your profile</h3>
+                                    <div class="profileImage-section">
+                                        <img src="user/assets/images/profile-image.jpg" alt="User Profile" />
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <!-- user editmodal start-->
-
-                        <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog"
-                            aria-labelledby="editProfileModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document" style="position: relative; top: 250px;">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <p class="modal-title" id="editProfileModalLabel">Edit Profile</p>
-                                    </div>
-                                    <div class="modal-body text-center">
-                                        <form action="/edituser" method="post" id="editProfileForm"
-                                            onsubmit="return validateEditProfileForm()">
-                                            <div class="single-form">
-                                                <input type="text" id="editName" name="editname"
-                                                    value="" placeholder="Enter your name" />
-                                                <div class="error-container">
-                                                    <div id="usernameError" class="error-message"></div>
-                                                </div>
-                                            </div>
-                                            <div class="single-form">
-                                                <input type="tel" id="editPhone" name="editmobile"
-                                                    value="" placeholder="Enter your phone number" />
-                                                <div class="error-container">
-                                                    <div id="phoneError" class="error-message"></div>
-                                                </div>
-                                            </div>
-                                            <button type="submit" class="user-btn mt-5">Save Changes</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- user editmodal end-->
-
-                        <div class="tab-pane fade" id="pills-order">
-                            <div class="my-account-order account-wrapper">
-                                <h4 class="account-title">Orders</h4>
-                                <div class="account-table text-center table-responsive">
-                                    
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th class="no">No</th>
-                                                    <th class="date">Date</th>
-                                                    <th class="total">Amount</th>
-                                                    <th class="">Payment</th>
-                                                    <th class="name">Inovoice</th>
-                                                    <th class="action">details</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                
-                                            </tbody>
-                                        </table>
-                                        
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="pills-download">
-                            <div class="my-account-download account-wrapper">
-                                <div class="card">
-                                    <div class="card-body d-flex justify-content-between">
-                                        <div>
-                                            <h2 class="account-title">Wallet Balance</h2>
-                                        </div>
-                                        <div>
-                                            <h2 class="account-title">₹
-                                            </h2>
+                                    <div class="user-info-card">
+                                        <div class="card-body">
+                                            <ol class="user-info">
+                                                <li class="">Firstname: <span style="font-weight: 200"><%=userData.firstName%></span></li>
+                                                <br />
+                                                <li class="info-label">Lastname:<%=userData.lastname%></li>
+                                                <br />
+                                                <li class="info-label">Email:<%=userData.email%></li>
+                                                <br />
+                                                <li class="info-label">Phone:<%=userData.mobile%></li>
+                                                <br />
+                                            </ol>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="account-table text-center table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="name">
-                                                    Date
-                                                </th>
-                                                <th class="date">status</th>
-
-                                                <th class="action">
-                                                    Amount
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            
-                                        </tbody>
-                                    </table>
+                                    <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="pills-address">
-                            <button class="btn btn-primary btn-hover-dark" id="showModalButton">ADD +</button><br><br>
+                    </div>
 
-                            <div class="row" id="addrassArea">
-                                
-                            </div>
-                        </div>
+                    <!-- user editmodal start-->
 
-
-                        <!-- user modal  -->
-
-                        <div id="addAddressModal" class="modal">
+                    <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-header " role="document" style="max-width: 800px;">
                             <div class="modal-content">
-                                <span class="close" id="closeModal">&times;</span>
-                                <h4 class="account-title">Add Address</h4>
-                                <!-- Your form goes here -->
-                                <form id="myForm" action='/addressform' method="post" onsubmit="return validateForm()">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="name" placeholder="Name" />
-                                                <p id="nameError" class="error-message"></p>
+                                <div class="modal-header d-flex justify-content-between align-items-center">
+                                    <p class="modal-title " id="editProfileModalLabel">Edit Profile</p>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <form action="" method="post" id="editProfileForm" onsubmit="">
+                                        <div class="single-form">
+                                            <input type="text" id="editName" name="editname" value="" placeholder="first name" />
+                                            <div class="error-container">
+                                                <div id="usernameError" class="error-message"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="address" placeholder="Address" />
-                                                <p id="addressError" class="error-message"></p>
+                                        <div class="single-form">
+                                            <input type="text" id="editName" name="editname" value="" placeholder="last name" />
+                                            <div class="error-container">
+                                                <div id="usernameError" class="error-message"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="landmark" placeholder="Landmark" />
-                                                <p id="landmarkError" class="error-message"></p>
+                                        <div class="single-form">
+                                            <input type="tel" id="editPhone" name="editmobile" value="" placeholder="Enter your phone number" />
+                                            <div class="error-container">
+                                                <div id="phoneError" class="error-message"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="state" placeholder="State" />
-                                                <p id="stateError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="city" placeholder="City" />
-                                                <p id="cityError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="pincode" placeholder="Pincode" />
-                                                <p id="pincodeError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="phone" placeholder="Phone" />
-                                                <p id="mobileError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="email" placeholder="Email address" />
-                                                <p id="emailError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary btn-hover-dark mt-4 text-center">Save Change</button>
-                                </form>
+                                        <button type="submit" class="btn btn-primary mt-5">Save Changes</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                        <!-- usermodal end -->
+                    </div>
+                    <!-- user editmodal end-->
 
-                        <!-- edit modal -->
-                        <div id="editAddressModal" class="modal">
-                            <div class="modal-content">
-                                <span class="close" id="closeEditModal">&times;</span>
-                                <h4 class="account-title">Edit Address</h4>
-                                <!-- Your form goes here -->
-                                <form id="editForm">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="single-form">
-                                                <input type="text" name="editName" />
-                                                <p id="editNameError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="single-form">
-                                                <input type="text" name="editAddress" />
-                                                <p id="editAddressError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="editLandmark" />
-                                                <p id="editLandmarkError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="editState" />
-                                                <p id="editStateError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="editCity" />
-                                                <p id="editCityError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="editPincode" />
-                                                <p id="editPincodeError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="editPhone" />
-                                                <p id="editPhoneError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="text" name="editEmail" />
-                                                <p id="editEmailError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <!-- Add hidden input for address ID -->
-                                        <input type="hidden" name="editAddressId" id="editAddressId" />
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <button type="submit" class="btn btn-primary btn-hover-dark">Save
-                                                    Changes</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
+                    <div class="tab-pane fade" id="pills-order">
+                        <div class="my-account-order account-wrapper">
+                            <h4 class="account-title">Orders</h4>
+                            <div class="account-table text-center table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="no">No</th>
+                                            <th class="date">Date</th>
+                                            <th class="total">Amount</th>
+                                            <th class="">Payment</th>
+                                            <th class="name">Inovoice</th>
+                                            <th class="action">details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
                             </div>
                         </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-download">
+                        <div class="my-account-download account-wrapper">
+                            <div class="card">
+                                <div class="card-body d-flex justify-content-between">
+                                    <div>
+                                        <h2 class="account-title">Wallet Balance</h2>
+                                    </div>
+                                    <div>
+                                        <h2 class="account-title">₹</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="account-table text-center table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="name">Date</th>
+                                            <th class="date">status</th>
 
-                        <!-- editmodal end -->
+                                            <th class="action">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-address">
+                        <button class="btn btn-primary btn-hover-dark" id="showModalButton">ADD +</button><br /><br />
 
-                        <div class="tab-pane fade" id="pills-account">
-                            <div class="my-account-details account-wrapper">
+                        <div class="row" id="addrassArea"></div>
+                    </div>
 
-                                <div class="account-details">
-                                    <div class="row">
+                    <!-- add address modal  -->
 
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <h5 class="title">
-                                                    Change password
-                                                </h5>
-                                            </div>
+                    <div id="addAddressModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close" id="closeModal">&times;</span>
+                            <h4 class="account-title">Add Address</h4>
+                            <!-- Your form goes here -->
+                            <form id="myForm" action="/addressform" method="post" onsubmit="return validateForm()">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="name" placeholder="Name" />
+                                            <p id="nameError" class="error-message"></p>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="password" id="oldPassword" placeholder="Current Password" />
-                                            </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="address" placeholder="Address" />
+                                            <p id="addressError" class="error-message"></p>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="password" id="freshPassword" placeholder="New Password" />
-                                            </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="landmark" placeholder="Landmark" />
+                                            <p id="landmarkError" class="error-message"></p>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="single-form">
-                                                <input type="password" id="freshConfirmation" placeholder="Confirm Password" />
-                                            </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="state" placeholder="State" />
+                                            <p id="stateError" class="error-message"></p>
                                         </div>
-                                        <div class="col-md-6  mx-auto text-center">
-                                            <div class="single-form ">
-                                                <p id="change-error" class="error-message text-center"></p>
-                                                <button onclick="validateAndSubmit()" class="btn btn-primary btn-hover-dark">
-                                                    Save Change
-                                                </button>
-                                            </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="city" placeholder="City" />
+                                            <p id="cityError" class="error-message"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="pincode" placeholder="Pincode" />
+                                            <p id="pincodeError" class="error-message"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="phone" placeholder="Phone" />
+                                            <p id="mobileError" class="error-message"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="email" placeholder="Email address" />
+                                            <p id="emailError" class="error-message"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-hover-dark mt-4 text-center">Save Change</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- add address modal end -->
+
+                    <!-- edit address modal -->
+                    <div id="editAddressModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close" id="closeEditModal">&times;</span>
+                            <h4 class="account-title">Edit Address</h4>
+                            <!-- Your form goes here -->
+                            <form id="editForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="single-form">
+                                            <input type="text" name="editName" />
+                                            <p id="editNameError" class="error-message"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="single-form">
+                                            <input type="text" name="editAddress" />
+                                            <p id="editAddressError" class="error-message"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="editLandmark" />
+                                            <p id="editLandmarkError" class="error-message"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="editState" />
+                                            <p id="editStateError" class="error-message"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="editCity" />
+                                            <p id="editCityError" class="error-message"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="editPincode" />
+                                            <p id="editPincodeError" class="error-message"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="editPhone" />
+                                            <p id="editPhoneError" class="error-message"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="text" name="editEmail" />
+                                            <p id="editEmailError" class="error-message"></p>
+                                        </div>
+                                    </div>
+                                    <!-- Add hidden input for address ID -->
+                                    <input type="hidden" name="editAddressId" id="editAddressId" />
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <button type="submit" class="btn btn-primary btn-hover-dark">Save Changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- edit address modal end -->
+
+                    <div class="tab-pane fade" id="pills-account">
+                        <div class="my-account-details account-wrapper">
+                            <div class="account-details">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <h5 class="title">Change password</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="password" id="oldPassword" placeholder="Current Password" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="password" id="freshPassword" placeholder="New Password" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-form">
+                                            <input type="password" id="freshConfirmation" placeholder="Confirm Password" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mx-auto text-center">
+                                        <div class="single-form">
+                                            <p id="change-error" class="error-message text-center"></p>
+                                            <button onclick="validateAndSubmit()" class="btn btn-primary btn-hover-dark">Save Change</button>
                                         </div>
                                     </div>
                                 </div>
@@ -346,109 +326,77 @@
                     </div>
                 </div>
             </div>
-            <!-- Tab content End -->
         </div>
+        <!-- Tab content End -->
     </div>
-    </div>
-    </div>
-    <!-- My Account Section End -->
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- My Account Section End -->
 
-
-
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
 
 
-
-
-    <script>
+<script>
     function validateAndSubmit() {
-    const currentPassword = document.getElementById('oldPassword').value;
-    const newPassword = document.getElementById('freshPassword').value;
-    const confirmPassword = document.getElementById('freshConfirmation').value;
-    const errorElement = document.getElementById('change-error');
+        const currentPassword = document.getElementById("oldPassword").value;
+        const newPassword = document.getElementById("freshPassword").value;
+        const confirmPassword = document.getElementById("freshConfirmation").value;
+        const errorElement = document.getElementById("change-error");
 
-    errorElement.innerText = '';
+        errorElement.innerText = "";
 
-    if (!currentPassword) {
-        errorElement.innerText = 'Please enter your current password.';
-        return;
-    }
-
-    if (!newPassword) {
-        errorElement.innerText = 'Please enter a new password.';
-        return;
-    }else if(newPassword.length < 8){
-        errorElement.innerText = 'Password cannot be less than 8';
-        return;
-    }
-
-    if (!confirmPassword) {
-        errorElement.innerText = 'Please confirm your new password.';
-        return;
-    }else if(confirmPassword.length < 8){
-        errorElement.innerText = 'Password cannot be less than 8';
-        return;
-    }
-
-    if (newPassword !== confirmPassword) {
-        errorElement.innerText = 'Passwords do not match.';
-        return;
-    }
-
-    callChangePassword(currentPassword, newPassword);
-}
-    function callChangePassword(current,newPass){
-        $.ajax({
-            url:'/changepassword',
-            method:'POST',
-            data:{current,newPass},
-            success:function(data){
-                if (data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: data.message
-                }).then(()=>{
-                    location.reload()
-                })
-            } else {
-                console.log('eroooooorrrrrrrrrrrrrrr');
-                document.getElementById('change-error').innerText = data.message;
-            }
-            },
-            error:function(err){
-
-            }
-        })
-    }
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-    const showModalButton = document.getElementById('showModalButton');
-    const modal = document.getElementById('addAddressModal');
-    const closeModalButton = document.getElementById('closeModal');
-
-    showModalButton.addEventListener('click', function () {
-        modal.style.display = 'block';
-    });
-
-    closeModalButton.addEventListener('click', function () {
-        modal.style.display = 'none';
-    });
-
-    window.addEventListener('click', function (event) {
-        if (event.target === modal) {
-            modal.style.display = 'none';
+        if (!currentPassword) {
+            errorElement.innerText = "Please enter your current password.";
+            return;
         }
-    });
 
-});
+        if (!newPassword) {
+            errorElement.innerText = "Please enter a new password.";
+            return;
+        } else if (newPassword.length < 8) {
+            errorElement.innerText = "Password cannot be less than 8";
+            return;
+        }
+
+        if (!confirmPassword) {
+            errorElement.innerText = "Please confirm your new password.";
+            return;
+        } else if (confirmPassword.length < 8) {
+            errorElement.innerText = "Password cannot be less than 8";
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            errorElement.innerText = "Passwords do not match.";
+            return;
+        }
+
+        callChangePassword(currentPassword, newPassword);
+    }
+    function callChangePassword(current, newPass) {
+        $.ajax({
+            url: "/changepassword",
+            method: "POST",
+            data: { current, newPass },
+            success: function (data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: data.message,
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    console.log("eroooooorrrrrrrrrrrrrrr");
+                    document.getElementById("change-error").innerText = data.message;
+                }
+            },
+            error: function (err) {},
+        });
+    }
 </script>
 
-    
 
-
-
-
+<%- include('../layouts/footer.ejs') -%>

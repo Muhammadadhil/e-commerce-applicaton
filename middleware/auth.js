@@ -1,3 +1,5 @@
+const User=require('../model/userModel');
+
 
 const isLogin=async (req,res,next)=>{
     try {
@@ -54,11 +56,38 @@ const isAdminLogout=async (req,res,next)=>{
     }
 }
 
+const isUserBlocled=async (req,res,next)=>{
+    try{
+        const user=req.session.userId
+        const blockedUser=await User.findOne({_id:user,isBlocked:true});
+        // console.log('blockedUser:',blockedUser);
+        if(blockedUser){
+            req.session.destroy((err)=>{
+                if(err){
+                    console.log(err.message);
+                }else{
+                    console.log('User Session destroyed due to block by admin');
+                }
+            })
+            // req.flash('blocked','you are blocked by admin')
+            res.redirect('/');
+            
+        }else{
+            next();
+        }
+
+    }catch(error){
+        console.log(error.message);
+        res.render('Error-500');
+    }
+}
+
 
 module.exports={
     isLogin,
     isLogout,
     isAdminLogin,
-    isAdminLogout
+    isAdminLogout,
+    isUserBlocled
 
 }
