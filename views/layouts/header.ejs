@@ -13,6 +13,9 @@
 
         <!-- CSS
 	============================================ -->
+        <!-- notyf toast-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">       
+
         <!-- fast bootstrap for toast-->
         <link href="https://cdn.jsdelivr.net/npm/fastbootstrap@2.2.0/dist/css/fastbootstrap.min.css" rel="stylesheet" integrity="sha256-V6lu+OdYNKTKTsVFBuQsyIlDiRWiOmtC8VQ8Lzdm2i4=" crossorigin="anonymous">
             
@@ -81,7 +84,7 @@
                             <div class="dropdown">
                                 <%if(locals.user){%>
 
-                                <a class="action" href="/profile" role="button"><i class="pe-7s-user"></i></a>
+                                <a class="action" href="/account" role="button"><i class="pe-7s-user"></i></a>
                                 <%}else{%>
                                 <a class="action" href="/login" role="button"><i class="pe-7s-user bg-light "></i></a>
                                 <%}%>

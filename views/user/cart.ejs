@@ -4,238 +4,267 @@
 <div class="section section-padding mt-5">
     <div class="container">
         <%if(cartDetails){%>
-            <%if(cartDetails.product){%>
-                <div class="cart-wrapper">
-                    <!-- Cart Wrapper Start -->
-                    <div  class="cart-table table-responsive">
-                        <table id="reloadPart" class="table">
-                            <thead>
-                                <tr>
-                                    <th class="product-thumb">Image</th>
-                                    <th class="product-info">product Information</th>
-                                    <th class="product-quantity">Quantity</th>
-                                    <th class="product-total-price">Total Price</th>
-                                    <th class="product-action">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody >
-                                <%cartDetails.product.forEach((product,i)=>{%>
+    <div class=" main-wrapper" id="reloadPart">
+        <%if(cartDetails.product.length){%>
 
+        <div class="cart-wrapper">
+            <!-- Cart Wrapper Start -->
+            <div class="cart-table table-responsive rounded">
+                <table  class="table">
+                    <thead>
+                        <tr>
+                            <th class="product-check"></th>
+                            <th class="product-thumb">Image</th>
+                            <th class="product-info">product Information</th>
+                            <th class="product-quantity">Quantity</th>
+                            <th class="product-total-price">Total Price</th>
+                            <th class="product-action">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    
+                        <%cartDetails.product.forEach((product,i)=>{%>
+
+                        <tr>
+                            <td class="product-check text-center ">
+                                <input type="checkbox" checked>
+                            </td>
+                            <td class="product-thumb">
+                                <img src="/multer/products/<%=product.productId.images.image1%>" alt="**" />
+                            </td>
+                            <td class="product-info">
+                                <h6 class="name">
+                                    <a href="product-details.html"><%=product.productId.name%></a>
+                                </h6>
+                                <div class="product-prices">
+                                    <span class="old-price">₹1000.00</span>
+                                    <span class="sale-price">₹<%=product.productId.price%></span>
+                                </div>
+                                <div class="product-size-color">
+                                    <p>Size <span>S</span></p>
+                                    <p>Color <span>White</span></p>
+                                </div>
+                            </td>
+                            <td class="quantity">
+                                <div class="product-quantity d-inline-flex">
+                                    <button onclick="addProductQuantity('<%=product.productId._id%>',-1)" type="button" class="sub">-</button>
+                                    <input type="text" value="<%=product.quantity%>" disabled required />
+                                    <button onclick="addProductQuantity('<%=product.productId._id%>',1)" type="button" class="add">+</button>
+                                </div>
+                            </td>
+                            <td id="reloadTotal" class="product-total-price">
+                                <span class="price">₹<%=product.totalPrice%></span>
+                            </td>
+                            <td class="product-action">
+                                <button onclick="removeProductFromCart('<%=product.productId._id%>')" class="remove">
+                                    <i class="pe-7s-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <%})%>     
+                    </tbody>
+                </table>
+            </div>
+            <!-- Cart Wrapper End -->
+            <!-- Cart btn Start -->
+            <div class="cart-btn rounded  ">
+                <div class="left-btn">
+                    <a href="/shop" class="btn btn-outline-primary btn-hover-primary">Continue Shopping</a>
+                </div>
+                <div class="right-btn">
+                    <a href="#" class="btn btn-outline-dark">Clear Cart</a>
+                </div>
+            </div>
+            <!-- Cart btn Start -->
+        </div>
+        <!-- <div class="row"> -->
+            <!-- <div class="col-lg-4">
+                <! Cart Shipping Start -->
+                <!-- <div class="cart-shipping">
+                    <div class="cart-title">
+                        <h4 class="title">Calculate Shipping</h4>
+                        <p>Estimate your shipping fee *</p>
+                    </div>
+                    <div class="cart-form">
+                        <p>Calculate shipping</p>
+                        <form action="#">
+                            <div class="single-select2">
+                                <div class="form-select2">
+                                    <select class="select2">
+                                        <option value="0">Select a country…</option>
+                                        <option value="1">Bangladesh</option>
+                                        <option value="2">Canada</option>
+                                        <option value="3">Colombia</option>
+                                        <option value="4">Indonesia</option>
+                                        <option value="5">Italy</option>
+                                        <option value="6">Pakistan</option>
+                                        <option value="7">Turkey</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="single-select2">
+                                <div class="form-select2">
+                                    <select class="select2">
+                                        <option value="">Select an option…</option>
+                                        <option value="BAG">Bagerhat</option>
+                                        <option value="BAN">Bandarban</option>
+                                        <option value="BAR">Barguna</option>
+                                        <option value="BARI">Barisal</option>
+                                        <option value="BHO">Bhola</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="single-form">
+                                <input class="form-control" type="text" placeholder="Postcode/ziip" />
+                            </div>
+                            <div class="single-form">
+                                <button class="btn btn-dark btn-hover-primary">Update totals</button>
+                            </div>
+                        </form>
+                    </div>
+                </div> -->
+                <!-- Cart Shipping End -->
+            <!-- </div> -->
+            <!-- <div class="col-lg-4 end-0 "> -->
+                <!-- Cart Shipping Start -->
+                <!-- <div class="cart-shipping">
+                    <div class="cart-title">
+                        <h4 class="title">Coupon Code</h4>
+                        <p>Enter your coupon code if you have one.</p>
+                    </div>
+                    <div class="cart-form">
+                        <form action="#">
+                            <div class="single-form">
+                                <input class="form-control" type="text" placeholder="Enter your coupon code.." />
+                            </div>
+                            <div class="single-form">
+                                <button class="btn btn-dark btn-hover-primary">Apply Coupon</button>
+                            </div>
+                        </form>
+                    </div>
+                </div> -->
+                <!-- Cart Shipping End -->
+            <!-- </div> -->
+            <div class="col-lg-4 ">
+                <!-- Cart Totals Start -->
+                <div class="cart-totals">
+                    <div class="cart-title">
+                        <h4 class="title">Cart totals</h4>
+                    </div>
+                    <div class="cart-total-table rounded-3 ">
+                        <table class="table">
+                            <tbody>
                                 <tr>
-                                    <td class="product-thumb">
-                                        <img src="/multer/products/<%=product.productId.images.image1%>" alt="**" />
+                                    <td>
+                                        <p class="value">Total items:</p>
+                                    </td>  
+                
+                                    <td>
+                                        <p class="value"><%=productsCount%></p>
+                                    </td>  
+                                </tr>
+                                <tr>
+                                
+                                    <td>
+                                        <p class="value">Subtotal</p>
                                     </td>
-                                    <td class="product-info">
-                                        <h6 class="name">
-                                            <a href="product-details.html"><%=product.productId.name%></a>
-                                        </h6>
-                                        <div class="product-prices">
-                                            <span class="old-price">$35.90</span>
-                                            <span class="sale-price">₹<%=product.productId.price%></span>
-                                        </div>
-                                        <div class="product-size-color">
-                                            <p>Size <span>S</span></p>
-                                            <p>Color <span>White</span></p>
-                                        </div>
-                                    </td>
-                                    <td class="quantity">
-                                        <div class="product-quantity d-inline-flex">
-                                            <button onclick="addProductQuantity('<%=product.productId._id%>',-1)" type="button" class="sub">-</button>
-                                            <input type="text" value="<%=product.quantity%>" disabled required />
-                                            <button onclick="addProductQuantity('<%=product.productId._id%>',1)" type="button" class="add">+</button>
-                                        </div>
-                                    </td>
-                                    <td id="reloadTotal" class="product-total-price">
-                                        <span  class="price">₹<%=product.totalPrice%></span>
-                                    </td>
-                                    <td class="product-action">
-                                        <button onclick="removeProductFromCart('<%=product.productId._id%>')" class="remove">
-                                            <i class="pe-7s-trash"></i>
-                                        </button>
+                                    <td>
+                                        <p class="price">₹<%=subTotal%></p>
                                     </td>
                                 </tr>
-                                <%})%>
+                                <tr>
+                                    <td>
+                                        <p class="value">Shipping</p>
+                                    </td>
+                                    <td>
+                                        <ul class="shipping-list">
+                                            <!-- <li class="radio">
+                                                <input type="radio" name="shipping" id="radio1" checked="" />
+                                                <label for="radio1"><span></span> Flat Rate</label>
+                                            </li> -->
+                                            <li class="radio">
+                                                <input type="radio" name="shipping" id="radio2" />
+                                                <label for="radio2"><span></span> Free Shipping</label>
+                                            </li>
+                                            <li class="radio">
+                                                <input type="radio" name="shipping" id="radio3" />
+                                                <label for="radio3"><span></span> Local Pickup</label>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p class="value">Total</p>
+                                    </td>
+                                    <td>
+                                        <p class="price">₹<%=subTotal%></p>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                    <!-- Cart Wrapper End -->
-                    <!-- Cart btn Start -->
-                    <div
-                    class="cart-btn">
-                        <div class="left-btn">
-                            <a href="shop-grid-left-sidebar.html" class="btn btn-outline-primary btn-hover-primary">Continue Shopping</a>
-                        </div>
-                        <div class="right-btn">
-                            <a href="#" class="btn btn-outline-dark">Clear Cart</a>
-                            <a href="#" class="btn btn-outline-dark">Update Cart</a>
-                        </div>
-                    </div>
-                    <!-- Cart btn Start -->
-                </div>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <!-- Cart Shipping Start -->
-                        <div class="cart-shipping">
-                            <div class="cart-title">
-                                <h4 class="title">Calculate Shipping</h4>
-                                <p>Estimate your shipping fee *</p>
-                            </div>
-                            <div class="cart-form">
-                                <p>Calculate shipping</p>
-                                <form action="#">
-                                    <div class="single-select2">
-                                        <div class="form-select2">
-                                            <select class="select2">
-                                                <option value="0">Select a country…</option>
-                                                <option value="1">Bangladesh</option>
-                                                <option value="2">Canada</option>
-                                                <option value="3">Colombia</option>
-                                                <option value="4">Indonesia</option>
-                                                <option value="5">Italy</option>
-                                                <option value="6">Pakistan</option>
-                                                <option value="7">Turkey</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="single-select2">
-                                        <div class="form-select2">
-                                            <select class="select2">
-                                                <option value="">Select an option…</option>
-                                                <option value="BAG">Bagerhat</option>
-                                                <option value="BAN">Bandarban</option>
-                                                <option value="BAR">Barguna</option>
-                                                <option value="BARI">Barisal</option>
-                                                <option value="BHO">Bhola</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="single-form">
-                                        <input class="form-control" type="text" placeholder="Postcode/ziip" />
-                                    </div>
-                                    <div class="single-form">
-                                        <button class="btn btn-dark btn-hover-primary">Update totals</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <!-- Cart Shipping End -->
-                    </div>
-                    <div class="col-lg-4">
-                        <!-- Cart Shipping Start -->
-                        <div class="cart-shipping">
-                            <div class="cart-title">
-                                <h4 class="title">Coupon Code</h4>
-                                <p>Enter your coupon code if you have one.</p>
-                            </div>
-                            <div class="cart-form">
-                                <form action="#">
-                                    <div class="single-form">
-                                        <input class="form-control" type="text" placeholder="Enter your coupon code.." />
-                                    </div>
-                                    <div class="single-form">
-                                        <button class="btn btn-dark btn-hover-primary">Apply Coupon</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <!-- Cart Shipping End -->
-                    </div>
-                    <div class="col-lg-4">
-                        <!-- Cart Totals Start -->
-                        <div class="cart-totals">
-                            <div class="cart-title">
-                                <h4 class="title">Cart totals</h4>
-                            </div>
-                            <div class="cart-total-table">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <p class="value">Subtotal</p>
-                                            </td>
-                                            <td>
-                                                <p class="price">£600.00</p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <p class="value">Shipping</p>
-                                            </td>
-                                            <td>
-                                                <ul class="shipping-list">
-                                                    <li class="radio">
-                                                        <input type="radio" name="shipping" id="radio1" checked="" />
-                                                        <label for="radio1"><span></span> Flat Rate</label>
-                                                    </li>
-                                                    <li class="radio">
-                                                        <input type="radio" name="shipping" id="radio2" />
-                                                        <label for="radio2"><span></span> Free Shipping</label>
-                                                    </li>
-                                                    <li class="radio">
-                                                        <input type="radio" name="shipping" id="radio3" />
-                                                        <label for="radio3"><span></span> Local Pickup</label>
-                                                    </li>
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <p class="value">Total</p>
-                                            </td>
-                                            <td>
-                                                <p class="price">£600.00</p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="cart-total-btn">
-                                <a href="#" class="btn btn-dark btn-hover-primary btn-block">Proceed To Checkout</a>
-                            </div>
-                        </div>
-                        <!-- Cart Totals End -->
+                    <div class="cart-total-btn">
+                        <a href="#" class="btn btn-dark btn-hover-primary btn-block">Proceed To Checkout</a>
                     </div>
                 </div>
-            <%}else{%>
-                <h4>no items in your cart</h4>
-                
-            <%}%>    
-        <%}else{%>
-            <div class="d-flex align-content-center ">
-                <h4>no items in your cart</h4>
-
+                <!-- Cart Totals End -->
             </div>
+        </div>
+    </div>
+    <%}else{%>
+  <!-- empty cart start-->
+        <div class="container-fluid  mt-100">
+            <div class="row">
+               <div class="col-md-12">
+                       <div class="card">
+                        <h2 class="card-title text-center mt-4">
+                            There are no more items in your cart
+                        </h2>
+                   <div class="card-body cart">
+                           <div class="col-sm-12 empty-cart-cls text-center">
+                               <img src="/user/assets/images/cart_11386380.png"  height="130" width="130" class="img-fluid mb-4 mr-3">
+                               <h4><strong>Your Cart is Empty</strong></h4>
+                               
+                               <a href="/shop" class="btn btn-sm btn-primary btn-hover-secondary m-3" data-abc="true">continue shopping</a>
+                           </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  <!-- empty cart end-->
+    <%}%>  
+        <%}else{%>
+        <div class="d-flex align-content-center">
+            <h4>no items in your cart</h4>
+        </div>
         <%}%>
     </div>
 </div>
 <!-- Shopping Cart Section End -->
 
-
-
-
-  <div class="toast-container top-0 start-50 translate-middle-x p-3">
+<!--Quantity Error Toast  -->
+<div class="toast-container top-0 start-50 translate-middle-x p-3">
     <div class="toast fade" role="alert" aria-live="assertive" id="quantityError" aria-atomic="true">
-      <div class="toast-body">
-        <div class="d-flex gap-4">
-          <span class="text-danger "><i class="fa-solid fa-circle-info fa-lg"></i></span>
-          <div class="d-flex flex-grow-1 align-items-center">
-            <span class="fw-semibold">Cannot increase quantity further</span>
-            <button type="button" class="btn-close btn-close-sm btn-close-black ms-auto" data-bs-dismiss="toast"
-              aria-label="Close"></button>
-          </div>
+        <div class="toast-body">
+            <div class="d-flex gap-4">
+                <span class="text-danger"><i class="fa-solid fa-circle-info fa-lg"></i></span>
+                <div class="d-flex flex-grow-1 align-items-center">
+                    <span class="fw-semibold">Cannot increase quantity further</span>
+                    <button type="button" class="btn-close btn-close-sm btn-close-black ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  
-
+</div>
+<!--Quantity Error Toast End -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-
 <script>
-    function addProductQuantity(productId,count){
-        console.log('add product qunatity function reached!!!');
+    function addProductQuantity(productId, count) {
+        console.log("add product qunatity function reached!!!");
 
         fetch("/addToCart", {
             method: "POST",
@@ -244,48 +273,45 @@
             },
             body: JSON.stringify({
                 productId,
-                count
+                count,
             }),
         })
-        .then(response => response.json())
-        .then((data)=>{
-            if(data.added){
-                console.log('reached added true!!!');
-                $('#reloadPart').load('/cart #reloadPart');
-            }else if (!data.added){
-                console.log('data.added false message:',data.message);
-                const qtyError = document.getElementById("quantityError");
-                    const toast=new bootstrap.Toast(qtyError);
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.added) {
+                    console.log("reached added true!!!");
+                    $("#reloadPart").load("/cart #reloadPart");
+                } else if (!data.added) {
+                    console.log("data.added false message:", data.message);
+                    const qtyError = document.getElementById("quantityError");
+                    const toast = new bootstrap.Toast(qtyError);
                     toast.show();
-            }
-        })
+                }
+            });
     }
 
-
-    function removeProductFromCart(productId){
-        console.log('prouct id to remove:',productId);
+    function removeProductFromCart(productId) {
+        console.log("prouct id to remove:", productId);
         fetch("/removeFromCart", {
             method: "PATCH",
             headers: {
                 "content-type": "application/json;charset=utf-8",
             },
             body: JSON.stringify({
-                productId
+                productId,
             }),
         })
-        .then(response => response.json())
-        .then((data)=>{
-            if(data.removed){
-
-                $('#reloadPart').load('/cart #reloadPart');
-                // window.location.reload();
-                // const productElement = document.getElementById(`product_${productId}`);
-                // if (productElement) {
-                //     productElement.remove();
-                // }
-            }
-            
-        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.removed) {
+                    $("#reloadPart").load("/cart #reloadPart");
+                    // window.location.reload();
+                    // const productElement = document.getElementById(`product_${productId}`);
+                    // if (productElement) {
+                    //     productElement.remove();
+                    // }
+                }
+            });
     }
 </script>
 

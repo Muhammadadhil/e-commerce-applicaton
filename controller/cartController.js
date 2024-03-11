@@ -10,8 +10,12 @@ const loadCartPage=async (req,res)=>{
             model:'products'
         }
         const cartDetails=await Cart.findOne({userId:user}).populate(populateOption);
-        // console.log('cartDetails:',cartDetails);
-        res.render('cart',{user,cartDetails});
+        
+        console.log("cartDetails.product:",cartDetails?.product);
+        const productsCount=cartDetails?.product.length;
+        const subTotal=cartDetails?.product.reduce((total,currentTotal)=> total+currentTotal.totalPrice,0);
+        
+        res.render('cart',{user,cartDetails,subTotal,productsCount});
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500')
@@ -89,8 +93,8 @@ const addProductsToCart=async (req,res)=>{
              res.json({addedNew:true})
         }
 
-        // console.log('productDetails:',productDetails);
-        // console.log('userId:',userId,"productId:",productId);
+
+
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500') 

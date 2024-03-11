@@ -59,10 +59,12 @@
                                                 </div>
                                                 <ul class="product-meta">
                                                     <li>
-                                                        <a class="action" data-bs-toggle="modal" data-bs-target="" href="#"><i class="pe-7s-search"></i></a> 
-                                                    </li>
-                                                    <li>
-                                                        <a class="action" href="#"><i class="pe-7s-shopbag"></i></a>
+                                                        <%if(locals.user){%>
+                                                            <a class="action" onclick="addToCart('<%=product._id%>')"><i class="pe-7s-shopbag"></i></a>
+                                                        <%}else{%>
+                                                            <a class="action"  onclick="showCartAlert()"><i class="pe-7s-shopbag"></i></a> 
+                                                        <%}%>
+                                                        
                                                     </li>
                                                     <li>
                                                         <a class="action" href="#"><i class="pe-7s-like"></i></a>
@@ -98,6 +100,115 @@
     </div>
     <!-- Shop Section End -->
 
+<!-- addtoCart extra Toast -->
+<div class="toast-container position-fixed top-0 end-0  p-6">
+    <div class="toast" id="addToExisting" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-body">
+        <div class="d-flex gap-4">
+          <span><i class="fa-solid fa-circle-check fa-lg icon-success"></i></span>
+          <div class="d-flex flex-column flex-grow-1 gap-2">
+            <div class="d-flex align-items-center">
+              <span class="fw-semibold">item already in the cart</span>
+              <button type="button" class="btn-close btn-close-sm ms-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+            </div>
+            <span>added 1 more</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- addtoCart Toast -->
+<div class="toast-container position-fixed top-0 end-0  p-6">
+    <div class="toast" id="addedTocart" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-body">
+        <div class="d-flex gap-4">
+          <span><i class="fa-solid fa-circle-check fa-lg icon-success"></i></span>
+          <div class="d-flex flex-column flex-grow-1 gap-2">
+            <div class="d-flex align-items-center">
+              <span class="fw-semibold">item added to you cart</span>
+              <button type="button" class="btn-close btn-close-sm ms-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+    function showCartAlert() {
+            Swal.fire({
+                title: "You need to log in!",
+                text: "Please log in to view your cart.",
+                icon: "warning",
+                confirmButtonText: "login",
+                showCancelButton: true,
+                // confirmButtonClass: 'btn btn-success',
+                customClass: {
+                    confirmButton: "custom-confirm-button",
+                    cancelButton: "custom-cancel-button",
+                },
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "/login";
+                    }
+                });
+        }
+
+    function addToCart(productId) {
+            let count=1;
+            fetch("/addToCart", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify({
+                    productId,
+                    count
+                }),
+            })
+            .then(response => response.json())
+            .then((data)=>{
+                console.log('data from the server:',data);
+                if(data.added){
+    
+                    const addToExisting = document.getElementById("addToExisting");
+                    const toast = new bootstrap.Toast(addToExisting);
+                        toast.show();
+                        
+                }else if(data.addedToCart=='not done'){
+                    console.log('reached productDetails page error part : failed to add item');
+
+                    const addToCartError=document.getElementById('addToCartError');
+                    // // const icon=document.getElementById('error-icon');
+                    // // icon.hidden=false;
+                    addToCartError.innerHTML='failed to add item';
+                    setTimeout(()=>{
+                        addToCartError.innerHTML='';
+                    },5000)
+
+                }else if(data.addedNew){
+    
+                    const addedToCart = document.getElementById("addedTocart");
+                    const toast=new bootstrap.Toast(addedToCart);
+                    toast.show();
+
+                }else if(!data.added){
+                    //if total quantity exceeded
+                    window.location.href='/cart'
+
+                }else{
+                    console.log('Unknown resssssponse from the servver!!');
+                }
+            })
+            .catch((err)=>{
+                console.error('Errrror:',err);
+            })
+        }
+</script>
 
 
 <%-include('../layouts/footer.ejs')%>

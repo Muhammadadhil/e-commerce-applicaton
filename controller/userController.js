@@ -66,8 +66,29 @@ const loadProfile=async (req,res)=>{
         const user=req.session.userId;
         console.log('user:',user);
         const userData=await User.findById({_id:user});
-        console.log('userData:',userData);
-        res.render('profile',{user,userData});
+        // console.log('userData:',userData);
+        res.render('account',{user,userData});
+    } catch (error) {
+        console.log(error.message);
+        
+    }
+}
+
+//edit profile post 
+const editProfile=async (req,res)=>{
+    try {
+        console.log('reached edit profile');
+        const {firstName,lastName}=req.body;
+        const userId=req.session.userId;
+        console.log('req.session.id:',req.session.userId,'firstname:',firstName,"lstname:",lastName);
+        const updateData=await User.findByIdAndUpdate({_id:userId},{$set:{firstName:firstName,lastname:lastName}});
+        console.log('updateData:',updateData);
+        if(updateData){
+            res.json({success:true});
+        }else{
+            res.json({success:false});
+        }
+
     } catch (error) {
         console.log(error.message);
         
@@ -316,7 +337,7 @@ const verifyuserOtp=async (req,res)=>{
                 }else{
                     const matchedOtp=await bcrypt.compare(otp,hashedOtp);
                     if(!matchedOtp){
-                        // res.render('otp',{message:'please provide a valid code'})
+
                         res.status(200).json({otp:'invalid',message:'please provide a valid code'});
                     }else{
                         await User.updateOne({_id:userId},{verified:true});
@@ -381,6 +402,41 @@ const userLogout=async (req,res)=>{
 }
 
 
+// //forgot password 
+// const loadForgotPassword=async (req,res)=>{
+//     try {
+//         res.render('forgetPassword');
+
+//     } catch (error) {
+//         console.log(error.message);
+//         res.status(500).render('Error-500');
+//     }
+// }
+
+// const forgetPassword=async (req,res)=>{
+//     try {
+
+//         const {email}=req.body;
+//         console.log('emial through body:',email);
+//         const emailUserDetails=await User.findOne({email:email});
+//         console.log('emailUserDetails:',emailUserDetails);
+
+//         if(emailUserDetails){
+//             const userId=emailUserDetails._id;
+//             otpVerificationEmail(emailUserDetails, req, res);
+//             res.redirect(`/verifyOtp?id=${userId}`);
+//         }else{
+//             res.render('forgetPassword',{message:'email not found'});
+//         }
+
+//     } catch (error) {
+//         console.log(error.message);
+//         res.status(500).render('Error-500');
+//     }
+// }
+
+
+
 module.exports={
     loadHomePage,
     loadAbout,
@@ -396,6 +452,8 @@ module.exports={
     loadProductDetails,
     userLogout,
     loadBlogPage,
-    loadContactPage
+    loadContactPage,
+    editProfile,
+    otpVerificationEmail
     
 }
