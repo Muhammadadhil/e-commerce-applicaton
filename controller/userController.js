@@ -2,8 +2,10 @@
 const User=require('../model/userModel');
 const Products=require('../model/productsModel');
 const userOtpVerfication=require('../model/userOtpVerfication');
+const Address=require('../model/addressModel');
 const bcrypt=require('bcrypt');
 const nodemailer=require('nodemailer');
+
 // const dotenv=require('')
 const {registerationSchema}=require('../middleware/validate');
 const { date } = require('joi');
@@ -60,17 +62,18 @@ const registerLoad=async (req,res)=>{
         res.status(500).render('Error-500')
     }
 }
-//load profle
-const loadProfile=async (req,res)=>{
+//load account
+const loadAccount=async (req,res)=>{
     try {
         const user=req.session.userId;
-        console.log('user:',user);
         const userData=await User.findById({_id:user});
-        // console.log('userData:',userData);
-        res.render('account',{user,userData});
+        const address=await Address.findOne({userId:user});
+        console.log('address:',address);
+    
+        res.render('account',{user,userData,address});
     } catch (error) {
         console.log(error.message);
-        
+        res.status(500).render('Error-500')
     }
 }
 
@@ -401,39 +404,19 @@ const userLogout=async (req,res)=>{
     }
 }
 
-
-// //forgot password 
-// const loadForgotPassword=async (req,res)=>{
-//     try {
-//         res.render('forgetPassword');
-
-//     } catch (error) {
-//         console.log(error.message);
-//         res.status(500).render('Error-500');
-//     }
-// }
-
-// const forgetPassword=async (req,res)=>{
-//     try {
-
-//         const {email}=req.body;
-//         console.log('emial through body:',email);
-//         const emailUserDetails=await User.findOne({email:email});
-//         console.log('emailUserDetails:',emailUserDetails);
-
-//         if(emailUserDetails){
-//             const userId=emailUserDetails._id;
-//             otpVerificationEmail(emailUserDetails, req, res);
-//             res.redirect(`/verifyOtp?id=${userId}`);
-//         }else{
-//             res.render('forgetPassword',{message:'email not found'});
-//         }
-
-//     } catch (error) {
-//         console.log(error.message);
-//         res.status(500).render('Error-500');
-//     }
-// }
+//checkout
+const loadCheckoutPage=async (req,res)=>{
+    try {
+        const user=req.session.userId;
+        const userAddresses=await Address.findOne({userId:user});
+        console.log('userAddresses:',userAddresses);
+        res.render('checkout',{user,userAddresses});
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
 
 
 
@@ -446,7 +429,7 @@ module.exports={
     loadShop,
     loadOtpPage,
     verifyuserOtp,
-    loadProfile,
+    loadAccount,
     resendOtp,
     loginCheck,
     loadProductDetails,
@@ -454,6 +437,6 @@ module.exports={
     loadBlogPage,
     loadContactPage,
     editProfile,
-    otpVerificationEmail
-    
+    otpVerificationEmail,
+    loadCheckoutPage
 }

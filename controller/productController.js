@@ -15,7 +15,7 @@ const loadProducts=async (req,res)=>{
 //load add products page
 const loadAddProducts=async (req,res)=>{
     try {
-        const categories=await Category.find({})
+        const categories=await Category.find({});
         res.render('addProducts',{categories});
      
     } catch (error) {
@@ -61,6 +61,7 @@ const addProducts=async (req,res)=>{
     }
 }
 
+//edit product page load
 const loadEditProduct=async (req,res)=>{
     try {
         console.log(':::::::::::::welcome to edit product::::::::::::::');

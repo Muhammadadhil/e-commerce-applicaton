@@ -137,7 +137,12 @@
 
                                     <ul class="dropdown-menu dropdown-profile">
                                         <li>
-                                            <a href="">My Account</a>
+                                            <%if(locals.user){%>
+                                                <a href="/account" role="button">My Account</i></a>
+                                            <%}else{%>
+                                                <a  href="/login" role="button">My Account</i></a>
+                                            <%}%>
+                                            
                                         </li>
                                         <li><a href="">Checkout</a></li>
                                         <li><a href="/login">Sign In</a></li>

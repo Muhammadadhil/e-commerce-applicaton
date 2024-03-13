@@ -3,7 +3,9 @@ const router = express();
 const userController=require('../controller/userController');
 const cartController=require('../controller/cartController');
 const userHelpController=require('../controller/userHelpController');
+const addressController=require('../controller/addressController');
 const auth=require('../middleware/auth');
+const {validateAddress}=require('../middleware/validate');
 
 router.use(express.json());
 router.use(express.urlencoded({extended:true}));
@@ -16,7 +18,7 @@ router.get('/',auth.isUserBlocled,userController.loadHomePage);
 router.get('/about',auth.isUserBlocled,userController.loadAbout);
 
 //account
-router.get('/account',auth.isUserBlocled,auth.isLogin,userController.loadProfile);
+router.get('/account',auth.isUserBlocled,auth.isLogin,userController.loadAccount);
 router.post('/editProfile',auth.isUserBlocled,userController.editProfile);
 
 
@@ -36,7 +38,7 @@ router.post('/addToCart',cartController.addProductsToCart);
 router.patch('/removeFromCart',cartController.removeProduct);
 
 //login
-router.get('/login',auth.isUserBlocled,userController.loginLoad);
+router.get('/login',auth.isLogout,auth.isUserBlocled,userController.loginLoad);
 router.post('/login',userController.loginCheck);
 
 //register
@@ -44,17 +46,27 @@ router.get('/register',auth.isUserBlocled,auth.isLogout,userController.registerL
 router.post('/register',userController.insertUser);
 
 //forget password
-router.get('/newPassword',userHelpController.loadNewPassword);
-router.get('/forgetPassword',auth.isUserBlocled,userHelpController.loadForgotPassword);
+router.get('/forgetPassword',auth.isLogout,userHelpController.loadForgotPassword);
 router.post('/forgetPassword',userHelpController.forgetPassword);
-router.get('/forgetPasswordOtp/:id',userHelpController.loadOtp);
+router.get('/forgetPasswordOtp/:id',auth.isLogout,userHelpController.loadOtp);
 router.post('/forgetPasswordOtpVerify',userHelpController.verifyOtp);
-
+router.get('/newPassword',auth.isLogout,userHelpController.loadNewPassword);
+router.post('/newPassword',userHelpController.updateNewPassword);
 
 //otp 
 router.get('/verifyOtp',auth.isUserBlocled,auth.isLogout,userController.loadOtpPage);
 router.post('/verifyOtp',userController.verifyuserOtp);
 router.get('/resendOtp',auth.isLogout,userController.resendOtp);
+
+//address
+router.post('/addAddress',validateAddress,addressController.addAddress);
+router.post('/getAddress',addressController.getAddress);
+router.post('/editAddress',addressController.editAddress);
+router.post('/removeAddress',addressController.removeAddress);
+
+//checkout
+router.get('/checkout',userController.loadCheckoutPage);
+
 
 //logout
 router.get('/logout',userController.userLogout);

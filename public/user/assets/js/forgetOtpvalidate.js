@@ -53,7 +53,8 @@ console.log("opt userid:" + otpUserId);
 function verifyOTP(event) {
     event.preventDefault();
 
-    console.log("verify OTP func reached!!");
+    console.log("verify OTP func reached : fetch request !!");
+
     const num1 = document.getElementById("num1").value;
     const num2 = document.getElementById("num2").value;
     const num3 = document.getElementById("num3").value;
@@ -79,16 +80,25 @@ function verifyOTP(event) {
         .then((response) => response.json())
         .then((data) => {
             console.log("data : ", data);
+            
             if (data.otp == false) {
+                
                 otpErrorElement.textContent = data.message;
             } else if (data.otp == "expired") {
+                
                 otpErrorElement.textContent = data.message;
             } else if (data.otp == "invalid") {
+                
                 otpErrorElement.textContent = data.message;
             } else if (data.otp == "noRecord") {
+                
                 otpErrorElement.textContent = data.message;
             } else if (data.otp == true) {
+
                 window.location.href = "/";
+            }else if(data.success){
+
+                window.location.href=`/newPassword?id=${otpUserId}`
             }
         })
         .catch((error) => {
@@ -122,3 +132,5 @@ function timer() {
 window.onload = function () {
     timer();
 };
+
+

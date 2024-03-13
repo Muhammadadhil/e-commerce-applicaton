@@ -9,6 +9,7 @@ const bcrypt=require('bcrypt');
 const loadForgotPassword=async (req,res)=>{
     try {
         res.render('forgetPassword');
+
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500');
@@ -68,12 +69,11 @@ const verifyOtp=async (req,res)=>{
             console.log("otpRecords: ",otpRecords);
 
             if(!otpRecords){
-                // throw new Error("Account has been already verified or record is already exist .please sign up or login");
-                res.json({otp:false,message:'Account has been already verified or record is already exist .please sign up or login'});
+                res.json({otp:false,message:'cannot find email id details'});
             }else{
                 const {expiresAt}=otpRecords; 
                 const hashedOtp=otpRecords.otp;
-                // console.log(`expiresAt:${expiresAt} & date.now:${Date.now()}`);
+                
                 
                 if(expiresAt<Date.now()){
                     //if time limit exceeded
@@ -86,8 +86,12 @@ const verifyOtp=async (req,res)=>{
 
                         res.status(200).json({otp:'invalid',message:'please provide a valid code'});
                     }else{
-                        res.render('newPassword');
-                        res.redirect('/newPassword');
+                        await userOtpVerfication.deleteMany({userId});
+                        res.status(200).json({success:true});
+
+                        // res.status(200).json({otp:'success'});
+                        // res.render('newPassword');
+                        // res.redirect('/newPassword');
                     }
                 }  
             }
@@ -102,10 +106,39 @@ const verifyOtp=async (req,res)=>{
 //load new password page
 const loadNewPassword= async (req,res)=>{
     try {
-
         console.log('reached load new password method!!!!');
-        res.render('newPassword')
-        // res.send('hiii')
+        const userId=req.query.id;
+        // const userId=req.params.id;
+        // console.log('userId:',userId);
+        res.render('newPassword',{userId});
+        // res.send({h:'ahahaghag'});
+        // res.json({sucess:true});
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
+
+//update new password post
+const updateNewPassword=async (req,res)=>{
+    try {
+        console.log(':::::reached upadtenew password post::::::');
+        const {password,userId}=req.body;
+        console.log('password:',password,'userId:',userId);
+
+        const hashedPassword=await bcrypt.hash(password,10);
+        console.log('hashedPassword',hashedPassword);
+
+        const updateData=await User.findOneAndUpdate({_id:userId},{$set:{password:hashedPassword}});
+        console.log('updateData',updateData);
+        if(updateData){
+            req.session.userId=userId;
+            res.redirect('/');
+        }else{
+            res.render('newPassword',{message:'failed to save new password'})
+        }
+
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500');
@@ -116,5 +149,6 @@ module.exports={
     forgetPassword,
     loadOtp,
     verifyOtp,
-    loadNewPassword
+    loadNewPassword,
+    updateNewPassword
 }
