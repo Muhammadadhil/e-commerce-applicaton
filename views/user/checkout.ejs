@@ -1,5 +1,7 @@
 <%-include('../layouts/header')%>
 
+
+
 <!-- Checkout Section Start -->
 <div class="section section-padding mt-5">
     <div class="container">
@@ -18,7 +20,7 @@
 
             <div class="collapse" id="coupon">
                 <div class="card-body">
-                    <form action="#">
+                    <form action="">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="single-form">
@@ -35,6 +37,85 @@
                 </div>
             </div>
         </div>
+        <div class="single-form checkbox-checkbox mb-5">
+            <input type="checkbox" id="shipping" />
+            <label for="shipping">
+                <span></span> Ship to a different
+                address?</label>
+        </div>
+
+        <div class="checkout-shipping">
+            <div class="row">
+                <div class="col-lg-7">
+                    <!-- Checkout Form Start -->
+                    <div class="checkout-form">
+                        <div class="checkout-title">
+                            <h4 class="title">Billing Address new:</h4>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="single-form">
+                                    <input type="text" name="nameeee" id="name" placeholder="name" />
+                                    <p id="nameError" class="error-message"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="single-form">
+                                    <input type="text" name="phone" id="phone" placeholder="mobile number" />
+                                    <p id="mobileError" class="error-message"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="single-form">
+                                    <input type="text" name="email" id="email" placeholder="Email address" />
+                                    <p id="emailError" class="error-message"></p>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="single-form">
+                                    <input type="text" name="address" id="address" placeholder="Flat, House no., Building, Company, Apartment" />
+                                    <p id="addressError" class="error-message"></p>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="single-form">
+                                    <input type="text" name="landmark" id="landmark" placeholder="Landmark" value="" />
+                                    <p id="landmarkError" class="error-message"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="single-form">
+                                    <input type="text" name="city" id="city" placeholder="city" />
+                                    <p id="pincodeError" class="error-message"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="single-form">
+                                    <input type="text" name="state" id="state" placeholder="state" />
+                                    <p id="pincodeError" class="error-message"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="single-form">
+                                    <input type="text" name="pincode" id="pincode" placeholder="Pincode" />
+                                    <p id="pincodeError" class="error-message"></p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="single-form">
+                        <button type="button" onclick="addAddress()" class="btn btn-primary btn-hover-dark d-block">add address</button>
+                    </div>
+
+                    <!-- Checkout Form End -->
+                </div>
+            </div>
+        </div>
+        <form id="addAddress" method="post" action="/placeOrder">
         <%if(!userAddresses?.address.length<1){%>
             <div class="col checkout-form">
                 <div class="checkout-title">
@@ -43,12 +124,12 @@
                 <div class="row">
                     <div class="col-lg-7">
                         <%if(userAddresses){%>
-                            <%userAddresses.address.forEach((address,index)=>{%>
+                            <%userAddresses?.address.forEach((address,index)=>{%>
                                 <div class=" text-start " >
                                     <br>
                                     <div class="card card-dashboard">
                                         <div class="card-body" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1)">
-                                            <input type="checkbox" checked >
+                                            <input type="radio" name="addressId" value="<%=address._id%>" <%if(index==0){%> checked <%}%> >
                                             <p> 
                                                 Name:  <%=address.name%> <br>
                                                 Mobile:  <%=address.phone%>  <br>    
@@ -73,7 +154,7 @@
                 
         
                 <%}else{%>
-                    <form id="addAddress">
+                    
                         <div class="row">
                             <div class="col-lg-7">
                                 <!-- Checkout Form Start -->
@@ -133,16 +214,18 @@
                                                 <p id="pincodeError" class="error-message"></p>
                                             </div>
                                         </div>
+                                        
                                     </div>
                                 </div>
                                 <div class="single-form">
                                     <button type="button" onclick="addAddress()" class="btn btn-primary btn-hover-dark d-block">add address</button>
                                 </div>
+
                                 <!-- Checkout Form End -->
-                            </div>
+                        </div>
                             
                 <%}%>
-
+        
                 <!-- order area -->
 
                 <div class="col-lg-5">
@@ -160,46 +243,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td class="Product-name">
-                                            <p>Bodysuit With Long Sleeves × 1</p>
-                                        </td>
-                                        <td class="Product-price">
-                                            <p>$150.00</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="Product-name">
-                                            <p>Classic Polo Shirt × 1</p>
-                                        </td>
-                                        <td class="Product-price">
-                                            <p>$150.00</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="Product-name">
-                                            <p>Trousers With Side Stripe × 1</p>
-                                        </td>
-                                        <td class="Product-price">
-                                            <p>$150.00</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="Product-name">
-                                            <p>Biker Jacket × 1</p>
-                                        </td>
-                                        <td class="Product-price">
-                                            <p>$150.00</p>
-                                        </td>
-                                    </tr>
+                                    <%if(cartDetails){%>
+                                        <%cartDetails.product.forEach((product,i)=>{%>
+                                            <tr>
+                                                <td class="Product-name">
+                                                    <p><%=product.productId.name%> × <%=product.quantity%></p>
+                                                </td>
+                                                <td class="Product-price">
+                                                    <p>₹<%=product.totalPrice%></p>
+                                                </td>
+                                            </tr>
+                                            <%})%>
+                                    <%}%>
+                                    
                                 </tbody>
                                 <tfoot>
+                                    
                                     <tr>
                                         <td class="Product-name">
                                             <p>Subtotal</p>
                                         </td>
                                         <td class="Product-price">
-                                            <p>$150.00</p>
+                                            <p>₹<%=subTotal%></p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -209,15 +274,15 @@
                                         <td class="Product-price">
                                             <ul class="shipping-list">
                                                 <li class="radio">
-                                                    <input type="radio" name="shipping" id="radio1" checked />
+                                                    <input type="radio" name="shipping" value="flat rate" id="radio1"  />
                                                     <label for="radio1"><span></span> Flat Rate</label>
                                                 </li>
                                                 <li class="radio">
-                                                    <input type="radio" name="shipping" id="radio2" />
+                                                    <input type="radio" name="shipping" value="free shipping" id="radio2" checked/>
                                                     <label for="radio2"><span></span> Free Shipping</label>
                                                 </li>
                                                 <li class="radio">
-                                                    <input type="radio" name="shipping" id="radio3" />
+                                                    <input type="radio" name="shopping"  value="local pickup" id="radio3" />
                                                     <label for="radio3"><span></span> Local Pickup</label>
                                                 </li>
                                             </ul>
@@ -228,7 +293,7 @@
                                             <p>Total</p>
                                         </td>
                                         <td class="total-price">
-                                            <p>$600.00</p>
+                                            <p>₹<%=subTotal%></p>
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -241,8 +306,8 @@
                                 <li>
                                     <div class="single-payment">
                                         <div class="payment-radio radio">
-                                            <input type="radio" name="radio" id="bank" />
-                                            <label for="bank"><span></span> Direct bank transfer </label>
+                                            <input type="radio" name="paymentMethod" value="online" id="bank" />
+                                            <label for="bank"><span></span> online</label>
 
                                             <div class="payment-details">
                                                 <p>Please send a Check to Store name with Store Street, Store Town, Store State, Store Postcode, Store Country.</p>
@@ -253,19 +318,7 @@
                                 <li>
                                     <div class="single-payment">
                                         <div class="payment-radio radio">
-                                            <input type="radio" name="radio" id="check" />
-                                            <label for="check"><span></span> Check payments </label>
-
-                                            <div class="payment-details">
-                                                <p>Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="single-payment">
-                                        <div class="payment-radio radio">
-                                            <input type="radio" name="radio" id="cash" checked="checked" />
+                                            <input type="radio" name="paymentMethod" value="cashOnDelivery" id="cash" checked="checked" />
                                             <label for="cash"><span></span> Cash on Delivery</label>
 
                                             <div class="payment-details">
@@ -274,37 +327,29 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li>
-                                    <div class="single-payment">
-                                        <div class="payment-radio radio">
-                                            <input type="radio" name="radio" id="paypal" />
-                                            <label for="paypal"
-                                                ><span></span> Paypal
-                                                <img class="payment" src="assets/images/payment-2.html" alt="" />
-                                                <a href="#">What is PayPal?</a></label
-                                            >
-
-                                            <div class="payment-details">
-                                                <p>Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
                             </ul>
 
                             <div class="single-form">
-                                <a class="btn btn-primary btn-hover-dark d-block" href="#">Place Order</a>
+                                <button type="submit" onclick="" class="btn btn-primary btn-hover-dark d-block">Place Order</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
+        
     </div>
 </div>
 <!-- Checkout Section End -->
 
 <script>
+
+    function placeOrder(){
+        
+        console.log('payment method:',paymentMethod);
+
+    }
+
     function addAddress() {
         const name = document.getElementById("name").value;
         const phone = document.getElementById("phone").value;
@@ -315,7 +360,7 @@
         const state = document.getElementById("state").value;
         const pincode = document.getElementById("pincode").value;
 
-        console.log("bod:", name, phone, email, address, landmark, state, city, pincode);
+        console.log("add address body:", name, phone, email, address, landmark, state, city, pincode);
 
         fetch("/addAddress", {
             method: "POST",
@@ -337,7 +382,9 @@
             .then((data) => {
                 if (data.added) {
                     window.location.reload();
-                } else {
+                } else if(!data.validate){
+                    alert('joi error')
+                    console.log('joi error details:',data.message)
                 }
             })
             .catch((error) => {
@@ -367,7 +414,7 @@
                     body: JSON.stringify({
                         addressId,
                     }),
-                }).then(async(res) => {
+                }).then( async(res) => {
                     if (res.ok) {
                        await Swal.fire({
                             title: "Removed!",

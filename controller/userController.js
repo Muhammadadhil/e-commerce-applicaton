@@ -404,20 +404,6 @@ const userLogout=async (req,res)=>{
     }
 }
 
-//checkout
-const loadCheckoutPage=async (req,res)=>{
-    try {
-        const user=req.session.userId;
-        const userAddresses=await Address.findOne({userId:user});
-        console.log('userAddresses:',userAddresses);
-        res.render('checkout',{user,userAddresses});
-        
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).render('Error-500');
-    }
-}
-
 
 
 module.exports={
@@ -438,5 +424,4 @@ module.exports={
     loadContactPage,
     editProfile,
     otpVerificationEmail,
-    loadCheckoutPage
 }

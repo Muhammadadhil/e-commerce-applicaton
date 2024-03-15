@@ -4,6 +4,7 @@ const userController=require('../controller/userController');
 const cartController=require('../controller/cartController');
 const userHelpController=require('../controller/userHelpController');
 const addressController=require('../controller/addressController');
+const orderController=require('../controller/orderController');
 const auth=require('../middleware/auth');
 const {validateAddress}=require('../middleware/validate');
 
@@ -65,7 +66,10 @@ router.post('/editAddress',addressController.editAddress);
 router.post('/removeAddress',addressController.removeAddress);
 
 //checkout
-router.get('/checkout',userController.loadCheckoutPage);
+router.get('/checkout',auth.isLogin,orderController.loadCheckoutPage);
+router.post('/placeOrder',orderController.placeOrder);
+router.get('/orderSuccess',orderController.loadSuccessPage);
+
 
 
 //logout

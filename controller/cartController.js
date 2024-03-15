@@ -11,7 +11,7 @@ const loadCartPage=async (req,res)=>{
         }
         const cartDetails=await Cart.findOne({userId:user}).populate(populateOption);
         
-        console.log("cartDetails.product:",cartDetails?.product);
+        // console.log("cartDetails.product:",cartDetails?.product);
         const productsCount=cartDetails?.product.length;
         const subTotal=cartDetails?.product.reduce((total,currentTotal)=> total+currentTotal.totalPrice,0);
         
