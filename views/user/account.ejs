@@ -3,11 +3,12 @@
 <!-- My Account Section Start -->
 
 <!-- Button trigger modal -->
-
-<div class="section section-padding mt-5">
+<div class="section section-padding mt-4">
     <div class="container">
+<hr>
+
         <div class="row gy-4 mt-5">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <!-- My Account Menu Start -->
                 <div class="my-account-menu">
                     <ul class="nav account-menu-list flex-column rounded-2">
@@ -34,7 +35,7 @@
                 <!-- My Account Menu End -->
             </div>
 
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <!-- Tab content start -->
                 <div class="tab-content my-account-tab">
                     <div class="tab-pane fade show active" id="pills-dashboard">
@@ -64,6 +65,7 @@
                             </div>
                         </div>
                     </div>
+                    
 
                     <div class="tab-pane fade" id="pills-order">
                         <div class="my-account-order account-wrapper">
@@ -75,12 +77,37 @@
                                             <th class="no">No</th>
                                             <th class="date">Date</th>
                                             <th class="total">Amount</th>
-                                            <th class="">Payment</th>
-                                            <th class="name">Inovoice</th>
+                                            <th class="payment">Payment</th>
+                                            <th class="invoice">invoice</th>
                                             <th class="action">details</th>
                                         </tr>
                                     </thead>
-                                    <tbody></tbody>
+                                    <tbody>
+                                        <%userOrders.forEach((order,index)=>{%>
+                                            <tr>
+                                                <td>
+                                                    <%=index+1%>
+                                                </td>
+                                                <td>
+                                                    <%=order.orderDate.toLocaleDateString('en-US', {
+                                                        weekday: 'short' , year: 'numeric' , month: 'short' ,
+                                                        day: 'numeric' })%>
+                                                </td>
+                                                <td>
+                                                    ₹<%=order.subTotal%>
+                                                </td>
+                                                <td>
+                                                    <%=order.payment%>
+                                                </td>
+                                                <td>
+                                                    
+                                                </td>
+                                                <td>
+                                                    <a href="/detailsOrder?id=<%=order._id%>">view details</a>
+                                                </td>
+                                            </tr>
+                                        <%})%>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -133,7 +160,7 @@
                                                     Pincode:    <%=address.pincode%><br>
                                                     </p>  
 
-                                                    <a class="g-4" onclick="editAddress('<%=address._id%>')" data-bs-toggle="modal" data-bs-target="#editAddressModal" id="editAddress"><i
+                                                    <a class="g-4" onclick="getAddressFeilds('<%=address._id%>')" data-bs-toggle="modal" data-bs-target="#editAddressModal" id="editAddress"><i
                                                         class="fa fa-edit"></i></a>
                                                     <a class="g-4" onclick="removeAddress('<%=address._id%>')" id="removeAddress"><i
                                                         class="fa fa-trash"></i></a>
@@ -215,7 +242,7 @@
                                         <input type="text" name="addressId" hidden />
                                         <div class="">
                                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                            <button type="button" onclick="editAddress()" class="btn btn-primary">Save changes</button>
                                         </div>
                                     </form>
                                 </div>
@@ -283,6 +310,8 @@
                                                     <p id="pincodeError" class="error-message"></p>
                                                 </div>
                                             </div>
+                                            <p id="AddAddressError" class="error-message text-danger "></p>
+
                                         </div>
                                         <div class="">
                                             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
@@ -394,6 +423,15 @@
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
 
 <script>
+
+    function formatDate(dateString){
+        const option={day:'numeric',month:'long',year:'numeric'};
+        const date=new Date(dateString);
+        return date.toLocaleDateString('en-US', options);
+    }
+
+
+    
     function addAddress(){
 
         const name=document.querySelector('#addAddressModal input[name="name"]').value; 
@@ -407,6 +445,7 @@
         // const addressId=document.querySelector('#addAddressModal input[name="addressId"]').value;
 
         console.log('bod:',name,phone,email,address,landmark,state,city,pincode);
+        const commonError=document.getElementById('AddAddressError');
 
         fetch("/addAddress", {
             method: "POST",
@@ -422,9 +461,12 @@
             console.log(data);
             if(data.added){
                 window.location.reload();
-            }else if(!data.validate){
-                console.log(data.message);
-                alert('validation error:',data.message)
+            }else if(!data.validate && data.message) {
+                let errorMessage = "";
+                data.message.forEach(detail => {
+                    errorMessage += `${detail.message}<br>`;
+                });
+                commonError.innerHTML = errorMessage;
             }
         })
         .catch((error) => {
@@ -475,7 +517,51 @@
         });
     }
 
-    function editAddress(addressId) {
+    function editAddress(){
+
+        console.log('reached here');
+        const name=document.querySelector('#editAddressModal input[name="name"]').value ;
+        const phone=document.querySelector('#editAddressModal input[name="phone"]').value;
+        const email=document.querySelector('#editAddressModal input[name="email"]').value;
+        const address=document.querySelector('#editAddressModal input[name="address"]').value;
+        const landmark=document.querySelector('#editAddressModal input[name="landmark"]').value;
+        const state= document.querySelector('#editAddressModal input[name="state"]').value ;
+        const city= document.querySelector('#editAddressModal input[name="city"]').value ;
+        const pincode=document.querySelector('#editAddressModal input[name="pincode"]').value ;
+        const addressId=document.querySelector('#editAddressModal input[name="addressId"]').value;
+
+        console.log('bod:',name,phone,email,address,landmark,state,city,pincode,addressId);
+        const commonError=document.getElementById('editAddressError');
+
+        fetch("/editAddress", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({
+                name,phone,email,address,landmark,state,city,pincode,addressId
+            }),
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log("heyyyyyyyyyyyy",data);
+            if(data.edited){
+                
+                window.location.reload();
+            }else if(!data.validate && data.message) {
+                let errorMessage = "";
+                data.message.forEach(detail => {
+                    errorMessage += `${detail.message}<br>`;
+                });
+                commonError.innerHTML = errorMessage;
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+        }
+
+    function getAddressFeilds(addressId) {
         console.log("reched edit address::::::::::::");
 
         const response = fetch("/getAddress", {

@@ -33,6 +33,10 @@ const orderSchema=mongoose.Schema({
             required:true
         }
     }],
+    orderStatus:{
+        type:String,
+        default:'Pending'
+    },
     deliveryAddress:{
         type:Object,
         required:true,
@@ -50,10 +54,6 @@ const orderSchema=mongoose.Schema({
     },
     returnReason:{
         type:String
-    },
-    orderStatus:{
-        type:String,
-        default:'Pending'
     },
     subTotal:{
         type:Number,

@@ -18,9 +18,9 @@ router.set('views','./views/user');
 router.get('/',auth.isUserBlocled,userController.loadHomePage);
 router.get('/about',auth.isUserBlocled,userController.loadAbout);
 
-//account
+//account 
 router.get('/account',auth.isUserBlocled,auth.isLogin,userController.loadAccount);
-router.post('/editProfile',auth.isUserBlocled,userController.editProfile);
+router.post('/editProfile',auth.isUserBlocled,auth.isLogin,userController.editProfile);
 
 
 //shop and details shop
@@ -35,8 +35,8 @@ router.get('/contact',auth.isUserBlocled,userController.loadContactPage);
 
 //cart
 router.get('/cart',auth.isUserBlocled,auth.isLogin,cartController.loadCartPage);
-router.post('/addToCart',cartController.addProductsToCart);
-router.patch('/removeFromCart',cartController.removeProduct);
+router.post('/addToCart',auth.isLogin,cartController.addProductsToCart);
+router.patch('/removeFromCart',auth.isLogin,cartController.removeProduct);
 
 //login
 router.get('/login',auth.isLogout,auth.isUserBlocled,userController.loginLoad);
@@ -52,7 +52,7 @@ router.post('/forgetPassword',userHelpController.forgetPassword);
 router.get('/forgetPasswordOtp/:id',auth.isLogout,userHelpController.loadOtp);
 router.post('/forgetPasswordOtpVerify',userHelpController.verifyOtp);
 router.get('/newPassword',auth.isLogout,userHelpController.loadNewPassword);
-router.post('/newPassword',userHelpController.updateNewPassword);
+router.post('/newPassword',auth.isLogout,userHelpController.updateNewPassword);
 
 //otp 
 router.get('/verifyOtp',auth.isUserBlocled,auth.isLogout,userController.loadOtpPage);
@@ -60,17 +60,19 @@ router.post('/verifyOtp',userController.verifyuserOtp);
 router.get('/resendOtp',auth.isLogout,userController.resendOtp);
 
 //address
-router.post('/addAddress',validateAddress,addressController.addAddress);
-router.post('/getAddress',addressController.getAddress);
-router.post('/editAddress',addressController.editAddress);
-router.post('/removeAddress',addressController.removeAddress);
+router.post('/addAddress',auth.isLogin,validateAddress,addressController.addAddress);
+router.post('/getAddress',auth.isLogin,addressController.getAddress);
+router.post('/editAddress',auth.isLogin,validateAddress,addressController.editAddress);
+router.post('/removeAddress',auth.isLogin,addressController.removeAddress);
 
 //checkout
 router.get('/checkout',auth.isLogin,orderController.loadCheckoutPage);
-router.post('/placeOrder',orderController.placeOrder);
-router.get('/orderSuccess',orderController.loadSuccessPage);
+router.post('/placeOrder',auth.isLogin,orderController.placeOrder);
 
-
+//order
+router.get('/orderSuccess',auth.isLogin,orderController.loadSuccessPage);
+router.get('/detailsOrder',auth.isLogin,orderController.loadOrderDetails);
+router.post('/cancelProductOrder',orderController.cancelProductOrder);
 
 //logout
 router.get('/logout',userController.userLogout);

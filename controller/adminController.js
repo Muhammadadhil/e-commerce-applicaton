@@ -1,6 +1,7 @@
 const User=require('../model/userModel');
 const Category=require('../model/categoryModel');
 const bcrypt=require('bcrypt');
+const Order=require('../model/orderModel');
 
 
 //load admin login page
@@ -9,7 +10,7 @@ const loginLoad=async (req,res)=>{
         res.render('login');
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('user/error-500')
+        res.status(500).render('error-500')
     }
 }
 //login post
@@ -40,7 +41,7 @@ const verifyAdmin=async (req,res)=>{
         
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('user/error-500') 
+        res.status(500).render('error-500') 
     }
 }
 //load the home page
@@ -49,7 +50,7 @@ const loadHome=async (req,res)=>{
         res.render('adminDashboard')
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('user/error-500') 
+        res.status(500).render('error-500') 
     }
 }
 //load the users page
@@ -60,7 +61,7 @@ const loadCustomers=async (req,res)=>{
         res.render('customers',{users:customers})
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('user/error-500') 
+        res.status(500).render('error-500') 
 
     }
 }
@@ -68,6 +69,7 @@ const loadCustomers=async (req,res)=>{
 //block and unblock the users
 const userBlock=async (req,res)=>{
     try {
+
         const user_id=req.body.user_id;
         const userData=await User.findOne({_id:user_id});
         if(!userData.isBlocked){
@@ -79,7 +81,7 @@ const userBlock=async (req,res)=>{
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('user/error-500') 
+        res.status(500).render('error-500') 
     }
 }
 //load the category page
@@ -89,7 +91,7 @@ const loadCategory=async (req,res)=>{
         res.render('category',{categories});
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('user/error-500') 
+        res.status(500).render('error-500') 
     }
 }
 //add category
@@ -118,7 +120,7 @@ const addCategory=async (req,res)=>{
         }
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('user/error-500') 
+        res.status(500).render('error-500') 
     }
 }
 //edit category
@@ -132,7 +134,7 @@ const editCategory=async (req,res)=>{
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('user/error-500') 
+        res.status(500).render('error-500') 
     }
 }
 //edit category post
@@ -167,44 +169,96 @@ const updateCategory=async (req,res)=>{
         
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('user/error-500') 
+        res.status(500).render('error-500') 
     }
 }
 
-//soft delete the category
-const deleteCategory=async (req,res)=>{
+//block the category
+const blockCategory=async (req,res)=>{
     try {
         const {categoryId}=req.body;
         const categoryData=await Category.findOne({_id:categoryId})
-        if(categoryData.isBlocked){
-            await Category.findByIdAndUpdate({_id:categoryId},{$set:{isBlocked:false}})
-        }else{
-            await Category.findByIdAndUpdate({_id:categoryId},{$set:{isBlocked:true}})
-        }
+        categoryData.isBlocked=!categoryData.isBlocked ;
+        await categoryData.save();
+        
         res.json({updated:true});
         
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('user/error-500') 
+        res.status(500).render('error-500') 
     }
 }
 
 const adminLogout=async (req,res)=>{
     try {
-        req.session.destroy((err)=>{
-            if(err){
-                console.log(err.message);
-            }else{
-                console.log('admin session destoyed!!');
-            }
-        })
+        
+        delete req.session.adminId;
         res.redirect('/admin/');
         
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('user/error-500') 
+        res.status(500).render('error-500') 
     }
 }
+
+//order 
+const loadOrderList=async (req,res)=>{
+    try {
+
+        const orders=await Order.find({}); 
+        res.render('order',{orders});
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('error-500') 
+    }
+}
+
+//order details
+const loadOrderDetails=async (req,res)=>{
+    try {
+        const orderId=req.query.id;
+        console.log('orderId:',orderId);   
+
+        let populateOption={
+            path:'products.productId',
+            model:'products'
+        }
+        
+        const orderData=await Order.findOne({_id:orderId}).populate(populateOption);
+        const address=await Order.findOne({_id:orderId},{deliveryAddress:1,_id:0}); 
+        
+        console.log('orderData:',orderData,"address:",address);
+
+        res.render('orderDetails',{address,orderData});
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('error-500') 
+    }
+}
+
+const changeOrderStatus=async (req,res)=>{
+    try {
+        console.log("reached here in update status");
+        const {orderId,productId,status}=req.body;
+        
+        await Order.findOneAndUpdate(
+            {_id:orderId,'products.productId':productId},
+            {$set:{'products.$.productStatus':status}},
+            {new:true}
+        );
+        
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('error-500') 
+    }
+    
+
+}
+
+
 
 module.exports={
     loginLoad,
@@ -216,6 +270,10 @@ module.exports={
     addCategory,
     editCategory,
     updateCategory,
-    deleteCategory,
-    adminLogout
+    blockCategory,
+    adminLogout,
+    loadOrderList,
+    loadOrderDetails,
+    changeOrderStatus
+
 }

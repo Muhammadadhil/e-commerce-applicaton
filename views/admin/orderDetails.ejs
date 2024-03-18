@@ -1,0 +1,140 @@
+<%-include('../layouts/adminHeader')%>
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Orders List</h2> 
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row mb-50 mt-20 order-info-wrap">
+                <div class="col-md-4">
+                    <article class="icontext align-items-start">
+                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                            <i class="text-primary material-icons md-person"></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Customer</h6>
+                            <p class="mb-1">
+                                <%=address.deliveryAddress.name%> <br />
+                                <%=address.deliveryAddress.email%> <br />
+                                <%=address.deliveryAddress.phone%> <br />
+                            </p>
+                        </div>
+                    </article>
+                </div>
+                <!-- col// -->
+                <div class="col-md-4">
+                    <article class="icontext align-items-start">
+                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                            <i class="text-primary material-icons md-local_shipping"></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Order info</h6>
+                            <p class="mb-1">
+                                Total Amount: <%=orderData.subTotal%> <br />
+                                    Payment: <%=orderData.payment%> <br />
+
+                            </p>
+                        </div>
+                    </article>
+                </div>
+                <!-- col// -->
+                <div class="col-md-4">
+                    <article class="icontext align-items-start">
+                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                            <i class="text-primary material-icons md-place"></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Deliver to</h6>
+                            <p class="mb-1">
+                                City:  <%=address.deliveryAddress.city%> <br />
+                                       <%=address.deliveryAddress.address%><br />
+                                Pincode: <%=address.deliveryAddress.pincode%>
+                            </p>
+                        </div>
+                    </article>
+                </div>
+                <!-- col// -->
+            </div>
+            <!-- row // -->
+        <div class="card-body" >
+            <table class="table "id='reloadDiv'>
+                <thead>
+                    <tr>
+                        <th>Product image</th>
+                        <th scope="col">Product name</th>
+                        <th scope="col">Price </th>
+                        <th scope="col">No.of items</th>
+                        <th scope="col">Total amount</th>
+                        <th scope="col">Action</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <%orderData.products.forEach((product,index)=>{%>
+                        <tr>
+                            
+                            <td><img width="90px" src="/multer/products/<%=product.productId.images.image1%>" alt=""></td>
+                            <td><%=product.productId.name%></td>
+                            <td><%=product.price%></td>
+                            <td><%=product.quantity%></td>
+                            <td><%=product.totalPrice%></td>
+                            <td>
+                                
+                                <select id="statusSelect" onchange="changeStatus('<%=product.productId._id%>','<%=orderData._id%>')">
+                                
+                                    <option value="placed" <%= product.productStatus === 'placed' ? 'selected' : '' %> >placed</option>
+                                    <option value="out for delivery" <%= product.productStatus === 'out for delivery' ? 'selected' : '' %> > out for delivery</option>
+                                    <option value="shipped" <%= product.productStatus === 'shipped' ? 'selected' : '' %> >shipped</option>
+                                    <option value="delivered" <%= product.productStatus === 'delivered' ? 'selected' : '' %> >delivered</option>
+                                    
+                                </select>
+                            </td>
+                        </tr>
+                    <%})%>
+                    
+                </tbody>
+            </table>
+            
+        </div>
+        <!-- card-body end// -->
+    </div>
+    <!-- card end// -->
+    
+</section>
+<!-- content-main end// -->
+
+
+<script>
+
+    function changeStatus(productId,orderId){
+
+        const status=document.getElementById('statusSelect').value
+        console.log('orderId:',orderId);
+        console.log('productId:',productId);
+        console.log('status:',status);
+
+        fetch('/admin/changeOrderStatus',{
+            method:"POST",
+            headers:{
+                "content-type":"application/json;charset=utf-8"
+            },
+            body:JSON.stringify({
+                orderId,
+                productId,
+                status
+            })
+        })
+        .then((res)=> res.json())
+        .then((data)=>{
+            console.log(data);
+        })
+        
+    }
+
+</script>
+
+
+<%-include('../layouts/adminFooter')%>

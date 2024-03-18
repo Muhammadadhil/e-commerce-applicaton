@@ -90,7 +90,8 @@ const editAddress=async (req,res)=>{
             console.log('editedAddress:',editedAddress);
 
         if(editedAddress){
-            res.redirect('/account');
+            // res.redirect('/account');
+            res.status(200).json({edited:true})
         }    
 
     } catch (error) {

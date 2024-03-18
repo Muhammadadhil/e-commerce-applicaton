@@ -1,15 +1,23 @@
+<%-include('../layouts/header.ejs')%>
 
 
+<div class="section section-padding mt-5 ">
 
     <div class="container">
-      <div class="card custom-card">
-        <div class="card-body">
-          <h1>Order Successfull</h1> 
-          <p>We received your purchase request;<br/> we'll be in touch shortly!</p>
-          <a href="/shop"><button class="btn btn-primary btn-hover-dark">Explore more products</button></a><br>
-          <a href="/detailorder">view order details</a>
+      <div class="row justify-content-center">
+        <div class="col-lg-6 mt-5">
+          <div class="card custom-card mt-2 d-flex align-items-center ">
+            <div class="card-body text-center ">
+              <h1>Order Successfull</h1> 
+              <p>We received your purchase request;<br/> we'll be in touch shortly!</p>
+              <a href="/shop"><button class="btn btn-primary btn-hover-dark">Explore more products</button></a><br>
+              <a href="/detailsOrder?id=<%=orderId%>">view order details</a>
+            </div>
+          </div>
         </div>
       </div>
-      <canvas id="canvas">Canvas is not supported in your browser.</canvas>
     </div>
-  
+    
+</div>
+
+<%-include('../layouts/footer.ejs')%>

@@ -1,0 +1,157 @@
+<% if (orderData.products.length > 0) { %>
+    <div class="container mt-5">
+        <h3 class="mb-4 text-center">Ordered Products</h3>
+        <% orderData.products.forEach((product, index)=> { %>
+            <div class="card mt-3">
+                <div class="card-body d-flex justify-content-start">
+                    <div class="product-card d-flex">
+                        <div class="product-image">
+                            <a href="/detailshop?id=<%= product.productId._id %>">
+                                <img src="multerimages/<%= product.productId.images.image1 %>" alt=""
+                                    class="img-thumbnail" style="max-width: 280px;">
+                            </a>
+                        </div>
+                        <div class="mx-3" style="width: 180px;">
+                            <h5 class="product-details"><a
+                                    href="/detailshop?id=<%= product.productId._id %>">
+                                    <%= product.productId.name %>
+                                </a></h5>
+                            <p class="product-details">
+                                <%= product.productId.categoryId.name %> <br>
+                                Price: ₹<%= product.price %> <br>
+                                Quantity: <%= product.quantity %> <br>
+                                Total: ₹<%= product.totalPrice %> <br>
+                                Discounted:₹<%= product.price - product.totalPrice %> 
+                                <% if (orderData.orderStatus !== 'Cancelled' ||
+                                    product.productStatus === 'Cancelled') { %>
+                                        <br>
+                                        <button class="cancel-btn"
+                                            onclick="validateAndCancel('<%= product._id %>','<%= product.productId._id %>', '<%= orderData._id %>','<%= product.productStatus %>')"
+                                            <%=(product.productStatus==='out-for-delivery'
+                                            ) ? 'disabled' : '' %>>
+                                            <%= (product.productStatus==='delivered' )
+                                                ? 'Return order' :
+                                                (product.productStatus==='out-for-delivery'
+                                                ) ? 'No action' : 'Cancel order' %>
+                                        </button>
+                                <% } %>
+                            </p>
+                        </div>
+                    </div>
+                    <%console.log(product.productStatus,"helo")%>
+                    <div class="status-line">
+                        <div class="line">
+                          <div class="placed <%= (product.productStatus === 'shipped' || product.productStatus === 'out-for-delivery' || product.productStatus === 'delivered') ? 'green status-dot' : '' %>">
+                            <div class="status">Placed</div>
+                          </div>
+                          <div class="shipped <%= (product.productStatus === 'out-for-delivery' || product.productStatus === 'delivered') ? 'green status-dot' : '' %>">
+                            <div class="status">Shipped</div>
+                          </div>
+                          <div class="out-for-delivery <%= (product.productStatus === 'delivered') ? 'green status-dot' : '' %>">
+                            <div class="status">Out to Delivery</div>
+                          </div>
+                          <div class="delivered <%= (product.productStatus === 'delivered') ? 'green status-dot' : '' %>">
+                            <div class="status">Delivered</div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </div>
+            </div>
+        <% }); %>
+    <% } %>
+    <% if (orderData.cancelledProduct && orderData.cancelledProduct.length > 0) { %>
+        <div class="container mt-5">
+            <h3 class="mb-4">Cancelled Products</h3>
+            <% orderData.cancelledProduct.forEach(function(cancelledProduct, index) { %>
+                <div class="card mt-3">
+                    <div class="card-body d-flex justify-content-start">
+                        <div class="cancelled-product-card d-flex">
+                            <div class="cancelled-product-image ">
+                                <a
+                                    href="/detailshop?id=<%= cancelledProduct.productDetails._id %>">
+                                    <img src="multerimages/<%= cancelledProduct.productDetails.images.image1 %>"
+                                        alt="" class="img-thumbnail"
+                                        style="max-height: 250px; max-width: 150px;">
+                                </a>
+                            </div>
+                            <div class="mx-3 " style="width: 180px;">
+                                <div class="product-details">
+                                    <h5 class="product-details"><a
+                                            href="/detailshop?id=<%= cancelledProduct.productDetails._id %>">
+                                            <%= cancelledProduct.productDetails.name %>
+                                        </a></h5>
+                                    <p>Price:₹ <%= cancelledProduct.productDetails.price %>
+                                        <br>Quantity: <%= cancelledProduct.quantity %>
+                                        <br>Status: <%= cancelledProduct.productStatus %>
+                                        <br>Cancel Reason: <%= cancelledProduct.cancelReason %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="status-cancel">
+                            <div class="line cancel">
+                                <div class="inner-line-1"></div>
+                                <div class="status">Packed</div>
+                            </div>
+                            <div class="line cancelLine">
+                                <div class="inner-line-2"></div>
+                                <div class="status">Cancelled</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        <% } %>
+        <br><br>
+        <%console.log(orderData,'fsssssssssssssss')%>
+        <% if (orderData.returnedProduct && orderData.returnedProduct.length > 0) { %>
+            <div class="container mt-5">
+                <h3 class="mb-4">Returned Products</h3>
+                <% orderData.returnedProduct.forEach(function(returnedProduct, index) { %>
+                    <div class="card mt-3">
+                        <div class="card-body d-flex justify-content-start">
+                            <div class="cancelled-product-card d-flex">
+                                <div class="cancelled-product-image ">
+                                    <a
+                                        href="/detailshop?id=<%= returnedProduct.productDetails._id %>">
+                                        <img src="multerimages/<%= returnedProduct.productDetails.images.image1 %>"
+                                            alt="" class="img-thumbnail"
+                                            style="max-height: 250px; max-width: 150px;">
+                                    </a>
+                                </div>
+                                <div class="mx-3 " style="width: 180px;">
+                                    <div class="product-details">
+                                        <h5 class="product-details"><a
+                                                href="/detailshop?id=<%= returnedProduct.productDetails._id %>">
+                                                <%= returnedProduct.productDetails.name %>
+                                            </a></h5>
+                                        <p>Price:₹ <%= returnedProduct.productDetails.price %>
+                                            <br>Quantity: <%= returnedProduct.quantity %>
+                                            <br>Status: <%= returnedProduct.productStatus %>
+                                            <br>return Reason: <%= returnedProduct.returnReason %>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="status-cancel">
+                                <div class="line cancel" id="cancel">
+                                    <div class="inner-line-1"></div>
+                                    <div class="status">Packed</div>
+                                </div>
+                                <div class="line cancelLine" id="cancelLine">
+                                    <div class="inner-line-2"></div>
+                                    <div class="status">returned</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } %>
+            <br><br>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div><br>

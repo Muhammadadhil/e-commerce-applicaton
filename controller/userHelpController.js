@@ -108,8 +108,6 @@ const loadNewPassword= async (req,res)=>{
     try {
         console.log('reached load new password method!!!!');
         const userId=req.query.id;
-        // const userId=req.params.id;
-        // console.log('userId:',userId);
         res.render('newPassword',{userId});
         // res.send({h:'ahahaghag'});
         // res.json({sucess:true});

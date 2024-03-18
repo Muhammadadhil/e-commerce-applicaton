@@ -1,0 +1,116 @@
+<%- include('../layouts/header.ejs') -%>
+
+<br>
+<div class="section section-padding">
+    <div class="container"><hr><br>
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="mt-4  text-warning ">ORDER DETAILS</h3><br>
+                    <h4 class="name  text-muted">OrderId: <%=orderData._id%></h4>
+                    <p class=" text-muted"><b>Ordered Date:</b>
+                        <%=orderData.orderDate.toLocaleDateString('en-US', {
+                            weekday: 'short' , year: 'numeric' , month: 'short' ,
+                            day: 'numeric' })%>
+                        <br><b>Payment Method:</b>
+                        <%= orderData.payment %><br>
+                        <b>Address:</b>
+                        <%= orderData.deliveryAddress.name %>,<%= orderData.deliveryAddress.address %> <br>
+                        <b>Shipping:</b><%= orderData.deliveryAddress.pincode %>,<%= orderData.deliveryAddress.city %>
+                        <br>
+                    </p>
+
+            </div>
+            <div >
+                <% if (orderData.products.length > 0) { %>
+                    <h3 class="mb-4 mt-5">Ordered Products</h3>
+                <table class="table "style="border: 1px solid grey;">
+                    <thead>
+                        <tr class="text-center ">
+                            <th class="no fw-bold ">No</th>
+                            <th class="date fw-bold ">Image</th>
+                            <th class="total fw-bold ">Amount</th>
+                            <th class="payment fw-bold ">Details</th>
+                            <th class="invoice fw-bold ">Status</th>
+                            <th class="actions fw-bold ">Actions</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody class="text-center ">
+                        <% orderData.products.forEach((product, index)=> { %>
+                            <tr>
+                                <td>
+                                    <%=index+1%>
+                                </td>
+                                <td>
+                                    <img src="multer/products/<%= product.productId.images.image1 %>" alt=""
+                                    class="" style="max-width: 180px;">
+                                </td>
+                                
+                                
+                                <td>
+                                    <h5 class="product-details"><a
+                                        href="/detailshop?id=<%= product.productId._id %>">
+                                        <%= product.productId.name %>
+                                    </a></h5>
+                                </td>
+                                <td>
+                                    <p class="product-details">
+                                        <%= product.productId.categoryId.name %> <br>
+                                        Price: ₹<%= product.price %> <br>
+                                        Quantity: <%= product.quantity %> <br>
+                                        Total: ₹<%= product.totalPrice %> <br>
+                                    </p>
+                                </td>
+                                <td>
+                                    <h5><%=product.productStatus%></h5>
+                                </td>
+                                <td>
+                                    <%if(product.productStatus=='delivered'){%>
+                                        <h5><a href="" class="btn" style=" background-color: rgb(240, 88, 0);">Return</a></h5>
+                                    <%}else{%>
+                                        <h5><a onclick="cancelOrder('<%= product.productId._id %>')" class="btn" style=" background-color: rgb(255, 208, 0);">cancel</a></h5>
+                                    <%}%>
+                                </td>
+                            </tr>
+                        <%})%>
+                    </tbody>
+                </table>
+                <% } %>     
+            </div>
+                        
+                
+
+<script>
+    async function cancelOrder(productId){
+        const { value: text } = await Swal.fire({
+            input: "textarea",
+            inputLabel: "Reason for cancel",
+            inputPlaceholder: "Type your message here...",
+            
+            inputAttributes: {
+                "aria-label": "Type your message here"
+            },
+            showCancelButton: true
+        });
+        fetch('/cancelProductOrder',{
+            method:'POST',
+            headers:{
+             "content-type": "application/json;charset=utf-8"
+            },
+            body:JSON.stringify({
+                email,
+                password
+            })
+        })
+
+
+            if (text) {
+                Swal.fire({
+                    title: "canceled ",
+                    text: "canceled product order",
+                });
+            }
+    }
+</script>            
+
+

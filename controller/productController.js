@@ -1,7 +1,6 @@
 const Products=require('../model/productsModel');
 const Category=require('../model/categoryModel');
 
-
 //load the products page
 const loadProducts=async (req,res)=>{
     try {

@@ -236,9 +236,27 @@
   <!-- empty cart end-->
     <%}%>  
         <%}else{%>
-        <div class="d-flex align-content-center">
-            <h4>no items in your cart</h4>
+        <!-- empty cart start-->
+        <div class="container-fluid  mt-100">
+            <div class="row">
+               <div class="col-md-12">
+                       <div class="card">
+                        <h2 class="card-title text-center mt-4">
+                            There are no more items in your cart
+                        </h2>
+                   <div class="card-body cart">
+                           <div class="col-sm-12 empty-cart-cls text-center">
+                               <img src="/user/assets/images/cart_11386380.png"  height="130" width="130" class="img-fluid mb-4 mr-3">
+                               <h4><strong>Your Cart is Empty</strong></h4>
+                               
+                               <a href="/shop" class="btn btn-sm btn-primary btn-hover-secondary m-3" data-abc="true">continue shopping</a>
+                           </div>
+                   </div>
+                </div>
+            </div>
         </div>
+    </div>
+  <!-- empty cart end-->
         <%}%>
     </div>
 </div>

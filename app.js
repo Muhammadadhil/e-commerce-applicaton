@@ -8,7 +8,7 @@ const session=require('express-session');
 const nocache=require('nocache');
 const flash=require('express-flash');
 
-mongoose.connect('mongodb://localhost:27017/project-furbar')
+mongoose.connect(process.env.DB_URL);
 const app = express();
 
 // Use Morgan middleware for logging requests

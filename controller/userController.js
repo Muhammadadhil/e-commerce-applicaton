@@ -3,6 +3,7 @@ const User=require('../model/userModel');
 const Products=require('../model/productsModel');
 const userOtpVerfication=require('../model/userOtpVerfication');
 const Address=require('../model/addressModel');
+const Order=require('../model/orderModel');
 const bcrypt=require('bcrypt');
 const nodemailer=require('nodemailer');
 
@@ -68,9 +69,11 @@ const loadAccount=async (req,res)=>{
         const user=req.session.userId;
         const userData=await User.findById({_id:user});
         const address=await Address.findOne({userId:user});
-        console.log('address:',address);
+        const userOrders=await Order.find({userId:user})
+        // console.log('address:',address);
+        // console.log('orders:',userOrders);
     
-        res.render('account',{user,userData,address});
+        res.render('account',{user,userData,address,userOrders});
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500')
@@ -188,13 +191,10 @@ const insertUser = async (req, res) => {
     try {
         console.log('::::::reached insert user::::::');
 
-        
         const { firstName, lastName, email,mobile, password} = req.body;
 
         await User.findOneAndDelete({email:email,verified:false});
         const existingEmail=await User.findOne({email:email});
-
-
 
         console.log('existing email:',existingEmail);
         if(existingEmail){
@@ -389,13 +389,8 @@ const resendOtp=async (req,res)=>{
 //logout route
 const userLogout=async (req,res)=>{
     try {
-        req.session.destroy((err)=>{
-            if(err){
-                console.log(err.message);
-            }else{
-                console.log('user session destroyed');
-            }
-        })
+        
+        delete req.session.userId;
         res.redirect('/');
 
     } catch (error) {

@@ -141,7 +141,7 @@
                                                 Pincode:    <%=address.pincode%><br>
                                                 </p>  
 
-                                                <a class="g-4" onclick="editAddress('<%=address._id%>')" data-bs-toggle="modal" data-bs-target="#editAddressModal" id="editAddress"><i
+                                                <a class="g-4" onclick="getAddressFeilds('<%=address._id%>')" data-bs-toggle="modal" data-bs-target="#editAddressModal" id="editAddress"><i
                                                     class="fa fa-edit"></i></a>
                                                 <a class="g-4" onclick="removeAddress('<%=address._id%>')" id="removeAddress"><i
                                                     class="fa fa-trash"></i></a>
@@ -318,7 +318,7 @@
                                 <li>
                                     <div class="single-payment">
                                         <div class="payment-radio radio">
-                                            <input type="radio" name="paymentMethod" value="cashOnDelivery" id="cash" checked="checked" />
+                                            <input type="radio" name="paymentMethod" value="cash on delivery" id="cash" checked="checked" />
                                             <label for="cash"><span></span> Cash on Delivery</label>
 
                                             <div class="payment-details">
@@ -341,13 +341,161 @@
     </div>
 </div>
 <!-- Checkout Section End -->
+<!-- Edit address modal  -->
+
+<div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="">
+                <h5 class="modal-title" id="exampleModalLabel">Edit address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" >
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-md-6">
+                            <div class="single-form">
+                                <input type="text" name="name" />
+                                <p id="nameError" class="error-message"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="single-form">
+                                <input type="text" name="phone" placeholder="mobile number" />
+                                <p id="mobileError" class="error-message"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="single-form">
+                                <input type="text" name="email" placeholder="Email address" />
+                                <p id="emailError" class="error-message"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="single-form">
+                                <input type="text" name="address" placeholder="street address"/>
+                                <p id="addressError" class="error-message"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="single-form">
+                                <input type="text" name="landmark" placeholder="Landmark" value="" />
+                                <p id="landmarkError" class="error-message"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="single-form">
+                                <input type="text" name="state" placeholder="State" />
+                                <p id="stateError" class="error-message"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="single-form">
+                                <input type="text" name="city" placeholder="City" />
+                                <p id="cityError" class="error-message"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="single-form">
+                                <input type="text" name="pincode" placeholder="Pincode" />
+                                <p id="pincodeError" class="error-message"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="text" name="addressId" hidden />
+
+                    <p id="editAddressError" class="error-message text-danger "></p>
+
+                    <div class="">
+                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                        <button type="button" onclick="editAddress()" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit address modal end-->
 
 <script>
 
-    function placeOrder(){
-        
-        console.log('payment method:',paymentMethod);
+    function editAddress(){
 
+        console.log('reached here in edit address');
+        const name=document.querySelector('#editAddressModal input[name="name"]').value ;
+        const phone=document.querySelector('#editAddressModal input[name="phone"]').value;
+        const email=document.querySelector('#editAddressModal input[name="email"]').value;
+        const address=document.querySelector('#editAddressModal input[name="address"]').value;
+        const landmark=document.querySelector('#editAddressModal input[name="landmark"]').value;
+        const state= document.querySelector('#editAddressModal input[name="state"]').value ;
+        const city= document.querySelector('#editAddressModal input[name="city"]').value ;
+        const pincode=document.querySelector('#editAddressModal input[name="pincode"]').value ;
+        const addressId=document.querySelector('#editAddressModal input[name="addressId"]').value;
+
+        console.log('bod:',name,phone,email,address,landmark,state,city,pincode,addressId);
+        const commonError=document.getElementById('editAddressError');
+
+        fetch("/editAddress", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({
+                name,phone,email,address,landmark,state,city,pincode,addressId
+            }),
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log("heyyyyyyyyyyyy",data);
+            if(data.edited){
+                console.log('heyyy brroooo');
+                window.location.reload();
+            }else if(!data.validate && data.message) {
+                let errorMessage = "";
+                data.message.forEach(detail => {
+                    errorMessage += `${detail.message}<br>`;
+                });
+                commonError.innerHTML = errorMessage;
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+
+
+
+    function getAddressFeilds(addressId) {
+        console.log("reched edit address::::::::::::");
+
+        const response = fetch("/getAddress", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({
+                addressId,
+            }),
+        });
+        response
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data.currentAddress);
+                populateModalField(data.currentAddress);
+                $("#editAddressModal").modal("show");
+            });
+    }
+    
+    function populateModalField(addressData) {
+        document.querySelector('#editAddressModal input[name="name"]').value = addressData.name;
+        document.querySelector('#editAddressModal input[name="phone"]').value = addressData.phone;
+        document.querySelector('#editAddressModal input[name="email"]').value = addressData.email;
+        document.querySelector('#editAddressModal input[name="address"]').value = addressData.address;
+        document.querySelector('#editAddressModal input[name="landmark"]').value = addressData?.landmark || "! no landmark given";
+        document.querySelector('#editAddressModal input[name="state"]').value = addressData.state;
+        document.querySelector('#editAddressModal input[name="city"]').value = addressData.city;
+        document.querySelector('#editAddressModal input[name="pincode"]').value = addressData.pincode;
+        document.querySelector('#editAddressModal input[name="addressId"]').value = addressData._id;
     }
 
     function addAddress() {

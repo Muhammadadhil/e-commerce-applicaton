@@ -61,13 +61,15 @@ const AddressSchema = Joi.object({
 
 
 const validateAddress=(req,res,next)=>{
-    const {error}=AddressSchema.validate(req.body);
+    const { addressId, ...bodyWithoutAddressId } = req.body;
+
+    console.log('etheeeennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
+    const {error}=AddressSchema.validate(req.bodyWithoutAddressId);
 
     if(error){
-        console.log('joi: errror detailss:',error.details);
+        // console.log('joi: errror detailss:',error.details);
         return res.status(400).json({validate:false,message:error.details});
     }
-    console.log('no scenes');
 
     next();
 }

@@ -15,6 +15,9 @@ const loadCheckoutPage=async (req,res)=>{
             model:'products'
         }
         const cartDetails=await Cart.findOne({userId:user}).populate(populateOption);
+        if(!cartDetails){
+            return res.redirect('/cart')
+        }
         // console.log('cartDetais:',cartDetails);
         
         // console.log("cartDetails.product:",cartDetails?.product);
@@ -34,17 +37,25 @@ const loadCheckoutPage=async (req,res)=>{
 const placeOrder=async (req,res)=>{
     try {
         
-        // console.log("req.body from checkout page:", req.body);
         const userId=req.session.userId;
         const {addressId,paymentMethod}=req.body;
+        console.log('userId:',userId,"addressId:",addressId);
 
-        const address=await Address.findOne({userId:userId,'address._id':addressId});
-        // console.log('address:',address);
-        const selectedAddress=address.address.filter((address)=> address._id==addressId);
-        console.log( 'selectedAddress:',selectedAddress);
+        // const selectedAddress=await Address.aggregate([
+        //     {$unwind:"$address"},
+        //     {$match:{userId:userId,"address._id":addressId}}
+        // ])
+       
+        const result=await Address.findOne({userId:userId,'address._id':addressId})
+        const selectedAddress=result.address.find(address => address._id == addressId);
+        // console.log( 'selectedAddress:',selectedAddress);
+        
+    
+        // let selectedAddress=address.address.filter((address)=> address._id==addressId);
+        // selectedAddress= selectedAddress[0];
         
         const cartData=await Cart.findOne({userId:userId});
-        console.log('cartData:',cartData);
+        // console.log('cartData:',cartData);
         const subTotal=cartData?.product.reduce((total,currentTotal)=> total+currentTotal.totalPrice,0);
 
         // console.log('cartData:',cartData);
@@ -58,7 +69,7 @@ const placeOrder=async (req,res)=>{
             totalPrice:product.totalPrice,
             productStatus:status
         }));
-        console.log('cartProducts:orderItems:',orderItems);
+        // console.log('cartProducts:orderItems:',orderItems);
 
         const order=new Order({
             userId:userId,
@@ -82,10 +93,10 @@ const placeOrder=async (req,res)=>{
                         $inc:{quantity:-item.quantity}
                     })
             }
-            // orderItems.forEach((item)=>{
-            // })
+            
+            
             await Cart.deleteMany({});
-            res.redirect('/orderSuccess')
+            res.redirect(`/orderSuccess?id=${orderDetails._id}`)
         }
 
     } catch (error) {
@@ -96,8 +107,37 @@ const placeOrder=async (req,res)=>{
 
 const loadSuccessPage=async (req,res)=>{
     try {
+        const orderId=req.query.id;
+        res.render('orderSuccess',{orderId});
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
 
-        res.render('orderSuccess');
+const loadOrderDetails=async (req,res)=>{
+    try {
+        const user=req.session.userId;
+        const orderId=req.query.id;
+        console.log('orderId:',orderId);
+        populateOption={
+            path:'products.productId',
+            model:'products'
+        }
+        const orderData=await Order.findOne({_id:orderId}).populate(populateOption);
+        res.render('orderDetails',{user,orderData});
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
+
+//cancel
+const cancelProductOrder=async (req,res)=>{
+    try {
+        
         
     } catch (error) {
         console.log(error.message);
@@ -106,8 +146,11 @@ const loadSuccessPage=async (req,res)=>{
 }
 
 
+
 module.exports={
     loadCheckoutPage,
     placeOrder,
-    loadSuccessPage
+    loadSuccessPage,
+    loadOrderDetails,
+    cancelProductOrder
 }
