@@ -26,22 +26,34 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="shop-sort">
-                        <span class="title">Sort By :</span>
-                        <select class="select2-2">
-                            <option value="featured">Featured</option>
-                            <option value="rating">Rating</option>
-                            <option value="price">Price</option>
-                        </select>
+                    <div class="widget-search">
+                            <input type="text" oninput="searchProducts(this.value)" placeholder="Search Your Product">
+                            <button><i class="fa fa-search"></i></button>
                     </div>
+                    
+                    <div class="dropdown dropdown-hover">
+                        <a class="btn btn-light  dropdown-toggle" href="#" role="button">
+                          Sort by:
+                        </a>
+                        <ul class="dropdown-menu border-0" role="menu">
+                          <li><a class="dropdown-item" onclick="sortProducts('1')" >Popularity</a></li>
+                          <li><a class="dropdown-item" onclick="sortProducts('2')" >Featured</a></li>
+                          <li><a class="dropdown-item" onclick="sortProducts('3')" >New arrivals</a></li>
+                          <li><a class="dropdown-item" onclick="sortProducts('4')" >Price low to high</a></li>
+                          <li><a class="dropdown-item" onclick="sortProducts('5')" >Price high to low</a></li>
+
+                        </ul>
+                    </div>
+                    
                 </div>
                 <!-- Shop top Bar End -->
 
-                <div class="tab-content">
+                <div class="tab-content mb-5 ">
                     <div class="tab-pane fade show active" id="grid">
                         <!-- Shop Product Wrapper Start -->
                         <div class="shop-product-wrapper">
-                            <div class="row">
+                            <div id="productPart" class="row">
+                                
                                 <%products.forEach((product)=>{%>
                                     
                                     <%if(!product.isDeleted && !product.categoryId.isBlocked){%>
@@ -66,7 +78,6 @@
                                                         <%}%>
                                                         
                                                     </li>
-                                                    <li>
                                                         <a class="action" href="#"><i class="pe-7s-like"></i></a>
                                                     </li>
                                                 </ul>
@@ -81,8 +92,6 @@
                            <!-- Shop Product Wrapper End -->
                     </div>
                 </div>
-                
-
                 <!-- Page pagination Start -->
                 <div class="page-pagination">
                     <ul class="pagination justify-content-center">
@@ -99,7 +108,7 @@
         </div>
     </div>
     <!-- Shop Section End -->
-
+    
 <!-- addtoCart extra Toast -->
 <div class="toast-container position-fixed top-0 end-0  p-6">
     <div class="toast" id="addToExisting" role="alert" aria-live="assertive" aria-atomic="true">
@@ -138,6 +147,67 @@
     </div>
   </div>
 <script>
+    function searchProducts(value){
+
+        const reloadPart=document.getElementById('productPart');
+
+        fetch(`/search?searchKey=${value}`)
+        .then((res)=>res.json())
+        .then((data)=>{
+
+            if(data.products.length==0){
+
+                reloadPart.innerHTML=`<div class="alert alert-primary  mt-5" role="alert">
+                    <strong>No products found!</strong> Your search did not match any products.
+                </div>`;
+            }else{
+
+                reloadPart.innerHTML='';
+
+                data.products.forEach((product) => {
+                if (!product.isDeleted && !product.categoryId.isBlocked) {
+                    
+                    const productHTML = `
+                        <div class="col-lg-4 col-sm-6">
+                            <!-- Single Product Start -->
+                            <div class="single-product">
+                                <a href="/productDetails?id=${product._id}"><img src="/multer/products/${product.images.image1}" width="270" height="303" alt="product" /></a>
+                                <div class="product-content">
+                                    <h4 class="title">
+                                        <a href="">${product.name}</a>
+                                    </h4>
+                                    <div class="price">
+                                        <span class="sale-price">₹${product.price}</span>
+                                    </div>
+                                </div>
+                                <ul class="product-meta">
+                                    
+                                    <li>
+                                        <a class="action" href="#"><i class="pe-7s-like"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- Single Product End -->
+                        </div>
+                    `;
+
+                    // Append the product HTML to reloadPart
+                    reloadPart.insertAdjacentHTML('beforeend', productHTML);
+                }
+            })
+            }
+        })
+    }
+
+    function sortProducts(criteria){
+
+        const currentUrl=new URL(window.location.href);
+        console.log('currentUrl:',currentUrl);
+        currentUrl.searchParams.set('sort',criteria);
+        window.location.href=currentUrl.href;
+
+    }
+
     function showCartAlert() {
             Swal.fire({
                 title: "You need to log in!",

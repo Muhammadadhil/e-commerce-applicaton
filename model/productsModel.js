@@ -34,6 +34,10 @@ const productSchema=new mongoose.Schema({
             required:true
         }
     },
+    addedDate:{
+        type:Date,
+        required:true
+    },
     description:{
         type:String,
         required:true

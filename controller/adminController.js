@@ -248,8 +248,6 @@ const changeOrderStatus=async (req,res)=>{
             {$set:{'products.$.productStatus':status}},
             {new:true}
         );
-        
-        
     } catch (error) {
         console.log(error.message);
         res.status(500).render('error-500') 

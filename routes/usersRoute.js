@@ -26,6 +26,8 @@ router.post('/editProfile',auth.isUserBlocled,auth.isLogin,userController.editPr
 //shop and details shop
 router.get('/shop',auth.isUserBlocled,userController.loadShop);
 router.get('/productDetails',auth.isUserBlocled,userController.loadProductDetails);
+router.get('/search',userController.searchProducts);
+
 
 //blog
 router.get('/blog',auth.isUserBlocled,userController.loadBlogPage);

@@ -1,5 +1,6 @@
 const Products=require('../model/productsModel');
 const Category=require('../model/categoryModel');
+const { date } = require('joi');
 
 //load the products page
 const loadProducts=async (req,res)=>{
@@ -40,6 +41,7 @@ const addProducts=async (req,res)=>{
             quantity:details.quantity,
             categoryId:category._id,
             description:details.description,
+            addedDate:new date(),
             images:{
                 image1:files[0].filename,
                 image2:files[1].filename,

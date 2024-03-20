@@ -127,10 +127,54 @@ const loadContactPage=async (req,res)=>{
 //loading the shop page
 const loadShop=async (req,res)=>{
     try {
-        const products=await Products.find({}).populate('categoryId');
+        
         const user=req.session.userId;
+
+        let sortOption={};
+        switch(req.query.sort){
+            case '3':
+                sortOption={}
+
+            case '4':
+                sortOption={price:1};
+                break;
+
+            case '5':
+                sortOption={price:-1}   
+                break;
+        }
+        // console.log('sortOption:',sortOption);
+
+        // const value=req.query.search;
+        // console.log('value:',value);
+
+        // const regObj=new RegExp(value,'i');
+        // console.log('regObj:',regObj);
+        // const searchCriteria={
+        //     $or:[
+        //         {name:{$regex:regObj}},
+        //         {description:{$regex:regObj}}
+        //     ]
+        // }
+        
+        const products=await Products.find().populate('categoryId').sort(sortOption)
+
         res.render('shop',{products,user});
     } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500')
+    }
+}
+const searchProducts=async (req,res)=>{
+    try {
+        const value=req.query.searchKey;
+        const regex=new RegExp(value,'i');
+
+        const products=await Products.find({name:{$regex:regex}}).populate('categoryId') 
+        // console.log('products:',products);
+        // res.send(products); 
+        res.json({products})
+    } catch (error) { 
         console.log(error.message);
         res.status(500).render('Error-500')
     }
@@ -419,4 +463,5 @@ module.exports={
     loadContactPage,
     editProfile,
     otpVerificationEmail,
+    searchProducts
 }

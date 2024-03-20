@@ -118,6 +118,8 @@ const loadSuccessPage=async (req,res)=>{
 
 const loadOrderDetails=async (req,res)=>{
     try {
+
+        console.log('reached hereeeeeeeeeeeeeeeeeeeeeeee');
         const user=req.session.userId;
         const orderId=req.query.id;
         console.log('orderId:',orderId);
@@ -137,8 +139,21 @@ const loadOrderDetails=async (req,res)=>{
 //cancel
 const cancelProductOrder=async (req,res)=>{
     try {
-        
-        
+
+        const {orderId,productId}=req.body;
+        console.log('orderId,productId',orderId,productId);
+
+        const updateData=await Order.findOneAndUpdate({_id:orderId,'products.productId':productId},
+        {
+            $set:{'products.$.productStatus':'canceled'}
+        },{new:true})
+
+        console.log('updateData:',updateData);
+        if(updateData){
+            console.log('reached success');
+            res.status(200).json({changed:true,updateData})
+        }
+
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500');
