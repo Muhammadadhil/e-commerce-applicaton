@@ -5,19 +5,49 @@ const Products=require('../model/productsModel');
 const loadCartPage=async (req,res)=>{
     try {
         const user=req.session.userId;
+        console.log('user:',user);
         const populateOption={
             path:'product.productId',
-            model:'products'
+            model:'products'          
         }
-        const cartDetails=await Cart.findOne({userId:user}).populate(populateOption);
-        
-        // console.log("cartDetails.product:",cartDetails?.product);
+        const cartDetails=await Cart.findOne({userId:user}).populate(populateOption);   
+        //to avoid the products which isCatego(ryBlocked is true.
+        // const cartDetails=await Cart.aggregate([
+        //     {
+        //         $match:{userId:user}
+        //     },
+        //     {
+        //         $lookup:{
+        //             from:"products",   
+        //             localField:"product.productId",
+        //             foreignField:"_id",
+        //             as:"product"
+        //         }
+        //     },{
+        //         $unwind:"$product"
+        //     }
+        //     {
+        //         $match:{
+        //             "product.isCategoryBlocked":false
+        //         }
+        //     },{
+        //         $group:{
+        //             _id: "$_id",
+        //             userId: { $first: "$userId" },
+        //             __v: { $first: "$__v" },
+        //             product: { $push: "$product" } // Push matched products back into an array
+        //         }
+                
+        //     }
+        // ])
+        console.log("carDetails:",cartDetails);
+        // const carDetailsToShow=cartDetails.productId.find((product)=> product.isCategoryBlocked==false);
         const productsCount=cartDetails?.product.length;
         const subTotal=cartDetails?.product.reduce((total,currentTotal)=> total+currentTotal.totalPrice,0);
         
         res.render('cart',{user,cartDetails,subTotal,productsCount});
     } catch (error) {
-        console.log(error.message);
+        console.log("error:",error.message);
         res.status(500).render('Error-500')
     } 
 }

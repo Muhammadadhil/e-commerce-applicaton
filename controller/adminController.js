@@ -180,13 +180,14 @@ const blockCategory=async (req,res)=>{
         const {categoryId}=req.body;
         const categoryData=await Category.findOne({_id:categoryId})
         categoryData.isBlocked=!categoryData.isBlocked ;
-
-        const productsData=await Products.findOne({categoryId:categoryId})
-        productsData.isCategoryBlocked=!productsData.isCategoryBlocked;
-
         await categoryData.save();
-        await productsData.save();
-
+        
+        const isBlocked=categoryData.isBlocked;
+        
+        const productsData=await Products.updateMany({categoryId:categoryId},{$set:{isCategoryBlocked:isBlocked}})
+        console.log('productsData:',productsData);
+        
+        
         res.json({updated:true});
         
     } catch (error) {

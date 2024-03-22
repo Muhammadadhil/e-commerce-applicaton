@@ -5,13 +5,7 @@
 <!-- Checkout Section Start -->
 <div class="section section-padding mt-5">
     <div class="container">
-        <div class="checkout-info">
-            <p class="info-header error">
-                <i class="fa fa-exclamation-circle"></i>
-                <strong>Error:</strong> Username is required.
-            </p>
-        </div>
-
+    
         <div class="checkout-info">
             <p class="info-header">
                 <i class="fa fa-exclamation-circle"></i> Have a coupon?
@@ -129,7 +123,7 @@
                                     <br>
                                     <div class="card card-dashboard">
                                         <div class="card-body" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1)">
-                                            <input type="radio" name="addressId" value="<%=address._id%>" <%if(index==0){%> checked <%}%> >
+                                            <input type="radio" id="addressId" name="addressId" value="<%=address._id%>" <%if(index==0){%> checked <%}%> >
                                             <p> 
                                                 Name:  <%=address.name%> <br>
                                                 Mobile:  <%=address.phone%>  <br>    
@@ -228,7 +222,7 @@
         
                 <!-- order area -->
 
-                <div class="col-lg-5">
+                <div class="col-lg-5 mb-5">
                     <div class="checkout-order">
                         <div class="checkout-title">
                             <h4 class="title">Your Order</h4>
@@ -271,7 +265,7 @@
                                         <td class="Product-name">
                                             <p>Shipping</p>
                                         </td>
-                                        <td class="Product-price">
+                                        <td class="Product-price"> 
                                             <ul class="shipping-list">
                                                 <li class="radio">
                                                     <input type="radio" name="shipping" value="flat rate" id="radio1"  />
@@ -330,7 +324,7 @@
                             </ul>
 
                             <div class="single-form">
-                                <button type="submit" onclick="" class="btn btn-primary btn-hover-dark d-block">Place Order</button>
+                                <button type="button" onclick="placeOrder()" class="btn btn-primary btn-hover-dark d-block">Place Order</button>
                             </div>
                         </div>
                     </div>
@@ -416,6 +410,106 @@
     </div>
 </div>
 <!-- Edit address modal end-->
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    function placeOrder(){
+        
+        const addressId=document.getElementById('addressId').value;
+        const paymentMethod=document.querySelector('.checkout-payment input[name="paymentMethod"]:checked').value ;
+
+        fetch('/placeOrder',{
+            method:'POST',
+            headers:{
+                "content-type": "application/json;charset=utf-8"
+            },
+            body:JSON.stringify({
+                addressId,
+                paymentMethod
+            })
+        })
+        .then((response)=>response.json())
+        .then((data)=>{
+            if(data.codSuccess){
+                window.location.href=`/orderSuccess?id=${data.orderId}`
+            }else if(data.onlineSucces){
+                console.log('data.order:',data.order);
+                razorpayPayment(data.order);
+            }
+        })
+        .catch((err)=>{
+            if (err) throw err
+        })
+    }
+
+    function razorpayPayment(order){
+        var options = {
+            "key": "rzp_test_bHCQ2sAI4219I7", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "furbar", //your business name
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order._id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+            "handler": function (response){
+                console.log('response:',response);
+                console.log("response.razorpay_payment_id:",response.razorpay_payment_id);
+                console.log("response.razorpay_order_id:",response.razorpay_order_id);
+                console.log("response.razorpay_signature:",response.razorpay_signature);
+
+
+                alert("response.razorpay_payment_id:",response.razorpay_payment_id);
+                alert("response.razorpay_order_id",response.razorpay_order_id);
+                alert("response.razorpay_signature",response.razorpay_signature)
+
+                verifyPayment(response,order);
+            },
+            "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
+                "name": "Gaurav Kumar", //your customer's name
+                "email": "gaurav.kumar@example.com", 
+                "contact": "9000090000"  //Provide the customer's phone number for better conversion rates 
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {  
+                "color": "#3399cc"
+            }
+        };
+
+        var rzp1 = new Razorpay(options);
+        rzp1.on('payment.failed', function (response){
+                alert(response.error.code);
+                alert(response.error.description);
+                alert(response.error.source);
+                alert(response.error.step);
+                alert(response.error.reason);
+                alert(response.error.metadata.order_id);
+                alert(response.error.metadata.payment_id);
+        });
+
+        rzp1.open();
+    }
+
+    function verifyPayment(response,order){
+        fetch('/verifyPayment',{
+            method:"POST",
+            headers:{
+                "content-type": "application/json;charset=utf-8"
+            },
+            body:JSON.stringify({
+                response,
+                order
+            })
+
+        })
+    }
+
+
+</script>
+
 
 <script>
 

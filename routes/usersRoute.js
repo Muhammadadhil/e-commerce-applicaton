@@ -69,12 +69,14 @@ router.post('/removeAddress',auth.isLogin,addressController.removeAddress);
 
 //checkout
 router.get('/checkout',auth.isLogin,orderController.loadCheckoutPage);
-router.post('/placeOrder',auth.isLogin,orderController.placeOrder);
 
 //order
+router.post('/placeOrder',auth.isLogin,orderController.placeOrder);
 router.get('/orderSuccess',auth.isLogin,orderController.loadSuccessPage);
 router.get('/detailsOrder',auth.isLogin,orderController.loadOrderDetails);
 router.post('/cancelProductOrder',orderController.cancelProductOrder);
+router.post('/verifyPayment',orderController.verifyOnlinePayment);
+
 
 //logout
 router.get('/logout',userController.userLogout);
