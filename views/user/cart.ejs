@@ -5,7 +5,7 @@
     <div class="container">
         <%if(cartDetails){%>
     <div class=" main-wrapper" id="reloadPart">
-        <%if(cartDetails.product.length){%>
+        <%if(cartDetails.product.length ){%>
 
         <div class="cart-wrapper">
             <!-- Cart Wrapper Start -->
@@ -22,45 +22,46 @@
                         </tr>
                     </thead>
                     <tbody>
-                    
+                        
                         <%cartDetails.product.forEach((product,i)=>{%>
-
-                        <tr>
-                            <td class="product-check text-center ">
-                                <input type="checkbox" checked>
-                            </td>
-                            <td class="product-thumb">
-                                <img src="/multer/products/<%=product.productId.images.image1%>" alt="**" />
-                            </td>
-                            <td class="product-info">
-                                <h6 class="name">
-                                    <a href="product-details.html"><%=product.productId.name%></a>
-                                </h6>
-                                <div class="product-prices">
-                                    <span class="old-price">₹1000.00</span>
-                                    <span class="sale-price">₹<%=product.productId.price%></span>
-                                </div>
-                                <div class="product-size-color">
-                                    <p>Size <span>S</span></p>
-                                    <p>Color <span>White</span></p>
-                                </div>
-                            </td>
-                            <td class="quantity">
-                                <div class="product-quantity d-inline-flex">
-                                    <button onclick="addProductQuantity('<%=product.productId._id%>',-1)" type="button" class="sub">-</button>
-                                    <input type="text" value="<%=product.quantity%>" disabled required />
-                                    <button onclick="addProductQuantity('<%=product.productId._id%>',1)" type="button" class="add">+</button>
-                                </div>
-                            </td>
-                            <td id="reloadTotal" class="product-total-price">
-                                <span class="price">₹<%=product.totalPrice%></span>
-                            </td>
-                            <td class="product-action">
-                                <button onclick="removeProductFromCart('<%=product.productId._id%>')" class="remove">
-                                    <i class="pe-7s-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
+                            <%if(product.isCategoryBlocked==='false'){%>
+                                <tr>
+                                    <td class="product-check text-center ">
+                                        <input type="checkbox" checked>
+                                    </td>
+                                    <td class="product-thumb">
+                                        <a href="/productDetails?id=<%=product.productId._id%>"><img   src="/multer/products/<%=product.productId.images.image1%>" alt="**" /></a>
+                                    </td>
+                                    <td class="product-info">
+                                        <h6 class="name">
+                                            <a href="/productDetails?id=<%=product.productId._id%>"><%=product.productId.name%></a>
+                                        </h6>
+                                        <div class="product-prices">
+                                            <span class="old-price">₹1000.00</span>
+                                            <span class="sale-price">₹<%=product.productId.price%></span>
+                                        </div>
+                                        <div class="product-size-color">
+                                            <p>Size <span>S</span></p>
+                                            <p>Color <span>White</span></p>
+                                        </div>
+                                    </td>
+                                    <td class="quantity">
+                                        <div class="product-quantity d-inline-flex">
+                                            <button onclick="addProductQuantity('<%=product.productId._id%>',-1)" type="button" class="sub">-</button>
+                                            <input type="text" value="<%=product.quantity%>" disabled required />
+                                            <button onclick="addProductQuantity('<%=product.productId._id%>',1)" type="button" class="add">+</button>
+                                        </div>
+                                    </td>
+                                    <td id="reloadTotal" class="product-total-price">
+                                        <span class="price">₹<%=product.totalPrice%></span>
+                                    </td>
+                                    <td class="product-action">
+                                        <button onclick="removeProductFromCart('<%=product.productId._id%>')" class="remove">
+                                            <i class="pe-7s-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            <%}%>
                         <%})%>     
                     </tbody>
                 </table>

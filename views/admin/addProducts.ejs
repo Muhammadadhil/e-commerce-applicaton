@@ -27,7 +27,7 @@
                             <div class="mb-3">
                                 <label for="product_sku" class="form-label">Category</label>
                                 <select type="text" placeholder="Type here" class="form-control" name="category" id="category">
-                                    <%categories.forEach((category,i)=>{%> <%if(category.isDeleted===false){%>
+                                    <%categories.forEach((category,i)=>{%> <%if(!category.isBlocked){%>
                                     <option value="<%=category.name%>"><%=category.name%></option>
                                     <%}%> <%})%>
                                 </select>
@@ -77,7 +77,7 @@
 </section>
 
 <!-- <script defer src="https://cdn.crop.guide/loader/l.js?c=DJNDTB"></script> -->
-<script defer src="https://cdn.crop.guide/loader/l.js?c=NTBDZJ"></script>
+<!-- <script defer src="https://cdn.crop.guide/loader/l.js?c=NTBDZJ"></script> -->
 
 <script>
     function previewImage(event) {

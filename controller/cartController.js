@@ -19,7 +19,7 @@ const loadCartPage=async (req,res)=>{
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500')
-    }
+    } 
 }
 
 //addtocart post

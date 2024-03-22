@@ -34,10 +34,10 @@ const productSchema=new mongoose.Schema({
             required:true
         }
     },
-    addedDate:{
-        type:Date,
-        required:true
-    },
+    // addedDate:{
+    //     type:Date,
+    //     required:true
+    // },
     description:{
         type:String,
         required:true
@@ -48,6 +48,10 @@ const productSchema=new mongoose.Schema({
         ref:'Category'
     },
     isDeleted:{
+        type:Boolean,
+        default:false
+    },
+    isCategoryBlocked:{
         type:Boolean,
         default:false
     }

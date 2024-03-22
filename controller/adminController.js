@@ -2,6 +2,7 @@ const User=require('../model/userModel');
 const Category=require('../model/categoryModel');
 const bcrypt=require('bcrypt');
 const Order=require('../model/orderModel');
+const Products=require('../model/productsModel');
 
 
 //load admin login page
@@ -179,8 +180,13 @@ const blockCategory=async (req,res)=>{
         const {categoryId}=req.body;
         const categoryData=await Category.findOne({_id:categoryId})
         categoryData.isBlocked=!categoryData.isBlocked ;
+
+        const productsData=await Products.findOne({categoryId:categoryId})
+        productsData.isCategoryBlocked=!productsData.isCategoryBlocked;
+
         await categoryData.save();
-        
+        await productsData.save();
+
         res.json({updated:true});
         
     } catch (error) {

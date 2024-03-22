@@ -32,8 +32,8 @@ const addProducts=async (req,res)=>{
         
         const category=await Category.findOne({name:details.category});
  
-        console.log("req.files:",req.files);
-        console.log("files:",files);
+        // console.log("req.files:",req.files);
+        // console.log("files:",files);
 
         const newProduct=new Products({
             name:details.productName,
@@ -126,10 +126,17 @@ const updateProducts=async (req,res)=>{
                 image2:images[1],
                 image3:images[2],
                 image4:images[3]
-            }
+            },
+            
         }
         const updatedProduct=await Products.findByIdAndUpdate({_id:productId},editedProduct,{new:true});
 
+        // const updateedmany=await Products.updateMany({},{$unset:{isCategorBlocked:""}})
+        // if(updateedmany){
+        //     console.log('deleted all',updateedmany);
+        // }     
+
+              
        if(updatedProduct){
             res.redirect('/admin/products')
        }else{
