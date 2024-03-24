@@ -4,11 +4,13 @@ const Cart=require('../model/cartModel');
 const Order=require('../model/orderModel');
 const Products=require('../model/productsModel');
 const Razorpay=require('razorpay');
+// const {createHmac}=require('node:crypto');
+const crypto =require('crypto');
 
 let instance = new Razorpay(
     {
-        key_id: 'rzp_test_bHCQ2sAI4219I7',
-        key_secret: 'YZ0M9r3rFrFuJs3Tlweg0SoD' 
+        key_id: process.env.razorpay_key_id,
+        key_secret: process.env.razorpay_key_secret 
     }
 )
 
@@ -41,6 +43,8 @@ const loadCheckoutPage=async (req,res)=>{
     }
 }
 
+let orderItems={};
+
 //place order post 
 const placeOrder=async (req,res)=>{
     try {
@@ -64,7 +68,7 @@ const placeOrder=async (req,res)=>{
 
         console.log('cartData:',cartData);
         
-        const orderItems=cartData.product.map((product,index)=>({
+        orderItems=cartData.product.map((product,index)=>({
             productId:product.productId,
             quantity:product.quantity,
             price:product.price,
@@ -101,21 +105,22 @@ const placeOrder=async (req,res)=>{
             res.status(200).json({codSuccess:true,orderId});
 
         }else if(status=='pending'){
-
+        
             const options={
-                amount: subTotal,
+                amount: subTotal*100,
                 currency: "INR",
                 receipt: orderId,
             };
-
+            //creating instace for razorpay order
             instance.orders.create(options,(err,order)=>{
                 if(err){
                     console.log("error:",err);
                 }
                 console.log("new Order:",order);
-                res.json({onlineSucces:true,order})
+                res.json({onlineSuccess:true,order})
                 
             });
+            await Cart.deleteMany({});
         }
 
     } catch (error) {
@@ -123,20 +128,60 @@ const placeOrder=async (req,res)=>{
         res.status(500).render('Error-500');
     }
 }
+
+
 //verify razorpay payment
 const verifyOnlinePayment=async (req,res)=>{
     try {
         console.log('verify payment route reacheddd!!!');
-        // console.log('response',req.body.response);
         const {response,order}=req.body;
-        // console.log('response',response);
         console.log(req.body);
+
+        let hmac=crypto.createHmac('sha256',process.env.razorpay_key_secret);
+        hmac.update(response.razorpay_order_id + '|' + response.razorpay_payment_id);
+        hmac=hmac.digest('hex'); 
+
+
+        if(hmac == response.razorpay_signature){
+            console.log('!!!signature verified!!!!');
+            const orderId=order.receipt;
+            await Order.findByIdAndUpdate({_id:order.receipt},{$set:{ orderStatus:'placed'}});
+            
+            // decreasing ordered products quantiy
+            console.log('orderItems:',orderItems);
+            for(const item of orderItems){
+                await Products.updateOne({_id:item.productId},{
+                    $inc:{quantity:-item.quantity}
+                })
+            }
+
+            res.json({statusChanged:true,orderId});
+        
+        }else{
+
+        }
 
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500');
     }
 }
+
+// const changeOrderStatus=async (orderId)=>{
+//     try {
+        
+//         const updateData= await Order.findByIdAndUpdate({_id:orderId},{$set:{ orderStatus:'placed'}});
+//         if(updateData){
+//             return true;
+//         }else{
+//             return false;
+//         }
+           
+//     } catch (error) {
+//         console.log(error.message);
+//         res.status(500).render('Error-500');
+//     }
+// }
 
 const loadSuccessPage=async (req,res)=>{
     try {

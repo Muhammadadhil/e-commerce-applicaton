@@ -69,7 +69,7 @@ const loadAccount=async (req,res)=>{
         const user=req.session.userId;
         const userData=await User.findById({_id:user});
         const address=await Address.findOne({userId:user});
-        const userOrders=await Order.find({userId:user})
+        const userOrders=await Order.find({userId:user}).sort({orderDate:-1});
         // console.log('address:',address);
         // console.log('orders:',userOrders);
     

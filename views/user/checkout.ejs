@@ -123,6 +123,7 @@
                                     <br>
                                     <div class="card card-dashboard">
                                         <div class="card-body" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1)">
+                                            
                                             <input type="radio" id="addressId" name="addressId" value="<%=address._id%>" <%if(index==0){%> checked <%}%> >
                                             <p> 
                                                 Name:  <%=address.name%> <br>
@@ -133,8 +134,8 @@
                                                 Address:    <%=address.address%><br>        
                                                 Landmark:   <%=address.state%><br>      
                                                 Pincode:    <%=address.pincode%><br>
-                                                </p>  
-
+                                            </p>  
+                                            
                                                 <a class="g-4" onclick="getAddressFeilds('<%=address._id%>')" data-bs-toggle="modal" data-bs-target="#editAddressModal" id="editAddress"><i
                                                     class="fa fa-edit"></i></a>
                                                 <a class="g-4" onclick="removeAddress('<%=address._id%>')" id="removeAddress"><i
@@ -300,7 +301,7 @@
                                 <li>
                                     <div class="single-payment">
                                         <div class="payment-radio radio">
-                                            <input type="radio" name="paymentMethod" value="online" id="bank" />
+                                            <input type="radio" name="paymentmethod" value="online" id="bank" />
                                             <label for="bank"><span></span> online</label>
 
                                             <div class="payment-details">
@@ -312,7 +313,7 @@
                                 <li>
                                     <div class="single-payment">
                                         <div class="payment-radio radio">
-                                            <input type="radio" name="paymentMethod" value="cash on delivery" id="cash" checked="checked" />
+                                            <input type="radio" name="paymentmethod" value="cash on delivery" id="cash" />
                                             <label for="cash"><span></span> Cash on Delivery</label>
 
                                             <div class="payment-details">
@@ -321,6 +322,7 @@
                                         </div>
                                     </div>
                                 </li>
+                                <span class="text-danger" id="paymentMethod-Error"></span>
                             </ul>
 
                             <div class="single-form">
@@ -411,14 +413,26 @@
 </div>
 <!-- Edit address modal end-->
 
+
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
     function placeOrder(){
         
         const addressId=document.getElementById('addressId').value;
-        const paymentMethod=document.querySelector('.checkout-payment input[name="paymentMethod"]:checked').value ;
-
+        const paymentMethodElement=document.querySelector('.checkout-payment input[name="paymentmethod"]:checked');
+        let paymentMethod='';
+        
+        if (!paymentMethodElement) {
+            const errorMessageElement = document.getElementById('paymentMethod-Error');
+            errorMessageElement.textContent = 'Please select a payment method.';
+            
+        } else {
+            const errorMessageElement = document.getElementById('paymentMethod-Error');
+            paymentMethod=paymentMethodElement.value;
+            errorMessageElement.textContent = '';
+        }
+        
         fetch('/placeOrder',{
             method:'POST',
             headers:{
@@ -433,7 +447,7 @@
         .then((data)=>{
             if(data.codSuccess){
                 window.location.href=`/orderSuccess?id=${data.orderId}`
-            }else if(data.onlineSucces){
+            }else if(data.onlineSuccess){
                 console.log('data.order:',data.order);
                 razorpayPayment(data.order);
             }
@@ -444,32 +458,24 @@
     }
 
     function razorpayPayment(order){
+
         var options = {
-            "key": "rzp_test_bHCQ2sAI4219I7", // Enter the Key ID generated from the Dashboard
-            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "key": "rzp_test_bHCQ2sAI4219I7", 
+            "amount": order.amount, 
             "currency": "INR",
-            "name": "furbar", //your business name
+            "name": "furbar", 
             "description": "Test Transaction",
             "image": "https://example.com/your_logo",
-            "order_id": order._id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "order_id": order.id, 
             // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
-            "handler": function (response){
+            "handler": function (response){                          //handler after payment success
                 console.log('response:',response);
-                console.log("response.razorpay_payment_id:",response.razorpay_payment_id);
-                console.log("response.razorpay_order_id:",response.razorpay_order_id);
-                console.log("response.razorpay_signature:",response.razorpay_signature);
-
-
-                alert("response.razorpay_payment_id:",response.razorpay_payment_id);
-                alert("response.razorpay_order_id",response.razorpay_order_id);
-                alert("response.razorpay_signature",response.razorpay_signature)
-
                 verifyPayment(response,order);
             },
-            "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
-                "name": "Gaurav Kumar", //your customer's name
-                "email": "gaurav.kumar@example.com", 
-                "contact": "9000090000"  //Provide the customer's phone number for better conversion rates 
+            "prefill": { 
+                "name": "muhammad adhil", 
+                "email": "aadhi@gmail.com", 
+                "contact": "9000090000" 
             },
             "notes": {
                 "address": "Razorpay Corporate Office"
@@ -481,13 +487,8 @@
 
         var rzp1 = new Razorpay(options);
         rzp1.on('payment.failed', function (response){
-                alert(response.error.code);
-                alert(response.error.description);
-                alert(response.error.source);
-                alert(response.error.step);
-                alert(response.error.reason);
-                alert(response.error.metadata.order_id);
-                alert(response.error.metadata.payment_id);
+            alert(response.error.description);
+            // window.location.href=`/detailsOrder?id=${order.receipt}`
         });
 
         rzp1.open();
@@ -503,13 +504,16 @@
                 response,
                 order
             })
-
         })
+        .then((res)=>res.json())
+        .then((data)=>{
+            if(data.statusChanged){
+                window.location.href=`/orderSuccess?id=${data.orderId}`
+            }
+        })   
     }
 
-
 </script>
-
 
 <script>
 
