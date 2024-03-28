@@ -8,6 +8,10 @@ const cartSchema=new mongoose.Schema({
         required:true,
         ref:'User'
     },
+    couponDiscount:{
+        type:Number,
+        default:0
+    },
     product:[
         {
             productId:{

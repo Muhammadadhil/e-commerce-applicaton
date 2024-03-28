@@ -11,7 +11,7 @@ const loadCartPage=async (req,res)=>{
             model:'products'          
         }
         const cartDetails=await Cart.findOne({userId:user}).populate(populateOption);   
-        //to avoid the products which isCatego(ryBlocked is true.
+        //to avoid the products which isCategoryBlocked is true.
         // const cartDetails=await Cart.aggregate([
         //     {
         //         $match:{userId:user}

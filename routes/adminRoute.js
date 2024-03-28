@@ -5,6 +5,7 @@ const upload=require('../middleware/multer');
 const auth=require('../middleware/auth');
 const adminController=require('../controller/adminController');
 const productController=require('../controller/productController');
+const couponController=require('../controller/couponController');
 // const orderController=require('../controller/orderController');
 
 
@@ -42,11 +43,13 @@ router.get('/orders',auth.isAdminLogin,adminController.loadOrderList);
 router.get('/orderDetails',auth.isAdminLogin,adminController.loadOrderDetails);
 router.post('/changeOrderStatus',adminController.changeOrderStatus);
 
-
-
-
-
-
+//coupons
+router.get('/coupons',auth.isAdminLogin,couponController.listCoupons);
+router.get('/addCoupons',auth.isAdminLogin,couponController.addCoupons);
+router.post('/addCoupons',auth.isAdminLogin,couponController.saveCoupons);
+router.get('/editCoupon',auth.isAdminLogin,couponController.editCoupon);
+router.post('/editCoupons',auth.isAdminLogin,couponController.saveEditCoupon);
+router.get('/deleteCoupon',auth.isAdminLogin,couponController.deleteCoupon);
 
 
 

@@ -9,7 +9,7 @@
         <div class="checkout-info">
             <p class="info-header">
                 <i class="fa fa-exclamation-circle"></i> Have a coupon?
-                <a data-bs-toggle="collapse" href="">Click here to enter your code</a>
+                <a data-bs-toggle="collapse" href="#coupon">Click here to enter your code</a>
             </p>
 
             <div class="collapse" id="coupon">
@@ -18,12 +18,15 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="single-form">
-                                    <input type="email" placeholder="Coupon code" />
+                                    <input type="text" placeholder="Coupon code" id="couponCode" required />
+                                    <span id="couponCodeError" class="text-danger"></span>
+                                    <span id="couponCodeSuccess" class="text-success "></span>
+
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="single-form">
-                                    <button class="btn btn-primary btn-hover-dark">Coupon</button>
+                                    <button onclick="applyCoupon(event)" class="btn btn-primary btn-hover-dark">Coupon</button>
                                 </div>
                             </div>
                         </div>
@@ -230,10 +233,10 @@
                         </div>
 
                         <div class="checkout-order-table table-responsive">
-                            <table class="table">
+                            <table class="table" id="reloadPart">
                                 <thead>
                                     <tr>
-                                        <th class="Product-name">Product</th>
+                                        <th class="Product-name fw-bold">Product</th>
                                         <th class="Product-price">Total</th>
                                     </tr>
                                 </thead>
@@ -252,19 +255,20 @@
                                     <%}%>
                                     
                                 </tbody>
-                                <tfoot>
+                                <tfoot >
                                     
                                     <tr>
                                         <td class="Product-name">
-                                            <p>Subtotal</p>
+                                            <p class="fw-bold ">total</p>
                                         </td>
                                         <td class="Product-price">
                                             <p>₹<%=subTotal%></p>
                                         </td>
                                     </tr>
+                                    
                                     <tr>
                                         <td class="Product-name">
-                                            <p>Shipping</p>
+                                            <p class="fw-bold ">Shipping</p>
                                         </td>
                                         <td class="Product-price"> 
                                             <ul class="shipping-list">
@@ -283,14 +287,28 @@
                                             </ul>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td class="Product-name">
-                                            <p>Total</p>
-                                        </td>
-                                        <td class="total-price">
-                                            <p>₹<%=subTotal%></p>
-                                        </td>
-                                    </tr>
+                                    <div >
+                                    <%if(cartDetails.couponDiscount>0){%>
+                                        <tr>
+                                            <td class="Product-name ">
+                                                <p class="fw-bold ">Subtotal</p>
+                                            </td>
+                                            <td class="Product-price">
+                                                <p>original amount ₹<span class="old-price"><%=subTotal%></span></p>
+                                                <p>coupon discounted amount:  ₹<%=subTotal-cartDetails.couponDiscount%></p>
+                                            </td>
+                                        </tr>
+                                    <%}else{%>
+                                        <tr>
+                                            <td class="Product-name">
+                                                <p class="fw-bold ">Subtotal</p>
+                                            </td>
+                                            <td class="Product-price">
+                                                <p>₹<%=subTotal%></p>
+                                            </td>
+                                        </tr>
+                                    <%}%>
+                                    </div>
                                 </tfoot>
                             </table>
                         </div>
@@ -301,12 +319,10 @@
                                 <li>
                                     <div class="single-payment">
                                         <div class="payment-radio radio">
+                                            <p class="Product-name fw-bold ">Payment method</p>
+                                            
                                             <input type="radio" name="paymentmethod" value="online" id="bank" />
-                                            <label for="bank"><span></span> online</label>
-
-                                            <div class="payment-details">
-                                                <p>Please send a Check to Store name with Store Street, Store Town, Store State, Store Postcode, Store Country.</p>
-                                            </div>
+                                            <label for="bank"><span></span>Online-Razorpay</label>
                                         </div>
                                     </div>
                                 </li>
@@ -415,6 +431,40 @@
 
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    function applyCoupon(event){
+
+        event.preventDefault();
+
+        const code=document.getElementById('couponCode').value
+        const errorElement=document.getElementById('couponCodeError');
+        const successElement=document.getElementById('couponCodeSuccess');
+
+        
+        fetch(`/applyCoupon?cpn=${code}`)
+        .then((res)=>res.json())
+        .then((data)=>{
+            if(data.verify){
+                console.log('ivdeeeee')
+                // const couponDiv=document.getElementById('couponPart');
+                // couponDiv.hidden=false;
+                // errorElement.innerHTML='';
+                successElement.innerHTML=`${data.couponData.couponName} coupon applied for the current order`
+                // document.getElementById('CouponDiscount').textContent=`${data.couponData.discountAmount}`
+                
+                const totalPart=document.getElementById('reloadPart');
+                
+                $('#reloadPart').load('/checkout #reloadPart ');
+ 
+            }else if(data.added=='already used'){
+                errorElement.innerHTML='Coupon already used';
+            }else if(!data.verify){
+                errorElement.innerHTML='Enter correct coupon code';
+            }
+        })
+    }
+</script>
 
 <script>
     function placeOrder(){

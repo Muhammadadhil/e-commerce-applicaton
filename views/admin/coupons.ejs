@@ -1,0 +1,106 @@
+<%-include('../layouts/adminHeader')%>
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Coupons</h2>
+            <p>here are coupons</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table id="reloadPart" class="table table-hover">
+                            <%if(coupons.length>1){%>
+                                <thead>
+                                    <tr>
+                                        <th>no.</th>
+                                        <th>Name</th>
+                                        <th>Code</th>
+                                        <th>Discount Amount</th>
+                                        <th>Expire Date</th>
+                                        <th>Criteria Amount</th>
+                                        <th>Use Limit</th>
+                                        <th>action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <%coupons.forEach((coupon,i)=>{%>
+                                    <tr>
+                                        <td><%=i+1%></td>
+                                        <td><%=coupon.couponName%></td>
+                                        <td><%=coupon.couponCode%></td>
+                                        <td><%=coupon.discountAmount%></td>
+                                        <%if(coupon.expiryDate>coupon.createdAt){%>
+                                            <td style="font-weight: bolder;"><%=coupon.expiryDate.toLocaleDateString('en-IN', { weekday: 'short' , year: 'numeric' , month: 'short' , day: 'numeric' })%></td>
+                                        <%}else{%>
+                                            <td class="text-danger "><%=coupon.expiryDate.toLocaleDateString('en-IN', { weekday: 'short' , year: 'numeric' , month: 'short' , day: 'numeric' })%>
+                                                <span class="badge rounded-pill alert-danger ">expired</span>
+                                            </td>
+                                   <%}%>
+                                        <td><%=coupon.criteriaAmount%></td>
+                                        <td><%=coupon.useLimit%></td>
+                                        <td>
+                                            <%if(coupon.expiryDate>coupon.createdAt){%>
+                                                <button id="blockCoupon" class="btn btn-outline-danger" onclick="deleteCoupon('<%=coupon._id%>')">delete</button><br><br>
+                                                <a href="/admin/editCoupon?id=<%=coupon._id%>" class="btn btn-outline-secondary">edit</a>
+                                            <%}else{%>
+                                                
+                                            <%}%>
+                                        </td>
+                                    </tr>
+                                <%})%>
+                                </tbody>
+                            <%}else{%>
+                                <div>
+                                    <h4 class="text-center">No Coupons to ist</h4>
+                                </div>
+                            <%}%>    
+                        </table>
+                    </div>
+                </div>
+                <!-- .col// -->
+            </div>
+            <!-- .row // -->
+        </div>
+        <!-- card body .// -->
+    </div>
+    <div class="d-flex justify-content-center  ">
+        <a type="button" class="btn btn-primary" href="/admin/addCoupons">add Coupons</a>
+    </div>
+    <!-- card .// -->
+</section>
+<%-include('../layouts/adminFooter')%>
+
+<script>
+   function deleteCoupon(couponId){
+
+        Swal.fire({
+            title: "Are you sure ?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`deleteCoupon?id=${couponId}`)
+                .then((res)=> res.json())
+                .then((data)=>{
+                    if(data.deleted){
+                        Swal.fire({
+                        title: "Deleted!",
+                        text: "Coupon has been deleted.",
+                        icon: "success"
+                        }).then(()=>{
+                            window.location.reload();
+                    })
+                }
+                })
+            }
+        });
+    }
+</script>

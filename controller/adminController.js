@@ -3,7 +3,7 @@ const Category=require('../model/categoryModel');
 const bcrypt=require('bcrypt');
 const Order=require('../model/orderModel');
 const Products=require('../model/productsModel');
-
+const Coupon=require('../model/couponModel');
 
 //load admin login page
 const loginLoad=async (req,res)=>{
@@ -264,7 +264,6 @@ const changeOrderStatus=async (req,res)=>{
 }
 
 
-
 module.exports={
     loginLoad,
     verifyAdmin,
@@ -279,6 +278,5 @@ module.exports={
     adminLogout,
     loadOrderList,
     loadOrderDetails,
-    changeOrderStatus
-
+    changeOrderStatus,
 }

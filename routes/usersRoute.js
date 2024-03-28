@@ -7,6 +7,7 @@ const addressController=require('../controller/addressController');
 const orderController=require('../controller/orderController');
 const auth=require('../middleware/auth');
 const {validateAddress}=require('../middleware/validate');
+const couponController=require('../controller/couponController');
 
 router.use(express.json());
 router.use(express.urlencoded({extended:true}));
@@ -77,6 +78,7 @@ router.get('/detailsOrder',auth.isLogin,orderController.loadOrderDetails);
 router.post('/cancelProductOrder',orderController.cancelProductOrder);
 router.post('/verifyPayment',orderController.verifyOnlinePayment);
 
+router.get('/applyCoupon',couponController.verifyCoupon)
 
 //logout
 router.get('/logout',userController.userLogout);

@@ -7,6 +7,7 @@ const Order=require('../model/orderModel');
 const bcrypt=require('bcrypt');
 const nodemailer=require('nodemailer');
 
+
 // const dotenv=require('')
 const {registerationSchema}=require('../middleware/validate');
 const { date } = require('joi');
@@ -165,6 +166,7 @@ const loadShop=async (req,res)=>{
         res.status(500).render('Error-500')
     }
 }
+//search 
 const searchProducts=async (req,res)=>{
     try {
         const value=req.query.searchKey;
@@ -174,6 +176,7 @@ const searchProducts=async (req,res)=>{
         // console.log('products:',products);
         // res.send(products); 
         res.json({products})
+        
     } catch (error) { 
         console.log(error.message);
         res.status(500).render('Error-500')
@@ -445,6 +448,8 @@ const userLogout=async (req,res)=>{
 
 
 
+
+
 module.exports={
     loadHomePage,
     loadAbout,
@@ -463,5 +468,5 @@ module.exports={
     loadContactPage,
     editProfile,
     otpVerificationEmail,
-    searchProducts
+    searchProducts,
 }

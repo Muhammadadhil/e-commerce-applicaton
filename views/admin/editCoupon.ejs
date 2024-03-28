@@ -1,0 +1,141 @@
+<%-include('../layouts/adminHeader')%>
+
+<section class="content-main">
+
+    <section class="content-main py-4 d-flex justify-content-center">
+        <div class="container-fluid">
+            <div class="row">
+                <h2 class="text-center">Edit Coupon</h2>
+                <div class="col-12 col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="/admin/editCoupons" onsubmit="return ValidateForm(event)" method="post"  id="couponForm">
+                                
+                                <div class="form-group my-3">
+                                    <label for="name">Coupon name</label>
+                                    <input type="text" class="form-control" id="name" name="couponName"
+                                         value="<%=couponData.couponName%>">
+                                    <div id="nameError" class=" text-danger  error-message"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="code">Coupon code </label>
+                                        <input class="form-control" id="code" name="couponCode" readonly value="<%=couponData.couponCode%>">
+                                        <button type="button" id="generateButton" class="btn btn-info my-3">Generate new </button>
+                                    <div id="codeError" class="text-danger error-message"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="discount">Discount Amount</label>
+                                    <input type="number" class="form-control" id="discount" name="discount"
+                                        placeholder="Type here" value="<%=couponData.discountAmount%>">
+                                    <div id="discountError" class=" text-danger error-message"></div>
+                                </div>
+                                <div class="form-group my-3">
+                                    <label for="expirydate">Expire Date</label>
+                                    <input  class="form-control" name="expiryDate" readonly value="<%=couponData.expiryDate.toLocaleDateString('en-US', { weekday: 'short' , year: 'numeric' , month: 'short' , day: 'numeric' })%>"> 
+                                </div>
+                                <div class="form-group my-3">
+                                    <label for="expirydate">Change Expiry</label>
+                                    <input type="date" class="form-control" id="changeExpiryDate" name="changeExpiryDate" value="<%=couponData.expiryDate%>">
+                                    <div id="expirydateError" class="text-danger error-message"></div>
+                                </div>
+                                <div class="form-group my-3">
+                                    <label for="criteriamount">Criteria Amount</label>
+                                    <input type="number" class="form-control" id="criteriAmount"
+                                        name="criteriaAmount" placeholder="Type here" value="<%=couponData.criteriaAmount%>">
+                                    <div id="criteriamountError" class="text-danger error-message"></div>
+                                </div>
+                                <div class="form-group my-3">
+                                    <label for="criteriamount">Usage limit</label>
+                                    <input type="number" class="form-control" id="useLimit"
+                                        name="useLimit" placeholder="Type here" value="<%=couponData.useLimit%>">
+                                    <div id="useLimitError" class="text-danger error-message"></div>
+                                </div>
+                                <input hidden name="couponId" value="<%=couponData._id%>">
+                                <div class="container d-flex justify-content-center mt-4">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function generateRandomString(length) {
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var randomString = '';
+            for (var i = 0; i < length; i++) {
+                randomString += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return randomString;
+        }
+
+        document.getElementById('generateButton').addEventListener('click',()=>{
+            const code=generateRandomString(5);
+            
+            document.getElementById('code').value='Furbar'+code;
+        })
+    </script>
+
+<script>
+    function ValidateForm(event){
+        
+        
+        const nameInput = document.getElementById('name').value;
+        console.log('nameINput:',nameInput);
+
+        const codeInput = document.getElementById('code').value;
+        console.log('codeInput:',codeInput);
+
+        const discountInput = document.getElementById('discount').value;
+        console.log('discountInput:',discountInput);
+
+        const criteriaAmountInput = document.getElementById('criteriAmount').value;
+        console.log('criteriaAmountInput:',criteriaAmountInput);
+
+        const useLimit = document.getElementById('useLimit').value;
+        console.log('useLimit:',useLimit);
+
+        
+        const nameError = document.getElementById('nameError');
+        const codeError = document.getElementById('codeError');
+        const discountError = document.getElementById('discountError');
+        const activationdateError = document.getElementById('activationdateError');
+        const expirydateError = document.getElementById('expirydateError');
+        const criteriaAmountError = document.getElementById('criteriamountError');
+        const useLimitError = document.getElementById('useLimitError');
+        
+        
+        if (!nameInput.trim()) {
+            nameError.innerHTML = 'Coupon name should not be empty';
+            return false;
+        }else if(!/^[a-zA-Z\s][a-zA-Z0-9\s]*$/.test(nameInput)){
+            nameError.innerHTML = 'Coupon name should not only numbers';
+            return false;
+        }else{
+            nameError.innerHTML =""
+        }
+        if(!discountInput.trim()){
+            discountError.innerHTML='discount should not be empty';
+            return false;
+        }else if(discountInput> criteriaAmountInput){
+            discountError.innerHTML=" discount amount should not be greater than criteria amount"
+            return false
+        }
+        if(!criteriaAmountInput.trim()){
+            criteriaAmountError.innerHTML='criterai amount field should not empty';
+            return false;
+        }
+        if(!useLimit.trim()){
+            useLimitError.innerHTML='limit field should not empty';
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+
+<%-include('../layouts/adminFooter')%>

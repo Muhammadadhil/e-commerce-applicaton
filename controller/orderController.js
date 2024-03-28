@@ -28,12 +28,9 @@ const loadCheckoutPage=async (req,res)=>{
         if(!cartDetails){
             return res.redirect('/cart')
         }
-        // console.log('cartDetais:',cartDetails);
-        
-        // console.log("cartDetails.product:",cartDetails?.product);
+
         const productsCount=cartDetails?.product.length;
         const subTotal=cartDetails?.product.reduce((total,currentTotal)=> total+currentTotal.totalPrice,0);
-        
         
         res.render('checkout',{user,userAddresses,cartDetails,subTotal});
         
@@ -64,9 +61,11 @@ const placeOrder=async (req,res)=>{
         const selectedAddress=result.address.find(address => address._id == addressId);
             
         const cartData=await Cart.findOne({userId:userId});
-        const subTotal=cartData?.product.reduce((total,currentTotal)=> total+currentTotal.totalPrice,0);
+        const subTotal=(cartData?.product.reduce((total,currentTotal)=> total+currentTotal.totalPrice,0))-cartData.couponDiscount;
 
         console.log('cartData:',cartData);
+        console.log('subtotal:',subTotal);
+
         
         orderItems=cartData.product.map((product,index)=>({
             productId:product.productId,
@@ -166,22 +165,6 @@ const verifyOnlinePayment=async (req,res)=>{
         res.status(500).render('Error-500');
     }
 }
-
-// const changeOrderStatus=async (orderId)=>{
-//     try {
-        
-//         const updateData= await Order.findByIdAndUpdate({_id:orderId},{$set:{ orderStatus:'placed'}});
-//         if(updateData){
-//             return true;
-//         }else{
-//             return false;
-//         }
-           
-//     } catch (error) {
-//         console.log(error.message);
-//         res.status(500).render('Error-500');
-//     }
-// }
 
 const loadSuccessPage=async (req,res)=>{
     try {
