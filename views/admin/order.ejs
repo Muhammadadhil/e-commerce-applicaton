@@ -13,6 +13,7 @@
                     <tr>
                         <th>No.</th>
                         <th scope="col">Order Id</th>
+                        <th scope="col">Order Date</th>
                         <th scope="col">Payment</th>
                         <th scope="col">No.of items</th>
                         <th scope="col">Total amount</th>
@@ -24,6 +25,7 @@
                     <%orders.forEach((order,i)=>{%>
                         <tr>
                             <td><%=i+1%></td>
+                            <td><%=order.orderDate.toLocaleDateString('en-US',dateOptions)%></td>
                             <td><%=order._id%></td>
                             <td><%=order.payment%></td>
                             <td><%=order.products.length%></td>

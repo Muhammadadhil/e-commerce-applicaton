@@ -146,7 +146,7 @@ const updateCategory=async (req,res)=>{
         const currentCategory= await Category.findOne({_id:categoryId});
 
         if(!currentCategory){
-            return res.json({update:false,message:"category not found"})
+            return res.json({update:false,message:"category not found"});
         }
 
         console.log('name ,currentCategory.name:',name,currentCategory.name);
@@ -170,7 +170,7 @@ const updateCategory=async (req,res)=>{
         
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('error-500') 
+        res.status(500).render('error-500'); 
     }
 }
 
@@ -186,34 +186,39 @@ const blockCategory=async (req,res)=>{
         
         const productsData=await Products.updateMany({categoryId:categoryId},{$set:{isCategoryBlocked:isBlocked}})
         console.log('productsData:',productsData);
-        
-        
+    
         res.json({updated:true});
         
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('error-500') 
+        res.status(500).render('error-500'); 
     }
 }
 
 const adminLogout=async (req,res)=>{
     try {
-        
         delete req.session.adminId;
         res.redirect('/admin/');
         
     } catch (error) {
         console.log(error.message);
-        res.status(500).render('error-500') 
+        res.status(500).render('error-500'); 
     }
 }
-
-//order 
+//list order 
 const loadOrderList=async (req,res)=>{
     try {
-
-        const orders=await Order.find({}); 
-        res.render('order',{orders});
+        const dateOptions = {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric'
+        };
+        const orders=await Order.find({}).sort({orderDate:-1}); 
+        res.render('order',{orders,dateOptions});
 
     } catch (error) {
         console.log(error.message);
@@ -259,14 +264,21 @@ const changeOrderStatus=async (req,res)=>{
         console.log(error.message);
         res.status(500).render('error-500') 
     }
-    
-
 }
-
+//load sales report page
 const loadSalesReport=async(req,res)=>{
     try {
+        const dateOptions = {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric'
+        };
         const orders=await Order.find({}).populate('userId').sort({orderDate:-1});
-        res.render('salesReport',{orders})
+        res.render('salesReport',{orders,dateOptions})
 
     } catch (error) {
         console.log(error.message);

@@ -147,9 +147,9 @@ const verifyOnlinePayment=async (req,res)=>{
         hmac.update(response.razorpay_order_id + '|' + response.razorpay_payment_id);
         hmac=hmac.digest('hex'); 
 
-
+        
         if(hmac == response.razorpay_signature){
-            console.log('!!!signature verified!!!!');
+            // console.log('!!!signature verified!!!!');
             const orderId=order.receipt;
             await Order.findByIdAndUpdate({_id:order.receipt},{$set:{ orderStatus:'placed'}});
             

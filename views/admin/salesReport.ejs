@@ -55,7 +55,7 @@
                             <td><%=i+1%></td>
                             <td class="text-success"><%=order._id%></td>
                             <td><%=order.userId.firstName+order.userId.lastname%></td>
-                            <td class="fw-bold "><%=order.orderDate.toLocaleDateString('en-US', { weekday: 'short' , year: 'numeric' , month: 'short' , day: 'numeric' })%></td>
+                            <td class="fw-bold "><%=order.orderDate.toLocaleDateString('en-US', dateOptions)%></td>
                             <td class="badge-pill badge-soft-success"><%=order.orderStatus%></td>
                             <td><%=order.subTotal%></td>
                             <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i><%=order.payment%></td>
@@ -87,8 +87,8 @@
 <!-- content-main end// -->
 
 <script>
-    function filterSales(){
-        fetch('')
+    function filterSales(criteria){
+        fetch(`/filterSales?id=${criteria}`)
     }
 </script>
 

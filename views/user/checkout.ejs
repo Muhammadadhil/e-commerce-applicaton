@@ -475,12 +475,15 @@
                 $('#reloadPart').load('/checkout #reloadPart ');
  
             }else if(data.added=='already used'){
+                successElement.innerHTML='';
                 errorElement.innerHTML='Coupon already used';
             }
             else if(data.coupon=='criteria didnot reached'){
+                successElement.innerHTML='';
                 errorElement.innerHTML=`this coupon is available for minimum purchase of ${data.couponData.criteriaAmount}`;
 
             }else if(!data.verify){
+                successElement.innerHTML='';
                 errorElement.innerHTML='Enter correct coupon code';
             }
             
