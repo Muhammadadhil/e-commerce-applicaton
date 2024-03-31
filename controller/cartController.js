@@ -1,6 +1,7 @@
 const Cart=require('../model/cartModel');
 const Products=require('../model/productsModel');
 
+
 //load cart page
 const loadCartPage=async (req,res)=>{
     try {
@@ -10,7 +11,15 @@ const loadCartPage=async (req,res)=>{
             path:'product.productId',
             model:'products'          
         }
-        const cartDetails=await Cart.findOne({userId:user}).populate(populateOption);   
+        let cartDetails=await Cart.findOne({userId:user})
+        const itemsCount=cartDetails?.product?.length;
+
+        if(!cartDetails){
+            return res.render('cart',{user,itemsCount,cartDetails})
+        }
+
+        cartDetails=await Cart.findOne({userId:user}).populate(populateOption);
+        
         //to avoid the products which isCategoryBlocked is true.
         // const cartDetails=await Cart.aggregate([
         //     {
@@ -25,7 +34,7 @@ const loadCartPage=async (req,res)=>{
         //         }
         //     },{
         //         $unwind:"$product"
-        //     }
+        //     },
         //     {
         //         $match:{
         //             "product.isCategoryBlocked":false
@@ -37,15 +46,14 @@ const loadCartPage=async (req,res)=>{
         //             __v: { $first: "$__v" },
         //             product: { $push: "$product" } // Push matched products back into an array
         //         }
-                
         //     }
         // ])
         console.log("carDetails:",cartDetails);
-        // const carDetailsToShow=cartDetails.productId.find((product)=> product.isCategoryBlocked==false);
-        const productsCount=cartDetails?.product.length;
-        const subTotal=cartDetails?.product.reduce((total,currentTotal)=> total+currentTotal.totalPrice,0);
-        
-        res.render('cart',{user,cartDetails,subTotal,productsCount});
+        // const subTotal=cartDetails?.product?.reduce((total,currentTotal)=> total+currentTotal.totalPrice,0);
+        const subTotal=cartDetails.product.reduce((total,current)=>{
+            return total+current.productId.price*current.quantity
+        },0);
+        res.render('cart',{user,itemsCount,cartDetails,subTotal});
     } catch (error) {
         console.log("error:",error.message);
         res.status(500).render('Error-500')
@@ -59,13 +67,24 @@ const addProductsToCart=async (req,res)=>{
 
         const {productId,count}=req.body;
         const userId=req.session.userId;
-        
-        const existingProduct=await Cart.findOne({userId:userId,'product.productId':productId},{'product.$':1});
-        console.log('existingProduct:',existingProduct);
 
+        const populateOption={
+            path:'product.productId',
+            model:'products'
+        }
+        const existingProduct = await Cart.findOne(
+            {
+              userId: userId,
+              'product.productId': productId
+            },
+            {
+              'product.$': 1
+            }
+          ).populate(populateOption);
+
+        console.log('existingProduct:',existingProduct);
         //find the total product stock 
         const totalProductStock=await Products.findOne({_id:productId},{quantity:1});
-        // console.log('totalProductStock:',totalProductStock);
         if(totalProductStock.quantity==0){
             return res.json({addedToCart:'not done'})
         }
@@ -74,7 +93,7 @@ const addProductsToCart=async (req,res)=>{
 
             //find the quantity of existing product in the cart 
             const currentQty=existingProduct.product.find((product)=> product).quantity;
-            console.log('CurrentQty:',currentQty,"totalProductStock:",totalProductStock.quantity);
+            // console.log('CurrentQty:',currentQty,"totalProductStock:",totalProductStock.quantity);
 
             if(count==-1 && count+currentQty <1){
                 return res.json({added:false});
@@ -85,9 +104,8 @@ const addProductsToCart=async (req,res)=>{
             }
 
             //finding the product price 
-            const priceOfProduct=existingProduct.product.find((product)=> product.productId==productId).price;
-            console.log('priceOfProduct:',priceOfProduct);
-
+            const priceOfProduct=existingProduct.product[0].productId.price;
+            
             // increment the product quantity and total price
             const incrementedProduct=await Cart.findOneAndUpdate(
                 {userId:userId,'product.productId':productId}, 
@@ -97,8 +115,7 @@ const addProductsToCart=async (req,res)=>{
                 }},
                 {new:true}
             );
-            console.log('incrementedProduct',incrementedProduct);
-            
+
             res.json({added:true});
 
         }else{
@@ -112,18 +129,14 @@ const addProductsToCart=async (req,res)=>{
                     $push:{
                         product:{
                             productId:productDetails._id,
-                            price:productDetails.price,
+                            // price:productDetails.price,
                             quantity:1,
                             totalPrice:productDetails.price
                         }
                     }
                 },{upsert:true});
-             // console.log('newCart:',newCart);    
-             console.log('added new product to the cart!');
              res.json({addedNew:true})
         }
-
-
 
     } catch (error) {
         console.log(error.message);

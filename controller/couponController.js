@@ -29,7 +29,7 @@ const addCoupons=async (req,res)=>{
 //add coupons post
 const saveCoupons=async (req,res)=>{
     try {
-        const {couponName,couponCode,discount,activationDate,expiryDate,criteriaAmount,useLimit}=req.body;
+        const {couponName,couponCode,discount,activationDate,expiryDate,criteriaAmount}=req.body;
         console.log('expiryDate:',expiryDate);
         console.log('new Date(activationDate):',new Date(activationDate));
 
@@ -40,7 +40,6 @@ const saveCoupons=async (req,res)=>{
             activationDate: new Date(activationDate),
             expiryDate: new Date(expiryDate), 
             criteriaAmount: criteriaAmount,
-            useLimit:useLimit
         });
 
         newCoupon.save();
@@ -64,7 +63,7 @@ const editCoupon=async (req,res)=>{
 //edit post 
 const saveEditCoupon=async (req,res)=>{
     try {
-        const {couponId,couponName,couponCode,discount,expiryDate,changeExpiryDate,criteriaAmount,useLimit}=req.body;
+        const {couponId,couponName,couponCode,discount,expiryDate,changeExpiryDate,criteriaAmount}=req.body;
         console.log(couponName,couponCode,discount,changeExpiryDate);
 
         const editedCoupon={
@@ -73,7 +72,6 @@ const saveEditCoupon=async (req,res)=>{
                 discountAmount: discount,
                 expiryDate: changeExpiryDate?changeExpiryDate:expiryDate, 
                 criteriaAmount: criteriaAmount,
-                useLimit:useLimit
         }
         const updatedCoupon=await Coupon.findByIdAndUpdate(couponId,editedCoupon,{new:true});
         if(updatedCoupon){
@@ -110,11 +108,20 @@ const verifyCoupon=async (req,res)=>{
     try {
         const userId=req.session.userId;
         const userEnteredCode=req.query.cpn;
+        console.log('userEnteredCode:',userEnteredCode);
+        const orderSubTotal=req.query.total;
+        console.log('orderSubTotal:',orderSubTotal);
         const currentDate=new Date();
         const couponData=await Coupon.findOne({couponCode:userEnteredCode,expiryDate:{$gte:currentDate}});
         console.log('couponData:',couponData);
+        console.log('couponData.criteriaAmount:',couponData.criteriaAmount);
+        if(orderSubTotal<couponData.criteriaAmount){
+            return res.json({coupon:'criteria didnot reached',couponData});
+        }
+        console.log('couponData:',couponData);
+        // if(couponData.)
         const useridExist=couponData.usedUser.includes(userId);
-        // console.log('useridExist:',useridExist)
+        
         if(couponData){
             if(useridExist){
                 return res.json({added:'already used'})

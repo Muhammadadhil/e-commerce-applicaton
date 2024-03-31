@@ -6,19 +6,31 @@ const Address=require('../model/addressModel');
 const Order=require('../model/orderModel');
 const bcrypt=require('bcrypt');
 const nodemailer=require('nodemailer');
-
-
+const Cart=require('../model/cartModel');
 // const dotenv=require('')
 const {registerationSchema}=require('../middleware/validate');
 const { date } = require('joi');
 
+
+//getting cart items count
+const getCartDetails=async (userId)=>{
+    try {
+        const cartDetails=await Cart.findOne({userId:userId});
+        const itemsCount=cartDetails?.product.length;
+        return {itemsCount,cartDetails};
+    } catch (error) {
+        throw new Error(err.message);
+    }
+}
+
 //loading home page
-const loadHomePage=(req,res)=>{
+const loadHomePage=async (req,res)=>{
     try {
         const user=req.session.userId;
         console.log(`hello aadhi,this is user : ${user}`);
         // const blockedMessage=req.flash('blocked')
-        res.render('home',{user})
+        const {itemsCount}=await getCartDetails(user);
+        res.render('home',{user,itemsCount})
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500')
@@ -38,7 +50,8 @@ const hashPassword=async(password)=>{
 const loadAbout=async (req,res)=>{
     try {
         const user=req.session.userId;
-        res.render('about',{user})
+        const {itemsCount}=await getCartDetails(user);
+        res.render('about',{user,itemsCount})
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500')
@@ -73,8 +86,8 @@ const loadAccount=async (req,res)=>{
         const userOrders=await Order.find({userId:user}).sort({orderDate:-1});
         // console.log('address:',address);
         // console.log('orders:',userOrders);
-    
-        res.render('account',{user,userData,address,userOrders});
+        const {itemsCount}=await getCartDetails(user);
+        res.render('account',{user,itemsCount,userData,address,userOrders});
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500')
@@ -105,7 +118,8 @@ const editProfile=async (req,res)=>{
 const loadBlogPage=async (req,res)=>{
     try {
         const user=req.session.userId;
-        res.render('blog',{user});
+        const {itemsCount}=await getCartDetails(user);
+        res.render('blog',{user,itemsCount});
         
     } catch (error) {
         console.log(error.message);
@@ -116,7 +130,8 @@ const loadBlogPage=async (req,res)=>{
 const loadContactPage=async (req,res)=>{
     try {
         const user=req.session.userId;
-        res.render('contact',{user});
+        const {itemsCount}=await getCartDetails(user);
+        res.render('contact',{user,itemsCount});
         
     } catch (error) {
         console.log(error.message);
@@ -159,8 +174,8 @@ const loadShop=async (req,res)=>{
         // }
         
         const products=await Products.find().populate('categoryId').sort(sortOption)
-
-        res.render('shop',{products,user});
+        const {itemsCount}=await getCartDetails(user);
+        res.render('shop',{products,user,itemsCount});
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500')
@@ -189,7 +204,8 @@ const loadProductDetails=async (req,res)=>{
         const productId=req.query.id;
         const user=req.session.userId;
         const productData=await Products.findOne({_id:productId}).populate('categoryId');
-        res.render('productDetails',{productData,user});
+        const {itemsCount}=await getCartDetails(user);
+        res.render('productDetails',{productData,user,itemsCount});
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500')
@@ -469,4 +485,5 @@ module.exports={
     editProfile,
     otpVerificationEmail,
     searchProducts,
+    getCartDetails
 }

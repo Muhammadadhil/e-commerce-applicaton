@@ -13,6 +13,10 @@ const couponSchema=mongoose.Schema({
         type:String,
         required:true
     },
+    activationDate:{
+        type:Date,
+        required:true
+    },
     expiryDate:{
         type:Date,
         required:true
@@ -21,21 +25,13 @@ const couponSchema=mongoose.Schema({
         type:String,
         required:true
     },
-    useLimit:{
-        type:Number,
-        required:true
-    },
     usedUser:{
         type:Array,
         ref:'User',
         default:[]
     },
-    isActive:{
-        type:Boolean,
-        default:false
-    }  
+     
 },
-
     {
         timestamps:true
     }

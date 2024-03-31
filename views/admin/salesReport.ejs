@@ -1,0 +1,96 @@
+
+<%-include('../layouts/adminHeader')%>
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Sales report</h2> 
+        </div>
+    </div>
+    <div class="card mb-4">
+        <header class="card-header">
+            <div class="row align-items-center">
+                <div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
+                    <div class="custom_select">
+                        <select onchange="filterSales()" class="form-select select-nice">
+                            <option selected>All</option>
+                            <option>weekly</option>
+                            <option>monthly</option>
+                            <option>yearly</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2 col-6">
+                    <input type="date" value="02.05.2021" class="form-control" />
+                </div>
+                <div class="col-md-2 col-6">
+                    <div class="custom_select">
+                        <select class="form-select select-nice">
+                            <option selected>Status</option>
+                            <option>All</option>
+                            <option>Paid</option>
+                            <option>Chargeback</option>
+                            <option>Refund</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="card-body" >
+            <table class="table text-center "id='reloadDiv'>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th class="text-dark " scope="col">Order Id</th>
+                        <th class="text-dark " scope="col">Billing name</th>
+                        <th class="text-dark " scope="col">Order date</th>
+                        <th class="text-dark " scope="col">Payment status</th>
+                        <th class="text-dark " scope="col">Total amount</th>
+                        <th class="text-dark " scope="col">Payment method</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%orders.forEach((order,i)=>{%>
+                        <tr>
+                            <td><%=i+1%></td>
+                            <td class="text-success"><%=order._id%></td>
+                            <td><%=order.userId.firstName+order.userId.lastname%></td>
+                            <td class="fw-bold "><%=order.orderDate.toLocaleDateString('en-US', { weekday: 'short' , year: 'numeric' , month: 'short' , day: 'numeric' })%></td>
+                            <td class="badge-pill badge-soft-success"><%=order.orderStatus%></td>
+                            <td><%=order.subTotal%></td>
+                            <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i><%=order.payment%></td>
+                        </tr>
+                    <%})%>
+                    
+                </tbody>
+            </table>
+            
+        </div>
+        <!-- card-body end// -->
+    </div>
+    <!-- card end// -->
+    <div class="pagination-area mt-30 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                <li class="page-item"><a class="page-link" href="#">02</a></li>
+                <li class="page-item"><a class="page-link" href="#">03</a></li>
+                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">16</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>
+<!-- content-main end// -->
+
+<script>
+    function filterSales(){
+        fetch('')
+    }
+</script>
+
+
+<%-include('../layouts/adminFooter')%>

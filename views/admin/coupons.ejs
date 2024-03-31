@@ -23,7 +23,6 @@
                                         <th>Discount Amount</th>
                                         <th>Expire Date</th>
                                         <th>Criteria Amount</th>
-                                        <th>Use Limit</th>
                                         <th>action</th>
                                     </tr>
                                 </thead>
@@ -42,7 +41,6 @@
                                             </td>
                                    <%}%>
                                         <td><%=coupon.criteriaAmount%></td>
-                                        <td><%=coupon.useLimit%></td>
                                         <td>
                                             <%if(coupon.expiryDate>coupon.createdAt){%>
                                                 <button id="blockCoupon" class="btn btn-outline-danger" onclick="deleteCoupon('<%=coupon._id%>')">delete</button><br><br>

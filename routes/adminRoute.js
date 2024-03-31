@@ -51,7 +51,8 @@ router.get('/editCoupon',auth.isAdminLogin,couponController.editCoupon);
 router.post('/editCoupons',auth.isAdminLogin,couponController.saveEditCoupon);
 router.get('/deleteCoupon',auth.isAdminLogin,couponController.deleteCoupon);
 
-
+//sales report
+router.get('/salesReport',auth.isAdminLogin,adminController.loadSalesReport);
 
 
 

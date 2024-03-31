@@ -263,6 +263,17 @@ const changeOrderStatus=async (req,res)=>{
 
 }
 
+const loadSalesReport=async(req,res)=>{
+    try {
+        const orders=await Order.find({}).populate('userId').sort({orderDate:-1});
+        res.render('salesReport',{orders})
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('error-500') 
+    }
+}
+
 
 module.exports={
     loginLoad,
@@ -279,4 +290,5 @@ module.exports={
     loadOrderList,
     loadOrderDetails,
     changeOrderStatus,
+    loadSalesReport
 }

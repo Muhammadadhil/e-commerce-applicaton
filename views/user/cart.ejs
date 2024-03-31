@@ -6,7 +6,6 @@
         <%if(cartDetails){%>
     <div class=" main-wrapper" id="reloadPart">
         <%if(cartDetails.product.length ){%>
-
         <div class="cart-wrapper">
             <!-- Cart Wrapper Start -->
             <div class="cart-table table-responsive rounded">
@@ -22,15 +21,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        
                         <%cartDetails.product.forEach((product,i)=>{%>
-                            
                                 <tr>
                                     <td class="product-check text-center ">
                                         <input type="checkbox" checked>
                                     </td>
                                     <td class="product-thumb">
-                                        <a href="/productDetails?id=<%=product.productId._id%>"><img   src="/multer/products/<%=product.productId.images.image1%>" alt="**" /></a>
+                                        <a href="/productDetails?id=<%=product.productId._id%>"><img   src="/multer/products/<%=product.productId.images?.image1%>" alt="**" /></a>
                                     </td>
                                     <td class="product-info">
                                         <h6 class="name">
@@ -41,8 +38,7 @@
                                             <span class="sale-price">₹<%=product.productId.price%></span>
                                         </div>
                                         <div class="product-size-color">
-                                            <p>Size <span>S</span></p>
-                                            <p>Color <span>White</span></p>
+                                            <p><span class="text-muted"><%=product.productId.description%></span></p>
                                         </div>
                                     </td>
                                     <td class="quantity">
@@ -53,7 +49,7 @@
                                         </div>
                                     </td>
                                     <td id="reloadTotal" class="product-total-price">
-                                        <span class="price">₹<%=product.totalPrice%></span>
+                                        <span class="price">₹<%=product.productId.price*product.quantity%></span>
                                     </td>
                                     <td class="product-action">
                                         <button onclick="removeProductFromCart('<%=product.productId._id%>')" class="remove">
@@ -61,7 +57,6 @@
                                         </button>
                                     </td>
                                 </tr>
-                            
                         <%})%>     
                     </tbody>
                 </table>
@@ -161,11 +156,10 @@
                                     </td>  
                 
                                     <td>
-                                        <p class="value"><%=productsCount%></p>
+                                        <p class="value"><%=itemsCount%></p>
                                     </td>  
                                 </tr>
                                 <tr>
-                                
                                     <td>
                                         <p class="value">Subtotal</p>
                                     </td>

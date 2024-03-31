@@ -92,10 +92,9 @@
 
                             <a class="action" href=""><i class="pe-7s-like"></i></a>
                             <%if(locals.user){%>
-                                <a class="action" href="/cart"><i class="pe-7s-shopbag"></i><span class="number">3</span></a>
+                                <a class="action" href="/cart"><i class="pe-7s-shopbag"></i><span class="number"><%=itemsCount%></span></a>
                             <%}else{%>
-                                <a class="action" onclick="showCartAlert()"><i class="pe-7s-shopbag"></i><span class="number">3</span></a>
-                                
+                                <a class="action" onclick="showCartAlert()"><i class="pe-7s-shopbag"></i></a>
                             <%}%>
                         </div>
                         <!-- Header Meta End -->
@@ -150,7 +149,7 @@
                                 </div>
                                 <a class="action" href="/cart">
                                     <i class="pe-7s-shopbag"></i>
-                                    <span class="number">3</span>
+                                    <span class="number">300</span>
                                 </a>
                             </div>
                             <!-- Header Action End -->

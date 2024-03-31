@@ -17,16 +17,16 @@ const cartSchema=new mongoose.Schema({
             productId:{
                 type:ObjectId,
                 required:true,
-                ref:'Productsssssssssssssss'
+                ref:'Products'
             },
             quantity:{
                 type:Number,
                 default:1
             },
-            price:{
-                type:Number,
-                default:0
-            },
+            // price:{
+            //     type:Number,
+            //     default:0
+            
             totalPrice:{
                 type:Number,
                 default:0

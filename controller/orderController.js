@@ -6,6 +6,7 @@ const Products=require('../model/productsModel');
 const Razorpay=require('razorpay');
 // const {createHmac}=require('node:crypto');
 const crypto =require('crypto');
+const Coupon=require('../model/couponModel');
 
 let instance = new Razorpay(
     {
@@ -29,10 +30,14 @@ const loadCheckoutPage=async (req,res)=>{
             return res.redirect('/cart')
         }
 
-        const productsCount=cartDetails?.product.length;
-        const subTotal=cartDetails?.product.reduce((total,currentTotal)=> total+currentTotal.totalPrice,0);
-        
-        res.render('checkout',{user,userAddresses,cartDetails,subTotal});
+        const itemsCount=cartDetails?.product.length;
+        const subTotal=cartDetails.product.reduce((total,current)=>{
+            return total+current.productId.price*current.quantity
+        },0);
+        const currentDate=new Date();
+        const coupons=await Coupon.find({activationDate:{$lte:currentDate}})
+
+        res.render('checkout',{user,itemsCount,userAddresses,cartDetails,subTotal,coupons});
         
     } catch (error) {
         console.log(error.message);
@@ -187,8 +192,10 @@ const loadOrderDetails=async (req,res)=>{
             path:'products.productId',
             model:'products'
         }
+        const cartDetails=await Cart.findOne({userId:user});
+        const itemsCount=cartDetails?.product.length;
         const orderData=await Order.findOne({_id:orderId}).populate(populateOption);
-        res.render('orderDetails',{user,orderData});
+        res.render('orderDetails',{user,orderData,itemsCount});
         
     } catch (error) {
         console.log(error.message);

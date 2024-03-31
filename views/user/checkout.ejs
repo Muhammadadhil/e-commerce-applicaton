@@ -31,7 +31,30 @@
                             </div>
                         </div>
                     </form>
-                </div>
+                    <div class="row">
+                   <div class="col-lg-3 mt-4 mb-4">
+                        <%if(coupons){%>
+                            <%coupons.forEach((coupon)=>{%>
+                                <div class="card coupon-card border-2 rounded-3 mb-2">
+                                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                        <i class="fa fa-gift" aria-hidden="true"></i>
+                                        <h5 class="coupon-tag"><%=coupon.couponName%></h5>
+                                        <p class="coupon-text">
+                                            Code: <b><%=coupon.couponCode%></b> <br />
+                                            Discount Amount: <b><%=coupon.discountAmount%> </b><br />
+                                            Critria Amount: <b><%=coupon.criteriaAmount%></b> 
+                                            
+                                        </p>
+                                        <p class="text-muted ">
+                                            Copy the code
+                                        </p>
+                                    </div>
+                                </div>
+                            <%})%>
+                        <%}%>
+                    </div>
+                    </div>
+                </div>  
             </div>
         </div>
         <div class="single-form checkbox-checkbox mb-5">
@@ -248,7 +271,7 @@
                                                     <p><%=product.productId.name%> × <%=product.quantity%></p>
                                                 </td>
                                                 <td class="Product-price">
-                                                    <p>₹<%=product.totalPrice%></p>
+                                                    <p>₹<%=product.productId.p%></p>
                                                 </td>
                                             </tr>
                                             <%})%>
@@ -262,11 +285,11 @@
                                             <p class="fw-bold ">total</p>
                                         </td>
                                         <td class="Product-price">
-                                            <p>₹<%=subTotal%></p>
+                                            <p id="subTotalAmount">₹<%=subTotal%></p>
                                         </td>
                                     </tr>
                                     
-                                    <tr>
+                                    <!-- <tr>
                                         <td class="Product-name">
                                             <p class="fw-bold ">Shipping</p>
                                         </td>
@@ -286,7 +309,7 @@
                                                 </li>
                                             </ul>
                                         </td>
-                                    </tr>
+                                    </tr> -->
                                     <div >
                                     <%if(cartDetails.couponDiscount>0){%>
                                         <tr>
@@ -438,30 +461,30 @@
         event.preventDefault();
 
         const code=document.getElementById('couponCode').value
+        const subTotalAmount=document.getElementById('subTotalAmount').textContent;
+        console.log('subTotalAmount:',subTotalAmount );
         const errorElement=document.getElementById('couponCodeError');
         const successElement=document.getElementById('couponCodeSuccess');
 
         
-        fetch(`/applyCoupon?cpn=${code}`)
+        fetch(`/applyCoupon?cpn=${code}&total=${subTotalAmount}`)
         .then((res)=>res.json())
         .then((data)=>{
             if(data.verify){
-                console.log('ivdeeeee')
-                // const couponDiv=document.getElementById('couponPart');
-                // couponDiv.hidden=false;
-                // errorElement.innerHTML='';
                 successElement.innerHTML=`${data.couponData.couponName} coupon applied for the current order`
-                // document.getElementById('CouponDiscount').textContent=`${data.couponData.discountAmount}`
-                
                 const totalPart=document.getElementById('reloadPart');
-                
                 $('#reloadPart').load('/checkout #reloadPart ');
  
             }else if(data.added=='already used'){
                 errorElement.innerHTML='Coupon already used';
+            }
+            else if(data.coupon=='criteria didnot reached'){
+                errorElement.innerHTML=`this coupon is available for minimum purchase of ${data.couponData.criteriaAmount}`;
+
             }else if(!data.verify){
                 errorElement.innerHTML='Enter correct coupon code';
             }
+            
         })
     }
 </script>
