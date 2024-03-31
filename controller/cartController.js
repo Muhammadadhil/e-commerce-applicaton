@@ -1,7 +1,6 @@
 const Cart=require('../model/cartModel');
 const Products=require('../model/productsModel');
 
-
 //load cart page
 const loadCartPage=async (req,res)=>{
     try {

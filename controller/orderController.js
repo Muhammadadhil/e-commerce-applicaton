@@ -61,24 +61,28 @@ const placeOrder=async (req,res)=>{
         //     {$unwind:"$address"},
         //     {$match:{userId:userId,"address._id":addressId}}
         // ])
-       
+
         const result=await Address.findOne({userId:userId,'address._id':addressId})
         const selectedAddress=result.address.find(address => address._id == addressId);
             
-        const cartData=await Cart.findOne({userId:userId});
-        const subTotal=(cartData?.product.reduce((total,currentTotal)=> total+currentTotal.totalPrice,0))-cartData.couponDiscount;
+        const populateOption={
+            path:'product.productId',
+            model:'products'
+        }
+        const cartData=await Cart.findOne({userId:userId}).populate(populateOption);
+        const subTotal=(cartData?.product.reduce((total,current)=> total+current.productId.price*current.quantity,0))-cartData.couponDiscount;
 
         console.log('cartData:',cartData);
         console.log('subtotal:',subTotal);
 
-        
         orderItems=cartData.product.map((product,index)=>({
             productId:product.productId,
             quantity:product.quantity,
-            price:product.price,
-            totalPrice:product.totalPrice,
+            price:product.productId.price,
+            totalPrice:product.productId.price*product.quantity,
             productStatus:status
         }));
+        console.log('orderItems:',orderItems)
         
         const order=new Order({
             userId:userId,
@@ -88,12 +92,11 @@ const placeOrder=async (req,res)=>{
             orderDate:new Date(),
             orderStatus:status,
             subTotal:subTotal,
-
         })
 
         const orderDetails=await order.save();
         const orderId=orderDetails._id
-        // console.log('orderDetails:',orderDetails);
+        console.log('orderDetails:',orderDetails);
 
         if(status=="placed"){
             for(const item of orderItems){
@@ -103,7 +106,6 @@ const placeOrder=async (req,res)=>{
                         $inc:{quantity:-item.quantity}
                     })
             }
-                
             await Cart.deleteMany({});
             // res.redirect(`/orderSuccess?id=${orderDetails._id}`);
             res.status(200).json({codSuccess:true,orderId});
