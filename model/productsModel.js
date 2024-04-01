@@ -1,5 +1,5 @@
 
-const { ObjectId } = require('mongodb');
+const { ObjectId, Timestamp } = require('mongodb');
 const mongoose=require('mongoose');
 // const categoryModel=require('./categoryModel');
 
@@ -55,6 +55,8 @@ const productSchema=new mongoose.Schema({
         type:Boolean,
         default:false
     }
+},{
+    timestamps:true
 })
 
 module.exports=mongoose.model('products',productSchema);

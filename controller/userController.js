@@ -149,7 +149,8 @@ const loadShop=async (req,res)=>{
         let sortOption={};
         switch(req.query.sort){
             case '3':
-                sortOption={}
+                sortOption={createdAt:-1};
+                break;
 
             case '4':
                 sortOption={price:1};
@@ -158,6 +159,14 @@ const loadShop=async (req,res)=>{
             case '5':
                 sortOption={price:-1}   
                 break;
+
+            case '6':
+                sortOption={name:1}
+                break;
+
+            case '7':
+                sortOption={name:-1}
+                break;    
         }
         // console.log('sortOption:',sortOption);
 

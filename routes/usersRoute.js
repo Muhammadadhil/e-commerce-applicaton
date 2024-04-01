@@ -78,8 +78,9 @@ router.get('/detailsOrder',auth.isLogin,orderController.loadOrderDetails);
 router.post('/cancelProductOrder',orderController.cancelProductOrder);
 router.post('/verifyPayment',orderController.verifyOnlinePayment);
 
+//coupon
 router.get('/applyCoupon',couponController.verifyCoupon)
-
+router.post('/removeCoupon',couponController.removeCoupon)
 //logout
 router.get('/logout',userController.userLogout);
 

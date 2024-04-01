@@ -182,7 +182,7 @@ const blockCategory=async (req,res)=>{
         categoryData.isBlocked=!categoryData.isBlocked ;
         await categoryData.save();
         
-        const isBlocked=categoryData.isBlocked;
+        const isBlocked=categoryData.isBlocked;6
         
         const productsData=await Products.updateMany({categoryId:categoryId},{$set:{isCategoryBlocked:isBlocked}})
         console.log('productsData:',productsData);

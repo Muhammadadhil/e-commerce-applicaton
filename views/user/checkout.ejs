@@ -311,14 +311,17 @@
                                         </td>
                                     </tr> -->
                                     <div >
-                                    <%if(cartDetails.couponDiscount>0){%>
+                                    <%if(cartDetails.couponDiscount){%>
                                         <tr>
                                             <td class="Product-name ">
                                                 <p class="fw-bold ">Subtotal</p>
                                             </td>
                                             <td class="Product-price">
                                                 <p>original amount ₹<span class="old-price"><%=subTotal%></span></p>
-                                                <p>coupon discounted amount:  ₹<%=subTotal-cartDetails.couponDiscount%></p>
+                                                <p class="text-info ">applied <%=cartDetails.couponDiscount.couponName%> coupon</p>
+                                                <p>coupon discounted amount:  ₹<%=subTotal-cartDetails.couponDiscount.discountAmount%></p>
+
+                                                <a onclick="removeCoupon('<%=cartDetails.couponDiscount._id%>')" class="text-muted">remove coupon?</a>
                                             </td>
                                         </tr>
                                     <%}else{%>
@@ -455,6 +458,23 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
+    function removeCoupon(couponId){
+        console.log(couponId);
+        axios.post('/removeCoupon',{
+            couponId
+        })
+        .then((response)=>{
+            if(response.data.updated){
+                $('#reloadPart').load('/checkout #reloadPart ');
+            }
+        })
+        .catch((err)=> {
+            if(err){
+                throw err
+            }
+        })
+    }
+
     function applyCoupon(event){
 
         event.preventDefault();
@@ -470,7 +490,9 @@
         .then((res)=>res.json())
         .then((data)=>{
             if(data.verify){
+                errorElement.innerHTML='';
                 successElement.innerHTML=`${data.couponData.couponName} coupon applied for the current order`
+                
                 const totalPart=document.getElementById('reloadPart');
                 $('#reloadPart').load('/checkout #reloadPart ');
  

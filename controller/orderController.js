@@ -21,10 +21,17 @@ const loadCheckoutPage=async (req,res)=>{
         const user=req.session.userId;
         const userAddresses=await Address.findOne({userId:user});
 
-        const populateOption={
-            path:'product.productId',
-            model:'products'
-        }
+        const populateOption=[
+            {
+                path:'product.productId',
+                model:'products'
+            },
+            {
+                path:'couponDiscount',
+                model:'Coupon'
+            }
+            
+        ]
         const cartDetails=await Cart.findOne({userId:user}).populate(populateOption);
         if(!cartDetails){
             return res.redirect('/cart')

@@ -128,9 +128,10 @@ const verifyCoupon=async (req,res)=>{
             }
             const cartResult = await Cart.findOneAndUpdate(
                 { userId: userId },
-                { $set: { couponDiscount: couponData.discountAmount } },
+                { $set: { couponDiscount: couponData._id} },
                 { new: true }
               );
+            console.log('cartResult:',cartResult);
             await Coupon.findOneAndUpdate(
                 {_id:couponData._id},
                 {$addToSet:{usedUser:userId}}
@@ -145,7 +146,27 @@ const verifyCoupon=async (req,res)=>{
         res.status(500).render('Error-500');
     }
 }   
+// remove applied coupon by user
+const removeCoupon=async (req,res)=>{
+    try {
+        const userId=req.session.userId;
+        const {couponId}=req.body;
 
+       console.log('!!!!!!reached here in remove and couponId:',couponId);
+
+       const updatedCoupon=await Coupon.findByIdAndUpdate({_id:couponId},{$pull:{usedUser:{$in:[userId]}}},{new:true});
+       const updatedCart=await Cart.findOneAndUpdate({userId:userId},{$set:{couponDiscount:null}});
+       if(updatedCart && updatedCoupon){
+            res.status(200).json({updated:true})
+       }else{
+            res.status(500).json({updated:false})
+       }
+    
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
 module.exports={
     listCoupons,
     addCoupons,
@@ -153,5 +174,6 @@ module.exports={
     editCoupon,
     saveEditCoupon,
     deleteCoupon,
-    verifyCoupon
+    verifyCoupon,
+    removeCoupon
 }
