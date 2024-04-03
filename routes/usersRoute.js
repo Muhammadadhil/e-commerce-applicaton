@@ -81,6 +81,14 @@ router.post('/verifyPayment',orderController.verifyOnlinePayment);
 //coupon
 router.get('/applyCoupon',couponController.verifyCoupon)
 router.post('/removeCoupon',couponController.removeCoupon)
+
+//wishlist
+router.get('/wishlist',userHelpController.loadWishlist)
+router.post('/addTowishlist',userHelpController.addItemToWishlist);
+router.get('/removeItemFromWishlist',userHelpController.removeFromWishlist)
+
+
+
 //logout
 router.get('/logout',userController.userLogout);
 

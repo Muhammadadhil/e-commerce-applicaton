@@ -1,4 +1,13 @@
 <%-include('../layouts/header.ejs')%>
+<style>
+    .fa-regular {    
+         color: black; 
+    }
+
+    .fa-solid {
+        color: red; 
+    }
+</style>
 
     <!-- Shop Section Start -->
     <div class="section section-padding mt-5">
@@ -7,11 +16,11 @@
             <div class="product-section-wrapper mt-5">
                 <!-- Shop top Bar Start -->
                 <div class="shop-top-bar">
-                    <div class="shop-text">
+                    <!-- <div class="shop-text">
                         <p>
                             <span>12</span> Product Found of <span>30</span>
                         </p>
-                    </div>
+                    </div> -->
                     <div class="shop-tabs">
                         <ul class="nav">
                             <li>
@@ -29,6 +38,16 @@
                     <div class="widget-search">
                             <input type="text" oninput="searchProducts(this.value)" placeholder="Search Your Product">
                             <button><i class="fa fa-search"></i></button>
+                    </div>
+                    <div class="dropdown dropdown-hover">
+                        <a class="btn btn-light  dropdown-toggle" href="#" role="button">
+                          Filter by category:
+                        </a>
+                        <ul class="dropdown-menu border-0" role="menu">
+                            <%categories.forEach((category)=>{%>
+                                <li><a class="dropdown-item" onclick="filterCategory('<%=category._id%>')" ><%=category.name%></a></li>
+                            <%})%>
+                        </ul>
                     </div>
                     
                     <div class="dropdown dropdown-hover">
@@ -76,18 +95,25 @@
                                                         <%if(locals.user){%>
                                                             <a class="action" onclick="addToCart('<%=product._id%>')"><i class="pe-7s-shopbag"></i></a>
                                                         <%}else{%>
-                                                            <a class="action"  onclick="showCartAlert()"><i class="pe-7s-shopbag"></i></a> 
+                                                            <a class="action"  onclick="showLoginAlert()"><i class="pe-7s-shopbag"></i></a> 
                                                         <%}%>
                                                         
                                                     </li>
-                                                        <a class="action" href="#"><i class="pe-7s-like"></i></a>
+                                                    <li id="wishlist-icon">
+                                                        <%if(locals.user){%>
+                                                            <a id="wishlstIcon" class="action" onclick="addToWishlist('<%=product._id%>')" >
+                                                                <i id="wishlistIcon-<%=product._id%>" class="<%=wishlist.products.some((item)=>item.productId.equals(product._id))?'fa-solid':'fa-regular' %> fa-heart"></i>   
+                                                            </a>
+                                                        <%}else{%>
+                                                            <a class="action"  onclick="showLoginAlert()"><i class="pe-7s-like"></i></a> 
+
+                                                        <%}%>
                                                     </li>
                                                 </ul>
                                             </div>
                                             <!-- Single Product End -->
                                         </div>
                                     <%}%>
-                                    
                                 <%})%>    
                                 
                             </div>
@@ -149,6 +175,35 @@
     </div>
   </div>
 <script>
+    function addToWishlist(productId){
+
+        axios.post('/addTowishlist',{
+            productId
+        })
+        .then((response)=>{
+            console.log(response)
+            // console.log(response.data.newWishlist.products);
+            
+            const icon=document.getElementById(`wishlistIcon-${productId}`);
+            if(response.data.added){
+                icon.classList.remove('fa-regular');
+                icon.classList.add('fa-solid');
+            } else if(response.data.removed){
+                icon.classList.remove('fa-solid');
+                icon.classList.add('fa-regular')
+            }
+            
+        })
+    }    
+    function filterCategory(filterCategory){
+        const currentUrl=new URL(window.location.href);
+        console.log('currentUrl:',currentUrl);
+        currentUrl.searchParams.set('filter',filterCategory);
+        window.location.href=currentUrl.href;
+
+    }
+
+
     function searchProducts(value){
 
         const reloadPart=document.getElementById('productPart');
@@ -210,10 +265,10 @@
 
     }
 
-    function showCartAlert() {
+    function showLoginAlert() {
             Swal.fire({
                 title: "You need to log in!",
-                text: "Please log in to view your cart.",
+                text: "Please log in ",
                 icon: "warning",
                 confirmButtonText: "login",
                 showCancelButton: true,

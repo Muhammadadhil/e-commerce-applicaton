@@ -13,6 +13,9 @@
 
         <!-- CSS
 	============================================ -->
+        <!-- font awesome icons-->  
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
         <!-- notyf toast-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">       
 
@@ -89,12 +92,15 @@
                                 <a class="action" href="/login" role="button"><i class="pe-7s-user "></i></a>
                                 <%}%>
                             </div>
-
-                            <a class="action" href=""><i class="pe-7s-like"></i></a>
+                            <%if(locals.user){%>
+                                <a class="action" href="/wishlist"><i class="pe-7s-like"></i></a>
+                            <%}else{%>
+                                <a class="action" onclick="showLoginAlert()"><i class="pe-7s-like"></i></a>
+                            <%}%>
                             <%if(locals.user){%>
                                 <a class="action" href="/cart"><i class="pe-7s-shopbag"></i><span class="number"><%=itemsCount%></span></a>
                             <%}else{%>
-                                <a class="action" onclick="showCartAlert()"><i class="pe-7s-shopbag"></i></a>
+                                <a class="action" onclick="showLoginAlert()"><i class="pe-7s-shopbag"></i></a>
                             <%}%>
                         </div>
                         <!-- Header Meta End -->
@@ -210,10 +216,10 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script>
-            function showCartAlert() {
+            function showLoginAlert() {
                 Swal.fire({
                     title: "You need to log in!",
-                    text: "Please log in to view your cart.",
+                    text: "Please log in ",
                     icon: "warning",
                     confirmButtonText:"login",
                     showCancelButton: true,

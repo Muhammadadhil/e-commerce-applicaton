@@ -66,6 +66,7 @@ const addProductsToCart=async (req,res)=>{
 
         const {productId,count}=req.body;
         const userId=req.session.userId;
+        console.log('usesssssssssssssssssssserIIIIIIIIIIId:',userId);
 
         const populateOption={
             path:'product.productId',

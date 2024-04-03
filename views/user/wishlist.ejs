@@ -1,0 +1,231 @@
+<%-include('../layouts/header')%>
+
+<!-- Shopping Cart Section Start -->
+<div class="section section-padding mt-5">
+    
+    <div class="container mt-5">
+        <div class="mb-5">
+            <h2 class="text-dark ">Your Wishlist</h2>
+        </div>
+        <%if(wishlist){%>
+    <div class=" main-wrapper" id="reloadPart">
+        <%if(wishlist.products.length>0){%>
+        <div class="cart-wrapper">
+            <!-- Cart Wrapper Start -->
+            <div class="cart-table table-responsive rounded bg-light ">
+                <table  class="table">
+                    <thead>
+                        <tr>
+                            <th class="product-check"></th>
+                            <th class="product-thumb">Image</th>
+                            <th class="product-info">product Information</th>
+                            <th class="product-action">Add to cart</th>
+                            <th class="product-action">Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%wishlist.products.forEach((item,i)=>{%>
+                                <tr>
+                                    <td class="product-check text-center ">
+                                        <%=i+1%>
+                                    </td>
+                                    <td class="product-thumb">
+                                        <a href="/productDetails?id=<%=item.productId._id%>"><img   src="/multer/products/<%=item.productId.images?.image1%>" alt="**" /></a>
+                                    </td>
+                                    <td class="product-info">
+                                        <h6 class="name">
+                                            <a href="/productDetails?id=<%=item.productId._id%>"><%=item.productId.name%></a>
+                                        </h6>
+                                        <div class="product-prices">
+                                            <span class="old-price">₹1000.00</span>
+                                            <span class="sale-price">₹<%=item.productId.price%></span>
+                                        </div>
+                                        <div class="product-size-color">
+                                            <p><span class="text-muted"><%=item.productId.description%></span></p>
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="text-muted lable">Stock:</span>
+                                            <%if(item.productId.quantity<1){%>
+                                            <span class="value text-danger">Sold Out</span>
+                                            <%}else if(item.productId.quantity>11){%>
+                                            <span class="value">Available</span>
+                                            <%}else if(item.productId.quantity<11) {%>
+                                            <span class="value text-danger">hurry! only few left</span>
+                                            <%}%>
+                                        </div>
+                                    </td>
+                                    <td class="product-action">
+                                        <a onclick="addToCart('<%=item.productId._id%>')" class="btn btn-dark btn-hover-primary">add to cart</a>
+                                    </td>
+                                    <td class="product-action">
+                                        <button onclick="removeItem('<%=item.productId._id%>')" class="alert-success border-0 ">
+                                            <!-- <i class="pe-7s-trash"></i> -->remove
+                                        </button>
+                                    </td>
+                                </tr>
+                        <%})%>     
+                    </tbody>
+                </table>
+            </div>
+            <!-- Cart Wrapper End -->
+            
+        </div>
+    </div>
+    <%}else{%>
+  <!-- empty cart start-->
+        <div class="container-fluid  mt-100 mb-5">
+            <div class="row">
+               <div class="col-md-12">
+                       <div class="card">
+                        <h2 class="card-title text-center mt-4">
+                            There are no more items in your wishlist
+                        </h2>
+                   <div class="card-body cart">
+                           <div class="col-sm-12 empty-cart-cls text-center">
+                               <img src="/user/assets/images/cart_11386380.png"  height="130" width="130" class="img-fluid mb-4 mr-3">
+                               <h4><strong>Your wishlist is Empty</strong></h4>
+                               
+                               <a href="/shop" class="btn btn-sm btn-primary btn-hover-secondary m-3" data-abc="true">continue shopping</a>
+                           </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  <!-- empty cart end-->
+    <%}%>  
+        <%}else{%>
+        <!-- empty cart start-->
+        <div class="container-fluid  mt-100 mb-5 ">
+            <div class="row">
+               <div class="col-md-12">
+                       <div class="card">
+                        <h2 class="card-title text-center mt-4">
+                            There are no more items in your Wishlist
+                        </h2>
+                   <div class="card-body cart">
+                           <div class="col-sm-12 empty-cart-cls text-center">
+                               <img src="/user/assets/images/cart_11386380.png"  height="130" width="130" class="img-fluid mb-4 mr-3">
+                               <h4><strong>Your wishlist is Empty</strong></h4>
+                               
+                               <a href="/shop" class="btn btn-sm btn-primary btn-hover-secondary m-3" data-abc="true">continue shopping</a>
+                           </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  <!-- empty cart end-->
+        <%}%>
+    </div>
+</div>
+<!-- Shopping Cart Section End -->
+
+
+
+<!-- addtoCart extra Toast -->
+<div class="toast-container position-fixed top-0 end-0  p-6">
+    <div class="toast" id="addToExisting" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-body">
+        <div class="d-flex gap-4">
+          <span><i class="fa-solid fa-circle-check fa-lg icon-success"></i></span>
+          <div class="d-flex flex-column flex-grow-1 gap-2">
+            <div class="d-flex align-items-center">
+              <span class="fw-semibold">item already in the cart</span>
+              <button type="button" class="btn-close btn-close-sm ms-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+            </div>
+            <span>added 1 more</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- addtoCart Toast -->
+<div class="toast-container position-fixed top-0 end-0  p-6">
+    <div class="toast" id="addedTocart" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-body">
+        <div class="d-flex gap-4">
+          <span><i class="fa-solid fa-circle-check fa-lg icon-success"></i></span>
+          <div class="d-flex flex-column flex-grow-1 gap-2">
+            <div class="d-flex align-items-center">
+              <span class="fw-semibold">item added to you cart</span>
+              <button type="button" class="btn-close btn-close-sm ms-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+
+    function removeItem(productId){
+        axios.get(`/removeItemFromWishlist?id=${productId}`)
+        .then((res)=>{
+            if(res.data.removed){
+                window.location.reload();
+            }
+        })
+    }    
+
+    function addToCart(productId) {
+            
+            let count=1;
+            fetch("/addToCart", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify({
+                    productId,
+                    count
+                }),
+            })
+            .then(response => response.json())
+            .then((data)=>{
+                if(data.added){
+    
+                    const addToExisting = document.getElementById("addToExisting");
+                    const toast = new bootstrap.Toast(addToExisting);
+                        toast.show();
+                        
+                }else if(data.addedNew){
+    
+                    const addedToCart = document.getElementById("addedTocart");
+                    const toast=new bootstrap.Toast(addedToCart);
+                    toast.show();
+
+                }else if(data.addedToCart=='not done'){
+                    console.log('reached productDetails page error part : failed to add item');
+
+                    const addToCartError=document.getElementById('addToCartError');
+                    // // const icon=document.getElementById('error-icon');
+                    // // icon.hidden=false;
+                    addToCartError.innerHTML='failed to add item';
+                    setTimeout(()=>{
+                        addToCartError.innerHTML='';
+                    },5000)
+
+                }else if(!data.added){
+                    //if total quantity exceeded
+                    window.location.href='/cart'
+
+                }else{
+                    console.log('Unknown resssssponse from the servver!!');
+                }
+            })
+            .catch((err)=>{
+                console.error('Errrror:',err);
+            })
+        }
+</script>
+
+<%-include('../layouts/footer')%>

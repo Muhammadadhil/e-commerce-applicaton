@@ -7,6 +7,9 @@ const Order=require('../model/orderModel');
 const bcrypt=require('bcrypt');
 const nodemailer=require('nodemailer');
 const Cart=require('../model/cartModel');
+const Category=require('../model/categoryModel');
+const Wishlist=require('../model/wishlistModel');
+
 // const dotenv=require('')
 const {registerationSchema}=require('../middleware/validate');
 const { date } = require('joi');
@@ -168,6 +171,15 @@ const loadShop=async (req,res)=>{
                 sortOption={name:-1}
                 break;    
         }
+
+        const filterCriteria=req.query.filter;
+        let filterQuery={};
+        if(filterCriteria){
+            filterQuery={categoryId:filterCriteria}
+        }
+
+
+
         // console.log('sortOption:',sortOption);
 
         // const value=req.query.search;
@@ -181,10 +193,12 @@ const loadShop=async (req,res)=>{
         //         {description:{$regex:regObj}}
         //     ]
         // }
-        
-        const products=await Products.find().populate('categoryId').sort(sortOption)
+
+        const products=await Products.find(filterQuery).populate('categoryId').sort(sortOption);
+        const categories=await Category.find();
+        const wishlist=await Wishlist.findOne({userId:user},{'products.productId':1,_id:0});
         const {itemsCount}=await getCartDetails(user);
-        res.render('shop',{products,user,itemsCount});
+        res.render('shop',{products,user,itemsCount,categories,wishlist});
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500')

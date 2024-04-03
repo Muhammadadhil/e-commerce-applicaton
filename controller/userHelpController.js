@@ -3,6 +3,10 @@ const User=require('../model/userModel');
 const userOtpVerfication=require('../model/userOtpVerfication');
 const userController=require('../controller/userController')
 const bcrypt=require('bcrypt');
+const Wishlist=require('../model/wishlistModel');
+const Cart=require('../model/cartModel');
+
+
 
 
 //load forgot password 
@@ -142,11 +146,91 @@ const updateNewPassword=async (req,res)=>{
         res.status(500).render('Error-500');
     }
 }
+
+const loadWishlist=async (req,res)=>{
+    try {
+        const user=req.session.userId;
+        const populateOption={
+            path:'products.productId',
+            model:'products'
+        }
+        const cartDetails=await Cart.findOne({userId:user});
+        const itemsCount=cartDetails?.product.length;
+        const wishlist=await Wishlist.findOne({userId:user}).populate(populateOption);
+        res.render('wishlist',{wishlist,user,itemsCount});
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
+
+const addItemToWishlist=async (req,res)=>{
+    try {
+        const {productId}=req.body;
+        const userId=req.session.userId;
+
+        const exist=await Wishlist.findOne({userId:userId,'products.productId':productId});
+        
+        if(exist){
+            await Wishlist.findOneAndUpdate(
+                { userId: userId },
+                { 
+                  $set:{userId:userId},
+                  $pull: { 
+                    products: { 
+                      productId: productId 
+                    } 
+                  } 
+                },{upsert:true,new:true}
+            );
+            res.json({removed:true})
+        }else{
+            
+            await Wishlist.findOneAndUpdate(
+                { userId: userId },
+                { 
+                  $set:{userId:userId},
+                  $push: { 
+                    products: { 
+                      productId: productId 
+                    } 
+                  } 
+                },{upsert:true,new:true}
+            );
+            res.json({added:true})
+        }
+
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
+
+//remove item from wishlist
+const removeFromWishlist= async (req,res)=>{
+    try {
+        
+        const productId=req.query.id;
+        const userId=req.session.userId;
+        
+        const updatedWishlist=await Wishlist.findOneAndUpdate({userId:userId},{$pull:{products:{productId:productId}}});
+        res.json({removed:true})
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    } 
+}
+
 module.exports={
     loadForgotPassword,
     forgetPassword,
     loadOtp,
     verifyOtp,
     loadNewPassword,
-    updateNewPassword
+    updateNewPassword,
+    loadWishlist,
+    addItemToWishlist,
+    removeFromWishlist
 }
