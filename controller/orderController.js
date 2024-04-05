@@ -75,9 +75,11 @@ const placeOrder=async (req,res)=>{
         const populateOption={
             path:'product.productId',
             model:'products'
+            
         }
-        const cartData=await Cart.findOne({userId:userId}).populate(populateOption);
-        const subTotal=(cartData?.product.reduce((total,current)=> total+current.productId.price*current.quantity,0))-cartData.couponDiscount;
+        const cartData=await Cart.findOne({userId:userId}).populate(populateOption).populate('couponDiscount');
+        
+        const subTotal=(cartData?.product.reduce((total,current)=> total+current.productId.price*current.quantity,0)) - (cartData?.couponDiscount?.discountAmount ?? 0);
 
         console.log('cartData:',cartData);
         console.log('subtotal:',subTotal);

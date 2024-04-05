@@ -6,65 +6,71 @@
             <h2 class="content-title card-title">Sales report</h2> 
         </div>
     </div>
-    <div class="card mb-4">
+    <div class="card mb-4 ">
         <header class="card-header">
             <div class="row align-items-center">
                 <div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
                     <div class="custom_select">
-                        <select onchange="filterSales()" class="form-select select-nice">
-                            <option selected>All</option>
-                            <option>weekly</option>
-                            <option>monthly</option>
-                            <option>yearly</option>
-
+                        <select onchange="filterSales(this.value)" class="form-select select-nice">
+                            <option selected>choose one</option>
+                            <option  <% if (filterCriteria === 'daily') { %>selected<% } %>>daily</option>
+                            <option  <% if (filterCriteria === 'weekly') { %>selected<% } %>>weekly</option>
+                            <option  <% if (filterCriteria === 'monthly') { %>selected<% } %>>monthly</option>
+                            <option  <% if (filterCriteria === 'yearly') { %>selected<% } %>>yearly</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-md-2 col-6">
-                    <input type="date" value="02.05.2021" class="form-control" />
+                    <p>From:</p>
+                    <input type="date" id="startDate" class="form-control" />
                 </div>
                 <div class="col-md-2 col-6">
-                    <div class="custom_select">
-                        <select class="form-select select-nice">
-                            <option selected>Status</option>
-                            <option>All</option>
-                            <option>Paid</option>
-                            <option>Chargeback</option>
-                            <option>Refund</option>
-                        </select>
-                    </div>
+                    <p>To:</p>
+                    <input type="date" id="endDate" class="form-control" />
                 </div>
+                <div class="col-md-2 col-6 mt-4">
+                    <button class="btn btn-secondary " onclick="filterSales()">generate</button>
+                </div>
+                
             </div>
         </header>
         <div class="card-body" >
-            <table class="table text-center "id='reloadDiv'>
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th class="text-dark " scope="col">Order Id</th>
-                        <th class="text-dark " scope="col">Billing name</th>
-                        <th class="text-dark " scope="col">Order date</th>
-                        <th class="text-dark " scope="col">Payment status</th>
-                        <th class="text-dark " scope="col">Total amount</th>
-                        <th class="text-dark " scope="col">Payment method</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%orders.forEach((order,i)=>{%>
+            <%if(orders.length>1){%>
+                <table class="table text-center "id='reloadDiv'>
+                    <thead>
                         <tr>
-                            <td><%=i+1%></td>
-                            <td class="text-success"><%=order._id%></td>
-                            <td><%=order.userId.firstName+order.userId.lastname%></td>
-                            <td class="fw-bold "><%=order.orderDate.toLocaleDateString('en-US', dateOptions)%></td>
-                            <td class="badge-pill badge-soft-success"><%=order.orderStatus%></td>
-                            <td><%=order.subTotal%></td>
-                            <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i><%=order.payment%></td>
+                            <th>No.</th>
+                            <th class="text-dark " scope="col">week/month/year/Date</th>
+                            <th class="text-dark " scope="col">Total sales count</th>
+                            <th class="text-dark " scope="col">Total revenue</th>
+                            <th class="text-dark " scope="col">Total Offer Discount </th>
+                            <th class="text-dark " scope="col">Total Coupon Discount</th>
                         </tr>
-                    <%})%>
-                    
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <%orders.forEach((order,i)=>{%>
+                            <tr>
+                                <td><%=i+1%></td>
+                                <td><%=order._id%></td>
+                                <td><%=order.totalSalesCount%></td>
+                                <td><%=order.totalRevenue%></td>
+                                <td>nil</td>
+                                <td>nil</td>
+    
+                            </tr>
+                            
+                        <%})%>
+                        
+                    </tbody>
+                </table>
+            <%}%>
             
+            <div>
+                <p><span class="fw-bold ">total sales count:</span><%=overallData[0].totalSalesCount%></p>
+                <p><span class="fw-bold ">total sales amount:</span><%=overallData[0].totalRevenue%></p>
+                <p><span class="fw-bold ">total discount amount:</span>:n/a</p>
+
+            </div>
         </div>
         <!-- card-body end// -->
     </div>
@@ -88,7 +94,26 @@
 
 <script>
     function filterSales(criteria){
-        fetch(`/filterSales?id=${criteria}`)
+
+        if(criteria){
+            const currentUrl=new URL(window.location.href);
+            currentUrl.searchParams.delete('start');
+            currentUrl.searchParams.delete('end');
+            currentUrl.searchParams.set('filter', criteria);
+            window.location.href=currentUrl.href;                   
+        }else{
+            
+            const startDate=document.getElementById('startDate').value
+            const endDate=document.getElementById('endDate').value
+
+            const currentUrl=new URL(window.location.href);
+            currentUrl.searchParams.set('start', startDate);
+            currentUrl.searchParams.set('end',endDate);
+            window.location.href=currentUrl.href;
+        }
+
+        
+
     }
 </script>
 

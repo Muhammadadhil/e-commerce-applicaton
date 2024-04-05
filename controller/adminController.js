@@ -268,6 +268,7 @@ const changeOrderStatus=async (req,res)=>{
 //load sales report page
 const loadSalesReport=async(req,res)=>{
     try {
+        const filterCriteria=req.query.filter;
         const dateOptions = {
             weekday: 'short',
             year: 'numeric',
@@ -277,8 +278,55 @@ const loadSalesReport=async(req,res)=>{
             minute: 'numeric',
             second: 'numeric'
         };
-        const orders=await Order.find({}).populate('userId').sort({orderDate:-1});
-        res.render('salesReport',{orders,dateOptions})
+        console.log('filterCriteria:',filterCriteria)
+
+        let orders=[];
+        // orders=await Order.find({}).populate('userId').sort({orderDate:-1});
+        const overallData=await Order.aggregate([
+            { 
+                $group:{
+                    _id:'',
+                    totalSalesCount:{$sum:1},
+                    totalRevenue:{$sum:'$subTotal'},
+                }
+            }
+        ])
+        console.log('overallData:',overallData);
+
+        switch(filterCriteria){
+            
+            case 'daily':
+            orders=await dialyReport();
+            break;
+
+            case 'weekly':
+                orders=[] 
+                orders= await weeklyReport();
+                break;
+
+            case 'monthly':
+                orders=[] 
+                orders= await monthlyReport();
+                break;    
+
+            case 'yearly':
+                orders=[] 
+                orders= await yearlyReport();    
+                break;
+        }
+
+        const startDate=req.query.start;
+        const endDate=req.query.end;
+        console.log('startDate:',startDate)
+        console.log('endDate:',endDate)
+
+        if(startDate && endDate){
+            orders=await customReport(startDate,endDate);
+        }
+
+        console.log('orders:',orders);
+        console.log('filterCriteria:',filterCriteria);
+        res.render('salesReport',{orders,dateOptions,filterCriteria,overallData})
 
     } catch (error) {
         console.log(error.message);
@@ -286,6 +334,102 @@ const loadSalesReport=async(req,res)=>{
     }
 }
 
+const dialyReport=async ()=>{
+
+    const orderDatas=await Order.aggregate([
+        {
+            $group: {
+                _id: { $dateToString: { format: "%d-%m-%Y", date: "$orderDate" } },
+                totalSalesCount: { $sum: 1},
+                totalRevenue:{$sum:'$subTotal'},
+            }
+        },{$sort:{_id:-1}}
+    ]);
+    return orderDatas;
+}
+
+const customReport=async (start,end)=>{
+    try {
+        console.log(start,end);
+        console.log(new Date(start));
+        const orderDatas=await Order.aggregate([
+            {
+                $match:{
+                    orderDate:{ $gte:new Date(start),$lte:new Date(end)}
+                }
+            },
+            {
+                $group: {
+                    _id: '$orderDate',
+                    totalSalesCount: { $sum: 1},
+                    totalRevenue:{$sum:'$subTotal'},
+                }
+            }
+        ]);
+        return orderDatas;
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const weeklyReport=async ()=>{
+    try {
+        const orderDatas=await Order.aggregate([
+            { 
+                $group: {
+                    _id: { $week: "$orderDate" },
+                    totalSalesCount: { $sum: 1},
+                    totalRevenue:{$sum:'$subTotal'},
+                }
+            }
+        ]);
+        return orderDatas;
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const monthlyReport=async ()=>{
+    try {
+
+        const orderDatas=await Order.aggregate([
+            {
+                $group: {
+                    _id:{$month: "$orderDate"} ,
+                    totalSalesCount: { $sum: 1},
+                    totalRevenue:{$sum:'$subTotal'},
+                }
+            }
+        ]);
+
+        return orderDatas;
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const yearlyReport=async ()=>{
+    try {
+        const orderDatas=await Order.aggregate([
+            { 
+                $group: {
+                    _id: { $year: "$orderDate" },
+                    totalSalesCount: { $sum: 1},
+                    totalRevenue:{$sum:'$subTotal'},
+                }
+            }
+        ]);
+
+        return orderDatas;
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 module.exports={
     loginLoad,

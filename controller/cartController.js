@@ -66,7 +66,6 @@ const addProductsToCart=async (req,res)=>{
 
         const {productId,count}=req.body;
         const userId=req.session.userId;
-        console.log('usesssssssssssssssssssserIIIIIIIIIIId:',userId);
 
         const populateOption={
             path:'product.productId',
@@ -82,7 +81,6 @@ const addProductsToCart=async (req,res)=>{
             }
           ).populate(populateOption);
 
-        console.log('existingProduct:',existingProduct);
         //find the total product stock 
         const totalProductStock=await Products.findOne({_id:productId},{quantity:1});
         if(totalProductStock.quantity==0){
@@ -131,7 +129,7 @@ const addProductsToCart=async (req,res)=>{
                             productId:productDetails._id,
                             // price:productDetails.price,
                             quantity:1,
-                            totalPrice:productDetails.price
+                            // totalPrice:productDetails.price
                         }
                     }
                 },{upsert:true});
