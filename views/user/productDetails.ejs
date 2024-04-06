@@ -84,7 +84,9 @@
                         <h4 class="product-name"><%=productData.name%></h4>
                         <div class="price">
                             <span class="sale-price">₹<%=productData.price%></span>
-                            <span class="old-price">₹<%=productData.price+10000%></span>
+                            <%if(productData.productDiscount || productData.categoryDiscount){%>
+                                <span class="old-price">₹<%=productData.orgPrice%></span>
+                            <%}%>
                         </div>
                         <div class="review-wrapper">
                             <div class="review-star">

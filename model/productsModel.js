@@ -12,6 +12,9 @@ const productSchema=new mongoose.Schema({
         type:Number,
         required:true
     },
+    orgPrice:{
+        type:Number
+    },
     quantity:{
         type:Number,
         required:true
@@ -34,10 +37,6 @@ const productSchema=new mongoose.Schema({
             required:true
         }
     },
-    // addedDate:{
-    //     type:Date,
-    //     required:true
-    // },
     description:{
         type:String,
         required:true
@@ -54,7 +53,26 @@ const productSchema=new mongoose.Schema({
     isCategoryBlocked:{
         type:Boolean,
         default:false
+    },
+    //offer
+    productOfferId:{
+        type:ObjectId,
+        ref:'Offer'
+    },
+    categoryOfferId:{
+        type:ObjectId,
+        ref:'Offer'
+    },
+    productDiscount:{
+        type:Number
+    },
+    categoryDiscount:{
+        type:Number
     }
+
+
+
+    
 },{
     timestamps:true
 })

@@ -1,0 +1,120 @@
+<%-include('../layouts/adminHeader')%>
+
+<section class="content-main">
+
+    <section class="content-main py-4 d-flex justify-content-center">
+        <div class="container-fluid">
+            <div class="row">
+                <h2 class="text-center">Add New Offer</h2>
+                <div class="col-12 col-md-12">
+                    <div class="card ">
+                        <div class="card-body">
+                            <form action="" onsubmit="" method="post" id="couponForm">
+                                
+                                <div class="form-group my-3 ">
+                                    <label for="name">Offer name</label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                        placeholder="Type here">
+                                    <div id="nameError" class="text-danger  error-message"></div>
+                                </div>
+
+                                <div class="form-group my-3  ">
+                                    <label for="offerType">Offer type</label>
+                                    <select id="offerType" name="offerType" class="form-control">
+                                        <option value="category">Category</option>
+                                        <option value="product">Product</option>
+                                    </select>
+                                </div>
+
+                                <div id="productDiv" class=" form-group my-3  ">
+                                    <label for="product">Products</label>
+                                    <select id="selectedProduct" name="products" class="form-control">
+                                        <%products.forEach((product)=>{%>
+                                             <option value="<%=product._id%>"><%=product.name%></option>
+                                        <%})%>
+                                    </select>
+                                </div>
+
+                                <div id="categoryDiv" class="form-group my-3  ">
+                                    <label for="category">Categories</label>
+                                    <select id="selectedCategory" name="category" class="form-control">
+                                        <%categories.forEach((category)=>{%>
+                                            <option value="<%=category._id%>"><%=category.name%></option>
+                                       <%})%>
+                                    </select>
+                                </div>
+                                <div class="form-group my-3 ">
+                                    <label for="name">Discount percentage</label>
+                                    <input type="text" class="form-control" id="discountPercentage" name=""
+                                        placeholder="10%">
+                                </div>
+
+                                <div class="form-group my-3 ">
+                                    <label for="expirydate">Expiry Date</label>
+                                    <input type="date" class="form-control" id="expiryDate" name="expiryDate" >
+                                    <div id="expirydateError" class="text-danger error-message"></div>
+                                </div>
+                                
+                                <div class="container d-flex justify-content-center mt-4">
+                                    <button onclick="addOffer()" type="button" class="btn btn-primary">Add Offer</button>
+                                </div> 
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<%-include('../layouts/adminFooter')%>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    
+    const offerTypeSelect = document.getElementById("offerType");
+    const productDiv = document.getElementById("productDiv");
+    const categoryDiv = document.getElementById("categoryDiv");
+
+    function showHideDivs() {
+        if (offerTypeSelect.value === "product") {
+            productDiv.style.display = "block";
+            categoryDiv.style.display = "none";
+        } else if (offerTypeSelect.value === "category") {
+            productDiv.style.display = "none";
+            categoryDiv.style.display = "block";
+        }
+    }
+    showHideDivs();
+    offerTypeSelect.addEventListener("change", showHideDivs);
+});
+
+function addOffer(){
+
+    const name=document.getElementById('name').value;
+    console.log('name:',name);
+    const offerType=document.getElementById('offerType').value;
+    console.log('offttype:',offerType);
+
+    const product=document.getElementById('selectedProduct').value;
+    console.log('3:',product);
+
+    const category=document.getElementById('selectedCategory').value;
+    console.log('4:',category);
+
+    const discountPercentage=document.getElementById('discountPercentage').value;
+    console.log('5:',discountPercentage);
+
+    const expiryDate=document.getElementById('expiryDate').value;
+    console.log('6:',expiryDate);
+
+
+    axios.post('/admin/addOffer',{
+        name,offerType,product,category,discountPercentage,expiryDate
+    })
+    .then((response)=>{
+        if(response.data.saved){
+            window.location.href='/admin/offers'
+        }
+    })
+}
+</script>

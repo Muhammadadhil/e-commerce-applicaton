@@ -1,0 +1,93 @@
+<%-include('../layouts/adminHeader')%>
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Offers</h2>
+            <p>here are the offers</p>
+        </div>
+        <div>
+            <a type="button" class="btn btn-primary" href="/admin/addOffer">Add Offers</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table id="reloadPart" class="table table-hover">
+                            <%if(offers.length>0){%>
+                                <thead>
+                                    <tr>
+                                        <th>no.</th>
+                                        <th>Offer name</th>
+                                        <th>Offer Type</th>
+                                        <th>Product</th>
+                                        <th>Category</th>
+                                        <th>Discount</th>
+                                        <th>Expiry</th>
+                                        <th>action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    <%offers.forEach((offer,i)=>{%>
+                                        <tr>
+                                            <td><%=i+1%></td>
+                                            <td><%=offer.name%></td>
+                                            <td>
+                                                <%= offer.offerType %>
+                                            </td>
+                                            <td><%=offer.offerType=='product'? offer.product.name: '-'%></td>
+                                            
+                                            <td><%=offer.offerType=='category'? offer.category.name: '-'%></td>
+                                            <td><%=offer.discountPercentage+'%' %></td>
+                                            <td><%=offer.expiryDate.toLocaleDateString('en-IN', {
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric'
+                                            })%></td>
+                                            <td id="relaodPart">
+                                                <%if(offer.isActive){%>
+                                                    <button onclick="removeOffer('<%=offer._id%>')" class="btn btn-outline-danger  ">remove</button></td>
+                                                <%}else{%>
+                                                    <button onclick="" class="btn btn-outline-success ">Add</button></td>
+                                                <%}%>
+
+                                        </tr>
+                                        
+                                    <%})%>
+                                </tbody>
+                            <%}else{%>
+                                <h4 class="text-center">No Offer Created</h4>
+                            <%}%>
+                        </table>
+                    </div>
+                </div>
+                <!-- .col// -->
+            </div>
+            <!-- .row // -->
+        </div>
+        <!-- card body .// -->
+    </div>
+    <!-- card .// -->
+</section>
+
+<script>
+function removeOffer(offerId){
+    const actionPart=document.getElementById('relaodPart');
+
+    axios.patch('/admin/removeOffer',{
+        offerId
+    })
+    .then((response)=>{
+
+        $('#reloadPart').load('/admin/offers #reloadPart');
+    })
+}
+</script>
+
+<%-include('../layouts/adminFooter')%>
+
+

@@ -6,8 +6,7 @@ const Cart=require('../model/cartModel');
 const listCoupons=async (req,res)=>{
     try {
             const currentDate=new Date();
-            // currentDate.setUTCHours(0, 0, 0, 0);
-            // console.log('currentDate:',currentDate);
+            
             const coupons=await Coupon.find({});
             res.render('coupons',{coupons})
 
@@ -29,6 +28,8 @@ const addCoupons=async (req,res)=>{
 //add coupons post
 const saveCoupons=async (req,res)=>{
     try {
+        console.log('!!!!!!!!! reached save coupons !!!!!!!!!!!!');
+
         const {couponName,couponCode,discount,activationDate,expiryDate,criteriaAmount}=req.body;
         console.log('expiryDate:',expiryDate);
         console.log('new Date(activationDate):',new Date(activationDate));

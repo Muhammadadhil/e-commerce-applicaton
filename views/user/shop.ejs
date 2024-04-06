@@ -88,6 +88,9 @@
                                                     </h4>
                                                     <div class="price">
                                                         <span class="sale-price">₹<%=product.price%></span>
+                                                        <%if(product.productDiscount || product.categoryDiscount){%>
+                                                            <span class="old-price">₹<%=product.orgPrice%></span>
+                                                        <%}%>
                                                     </div>
                                                 </div>
                                                 <ul class="product-meta">

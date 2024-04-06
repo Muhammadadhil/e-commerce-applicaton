@@ -6,6 +6,7 @@ const auth=require('../middleware/auth');
 const adminController=require('../controller/adminController');
 const productController=require('../controller/productController');
 const couponController=require('../controller/couponController');
+const offerController=require('../controller/offerController');
 // const orderController=require('../controller/orderController');
 
 
@@ -53,6 +54,14 @@ router.get('/deleteCoupon',auth.isAdminLogin,couponController.deleteCoupon);
 
 //sales report
 router.get('/salesReport',auth.isAdminLogin,adminController.loadSalesReport);
+
+//offers
+router.get('/offers',auth.isAdminLogin,offerController.offerLoader);
+router.get('/addOffer',auth.isAdminLogin,offerController.addOfferLoader);
+router.post('/addOffer',auth.isAdminLogin,offerController.addOffer)
+router.patch('/removeOffer',auth.isAdminLogin,offerController.removeOffer)
+
+
 
 
 
