@@ -85,7 +85,6 @@ const addOffer=async (req,res)=>{
 const removeOffer=async (req,res)=>{
     try {
         const {offerId}=req.body;   
-
         const updatedOffer=await Offer.findOneAndUpdate({_id:offerId},{$set:{isActive:false}},{new:true});
         // await Products.updateMany(
         //     {$or:[{productOfferId:offerId},{categoryOfferId:offerId}]}
@@ -93,8 +92,7 @@ const removeOffer=async (req,res)=>{
         if(updatedOffer.offerType==='product'){
 
             const offerApplied=await Products.find({productOfferId:offerId});
-            console.log('offerAppliedPRoductss:',offerApplied);
-           
+            
             offerApplied.map(async (product) => {
                 await Products.findOneAndUpdate(
                     { _id: product._id },
@@ -111,7 +109,6 @@ const removeOffer=async (req,res)=>{
         }else if(updatedOffer.offerType==='category'){
             const offerApplied=await Products.find({categoryOfferId:offerId});
 
-            console.log('offerApplied category PRoductss:',offerApplied);
             await Promise.all(offerApplied.map(async (product) => {
                 await Products.findOneAndUpdate(
                     { _id: product._id },
@@ -135,9 +132,56 @@ const removeOffer=async (req,res)=>{
     }
 }
 
+const reactivateOffer=async (req,res)=>{
+    try {
+        const {offerId}=req.body;
+        const updatedOffer=await Offer.findOneAndUpdate({_id:offerId},{$set:{isActive:true}},{new:true});
+
+        if(updatedOffer.offerType==='product'){
+            
+            const productDetails=await Products.findOne({_id:updatedOffer.product});
+            await Products.findByIdAndUpdate(
+                { _id: updatedOffer.product},
+                {
+                    $set: {
+                        productOfferId: updatedOffer._id,
+                        productDiscount: updatedOffer.discountPercentage,
+                        price: productDetails.price - (productDetails.price * updatedOffer.discountPercentage / 100)
+                    }
+                }
+            );
+
+        }else if(updatedOffer.offerType==='category'){
+
+            const categoryProducts=await Products.find({categoryId:updatedOffer.category});
+            // console.log('categoryProducts:',categoryProducts);
+            categoryProducts.map(async (product)=>{
+                await Products.findOneAndUpdate(
+                    { _id: product._id},
+                    {
+                        $set: {
+                            categoryOfferId: updatedOffer._id,
+                            categoryDiscount: updatedOffer.discountPercentage,
+                            price: product.price - (product.price * updatedOffer.discountPercentage / 100)
+                        }
+                    }
+                );
+            })
+        }
+        res.json({updated:true,updatedOffer})
+
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500);
+    }
+}
+
 module.exports={
     offerLoader,
     addOfferLoader,
     addOffer,
-    removeOffer
+    removeOffer,
+    reactivateOffer
+    
 }

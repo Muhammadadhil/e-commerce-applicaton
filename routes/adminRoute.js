@@ -59,7 +59,9 @@ router.get('/salesReport',auth.isAdminLogin,adminController.loadSalesReport);
 router.get('/offers',auth.isAdminLogin,offerController.offerLoader);
 router.get('/addOffer',auth.isAdminLogin,offerController.addOfferLoader);
 router.post('/addOffer',auth.isAdminLogin,offerController.addOffer)
-router.patch('/removeOffer',auth.isAdminLogin,offerController.removeOffer)
+router.patch('/removeOffer',auth.isAdminLogin,offerController.removeOffer);
+router.patch('/reactivateOffer',auth.isAdminLogin,offerController.reactivateOffer)
+
 
 
 

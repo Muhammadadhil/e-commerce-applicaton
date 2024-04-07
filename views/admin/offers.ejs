@@ -52,7 +52,7 @@
                                                 <%if(offer.isActive){%>
                                                     <button onclick="removeOffer('<%=offer._id%>')" class="btn btn-outline-danger  ">remove</button></td>
                                                 <%}else{%>
-                                                    <button onclick="" class="btn btn-outline-success ">Add</button></td>
+                                                    <button onclick="reactivateOffer('<%=offer._id%>')" class="btn btn-outline-success ">Add</button></td>
                                                 <%}%>
 
                                         </tr>
@@ -73,8 +73,15 @@
     </div>
     <!-- card .// -->
 </section>
+<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 
 <script>
+const notyf = new Notyf({
+    position: {
+        x: 'right',
+        y: 'top',
+}});
+
 function removeOffer(offerId){
     const actionPart=document.getElementById('relaodPart');
 
@@ -84,8 +91,27 @@ function removeOffer(offerId){
     .then((response)=>{
 
         $('#reloadPart').load('/admin/offers #reloadPart');
+        notyf.success(`deactivated ${response.data.updatedOffer.name}`);
+
     })
 }
+
+function reactivateOffer(offerId){
+    
+    axios.patch('/admin/reactivateOffer',{
+        offerId
+    })
+    .then((response)=>{
+        if(response.data.updated){
+            $('#reloadPart').load('/admin/offers #reloadPart');
+            console.log('doneeeeeeeee reactivated')
+            notyf.success(`reactivated the ${response.data.updatedOffer.name}`);
+            
+
+        }
+    })
+}
+
 </script>
 
 <%-include('../layouts/adminFooter')%>
