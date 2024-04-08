@@ -73,7 +73,7 @@
                                 </td>
                                 <td> 
                                     <%if(product.productStatus=='delivered'){%>
-                                    <h5><a href="" class="btn" style="background-color: rgb(240, 88, 0)">Return</a></h5>
+                                    <h5><a onclick="returnOrder('<%=orderData._id%>','<%= product.productId._id %>')" class="btn" style="background-color: rgb(240, 88, 0)">Return</a></h5>
 
                                     <%}else if(product.productStatus=='canceled'){%>
                                         <h5><a id="cancelButton" href="/productDetails?id=<%=product.productId._id%>" class="btn" style="background-color: rgb(51, 255, 0)">buy again</a></h5>
@@ -88,6 +88,10 @@
                 </div>
                 <% } %>
             </div>
+            <div>
+                <p>Amount after all discount</p>
+                <p><b>Order total:</b><%=orderData.subTotal%></p>
+            </div>
         
             
         </div>
@@ -95,6 +99,33 @@
 </div>
 
 <script>
+    async function returnOrder(orderId,productId){
+        const { value: text } = await Swal.fire({
+            input: "textarea",
+            inputLabel: "Reason for returning product",
+            inputPlaceholder: "Type your reason here...",
+
+            inputAttributes: {
+                "aria-label": "Type your message here",
+            },
+            showCancelButton: true,
+
+            preConfirm:(value)=>{
+                if(!value){
+                    Swal.showValidationMessage("Please enter a reason for cancel.");
+                }
+                return value;
+            }
+           
+        });
+
+        if(text){
+            axios.post('/returnProduct')
+        }
+    }
+
+
+
     async function cancelOrder(orderId,productId) {
         const { value: text } = await Swal.fire({
             input: "textarea",

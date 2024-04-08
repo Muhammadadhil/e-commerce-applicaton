@@ -226,12 +226,23 @@ const cancelProductOrder=async (req,res)=>{
             $set:{'products.$.productStatus':'canceled'}
         },{new:true})
 
-        console.log('updateData:',updateData);
+        // console.log('updateData:',updateData);
         if(updateData){
-            console.log('reached success');
             res.status(200).json({changed:true,updateData})
         }
 
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
+
+const returnProductOrder=async (req,res)=>{
+    try {
+        
+
+
+        
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500');
@@ -246,5 +257,6 @@ module.exports={
     loadSuccessPage,
     loadOrderDetails,
     cancelProductOrder,
-    verifyOnlinePayment
+    verifyOnlinePayment,
+    returnProductOrder
 }

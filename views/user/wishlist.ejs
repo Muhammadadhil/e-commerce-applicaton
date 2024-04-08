@@ -38,7 +38,10 @@
                                             <a href="/productDetails?id=<%=item.productId._id%>"><%=item.productId.name%></a>
                                         </h6>
                                         <div class="product-prices">
-                                            <span class="old-price">₹1000.00</span>
+                                            <%if(item.productId.productDiscount || item.productId.categoryDiscount){%>
+                                                <span class="old-price">₹<%=item.productId.orgPrice%></span>
+                                            <%}%>
+                                            <!-- <span class="old-price"></span> -->
                                             <span class="sale-price">₹<%=item.productId.price%></span>
                                         </div>
                                         <div class="product-size-color">

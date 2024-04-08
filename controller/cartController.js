@@ -19,34 +19,6 @@ const loadCartPage=async (req,res)=>{
 
         cartDetails=await Cart.findOne({userId:user}).populate(populateOption);
         
-        //to avoid the products which isCategoryBlocked is true.
-        // const cartDetails=await Cart.aggregate([
-        //     {
-        //         $match:{userId:user}
-        //     },
-        //     {
-        //         $lookup:{
-        //             from:"products",   
-        //             localField:"product.productId",
-        //             foreignField:"_id",
-        //             as:"product"
-        //         }
-        //     },{
-        //         $unwind:"$product"
-        //     },
-        //     {
-        //         $match:{
-        //             "product.isCategoryBlocked":false
-        //         }
-        //     },{
-        //         $group:{
-        //             _id: "$_id",
-        //             userId: { $first: "$userId" },
-        //             __v: { $first: "$__v" },
-        //             product: { $push: "$product" } // Push matched products back into an array
-        //         }
-        //     }
-        // ])
         console.log("carDetails:",cartDetails);
         // const subTotal=cartDetails?.product?.reduce((total,currentTotal)=> total+currentTotal.totalPrice,0);
         const subTotal=cartDetails.product.reduce((total,current)=>{

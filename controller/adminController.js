@@ -281,6 +281,7 @@ const loadSalesReport=async(req,res)=>{
         console.log('filterCriteria:',filterCriteria)
 
         let orders=[];
+        let dateOrTime='';
         // orders=await Order.find({}).populate('userId').sort({orderDate:-1});
         const overallData=await Order.aggregate([
             { 
@@ -297,21 +298,25 @@ const loadSalesReport=async(req,res)=>{
             
             case 'daily':
             orders=await dialyReport();
+            dateOrTime='day';
             break;
 
             case 'weekly':
                 orders=[] 
                 orders= await weeklyReport();
+                dateOrTime='week'
                 break;
 
             case 'monthly':
                 orders=[] 
                 orders= await monthlyReport();
+                dateOrTime='month'
                 break;    
 
             case 'yearly':
                 orders=[] 
-                orders= await yearlyReport();    
+                orders= await yearlyReport();  
+                dateOrTime='year'  
                 break;
         }
 
@@ -326,7 +331,7 @@ const loadSalesReport=async(req,res)=>{
 
         console.log('orders:',orders);
         console.log('filterCriteria:',filterCriteria);
-        res.render('salesReport',{orders,dateOptions,filterCriteria,overallData})
+        res.render('salesReport',{orders,dateOptions,filterCriteria,overallData,dateOrTime})
 
     } catch (error) {
         console.log(error.message);

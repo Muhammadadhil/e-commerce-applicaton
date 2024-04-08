@@ -105,7 +105,7 @@
                                                     <li id="wishlist-icon">
                                                         <%if(locals.user){%>
                                                             <a id="wishlstIcon" class="action" onclick="addToWishlist('<%=product._id%>')" >
-                                                                <i id="wishlistIcon-<%=product._id%>" class="<%=wishlist.products.some((item)=>item.productId.equals(product._id))?'fa-solid':'fa-regular' %> fa-heart"></i>   
+                                                                <i id="wishlistIcon-<%=product._id%>" class="<%=wishlist?.products?.some((item)=>item.productId.equals(product._id))?'fa-solid':'fa-regular' %> fa-heart"></i>   
                                                             </a>
                                                         <%}else{%>
                                                             <a class="action"  onclick="showLoginAlert()"><i class="pe-7s-like"></i></a> 

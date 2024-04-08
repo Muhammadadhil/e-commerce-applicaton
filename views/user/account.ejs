@@ -74,7 +74,7 @@
                                 
                                     
                                         <div class="card">
-                                            <h2 class="card-title text-center mt-4">There are no orders</h2>
+                                            <h2 class="card-title text-center mt-4">no orders to list</h2>
                                         </div>
                                     
                                     <%}else{%>
@@ -108,7 +108,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="tab-pane fade" id="pills-wallet">
+                        <div class="tab-pane fade" id="pills-wallet">
                         <div class="my-account-download account-wrapper">
                             <div class="card">
                                 <div class="card-body d-flex justify-content-between">
@@ -116,9 +116,12 @@
                                         <h2 class="account-title">Wallet Balance</h2>
                                     </div>
                                     <div>
-                                        <h2 class="account-title">₹</h2>
+                                        <h2 class="account-title">₹<%=userData.walletAmount%></h2>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="mt-4 d-flex justify-content-center ">
+                                <button class="btn btn-primary ">add money</button>
                             </div>
                             <div class="account-table text-center table-responsive">
                                 <table class="table">
@@ -126,15 +129,16 @@
                                         <tr>
                                             <th class="name">Date</th>
                                             <th class="date">status</th>
-
                                             <th class="action">Amount</th>
                                         </tr>
                                     </thead>
-                                    <tbody></tbody>
+                                    <tbody>
+
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                         <div class="tab-pane fade" id="pills-address">
                             <button class="btn btn-primary mb-3" id="addAddressButton" data-bs-toggle="modal" data-bs-target="#addAddressModal">add address</button>
                             <div class="row" id="addrassArea">

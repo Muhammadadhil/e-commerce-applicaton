@@ -58,7 +58,19 @@ const orderSchema=mongoose.Schema({
     subTotal:{
         type:Number,
         default:0
-    }
+    },
+    // orderReturns:[{
+    //     orderId:{
+    //         type:ObjectId,
+    //         required:true,
+            
+    //     },
+    //     productId:{
+    //         type:ObjectId,
+    //         required:true,
+    //         ref:'products'
+    //     }
+    // }]
 })
 
 module.exports=mongoose.model('Order',orderSchema);

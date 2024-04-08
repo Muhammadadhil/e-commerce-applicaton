@@ -5,6 +5,12 @@
         <div>
             <h2 class="content-title card-title">Sales report</h2> 
         </div>
+        <div>
+            <a type="button" class="btn btn-primary" onclick="generatePDf()">Download pdf</a>
+        </div>
+        <div>
+            <a type="button" class="btn btn-primary" onclick="generateExcel()">Download Excel</a>
+        </div>
     </div>
     <div class="card mb-4 ">
         <header class="card-header">
@@ -34,13 +40,16 @@
                 
             </div>
         </header>
-        <div class="card-body" >
+        <div class="card-body " id="download-part">
+            <div class="d-flex justify-content-center my-3">
+                <h3>furbar sales report</h3>
+            </div>
             <%if(orders.length>1){%>
                 <table class="table text-center "id='reloadDiv'>
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th class="text-dark " scope="col">week/month/year/Date</th>
+                            <th class="text-dark " scope="col"><%=dateOrTime%></th>
                             <th class="text-dark " scope="col">Total sales count</th>
                             <th class="text-dark " scope="col">Total revenue</th>
                             <th class="text-dark " scope="col">Total Offer Discount </th>
@@ -56,19 +65,17 @@
                                 <td><%=order.totalRevenue%></td>
                                 <td>nil</td>
                                 <td>nil</td>
-    
                             </tr>
-                            
                         <%})%>
                         
                     </tbody>
                 </table>
             <%}%>
             
-            <div>
-                <p><span class="fw-bold ">total sales count:</span><%=overallData[0].totalSalesCount%></p>
-                <p><span class="fw-bold ">total sales amount:</span><%=overallData[0].totalRevenue%></p>
-                <p><span class="fw-bold ">total discount amount:</span>:n/a</p>
+            <div class=" text-center  mt-5">
+                <p style="font-size: medium;"><span class="fw-bold ">total sales count:</span><%=overallData[0].totalSalesCount%></p>
+                <p style="font-size: medium;"><span class="fw-bold">total sales amount:</span><%=overallData[0].totalRevenue%></p>
+                <p style="font-size: medium;"><span class="fw-bold ">total discount amount:</span>:n/a</p>
 
             </div>
         </div>
@@ -92,6 +99,31 @@
 </section>
 <!-- content-main end// -->
 
+<!-- Excel download-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>\
+
+<!--pdf download-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js" integrity="sha512-YcsIPGdhPK4P/uRW6/sruonlYj+Q7UHWeKfTAkBW+g83NKM+jMJFJ4iAPfSnVp7BKD4dKMHmVSvICUbE/V1sSw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    function generatePDf(){
+        const element=document.getElementById('download-part');
+
+        html2pdf(element,{
+            filename:'furbar-sales-report'
+        });
+    }
+
+    function generateExcel(){
+        
+        const table=document.getElementById('download-part');
+        // Convert table to workbook
+        const wb = XLSX.utils.table_to_book(table);
+        // Save workbook as XLSX file
+        XLSX.writeFile(wb, 'sales-report-excel.xlsx');
+    }
+
+</script>
+
 <script>
     function filterSales(criteria){
 
@@ -111,8 +143,6 @@
             currentUrl.searchParams.set('end',endDate);
             window.location.href=currentUrl.href;
         }
-
-        
 
     }
 </script>
