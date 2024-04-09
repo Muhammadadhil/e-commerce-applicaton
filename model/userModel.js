@@ -37,7 +37,7 @@ const userSchema=new mongoose.Schema({
         type:Number,
         default:0
     },
-    walletTransactions:[{
+    walletHistory:[{
         amount:{
             type:Number,
             default:0

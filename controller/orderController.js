@@ -7,6 +7,7 @@ const Razorpay=require('razorpay');
 // const {createHmac}=require('node:crypto');
 const crypto =require('crypto');
 const Coupon=require('../model/couponModel');
+const User=require('../model/userModel');
 
 let instance = new Razorpay(
     {
@@ -156,20 +157,23 @@ const verifyOnlinePayment=async (req,res)=>{
         hmac.update(response.razorpay_order_id + '|' + response.razorpay_payment_id);
         hmac=hmac.digest('hex'); 
 
-        
         if(hmac == response.razorpay_signature){
             // console.log('!!!signature verified!!!!');
             const orderId=order.receipt;
             await Order.findByIdAndUpdate({_id:order.receipt},{$set:{ orderStatus:'placed'}});
-            
+            orderItems.forEach(async()=>{
+                console.log('count it !!!!!!!!f!!!!!1');
+            })
             // decreasing ordered products quantiy
             console.log('orderItems:',orderItems);
+
+            
             for(const item of orderItems){
+                // await Order.findOneByIdAndUpdate({_id:order.receipt},{$set:{'products.$.productStatus':'placed'}});
                 await Products.updateOne({_id:item.productId},{
                     $inc:{quantity:-item.quantity}
                 })
             }
-
             res.json({statusChanged:true,orderId});
         
         }else{
@@ -217,16 +221,42 @@ const loadOrderDetails=async (req,res)=>{
 //cancel
 const cancelProductOrder=async (req,res)=>{
     try {
-
-        const {orderId,productId}=req.body;
+        const userId=req.session.userId;
+        const {orderId,productId,text}=req.body;
         console.log('orderId,productId',orderId,productId);
 
         const updateData=await Order.findOneAndUpdate({_id:orderId,'products.productId':productId},
         {
             $set:{'products.$.productStatus':'canceled'}
-        },{new:true})
 
-        // console.log('updateData:',updateData);
+        },{new:true})
+        console.log('updateData:',updateData);
+
+        if(updateData.payment!=="cash on delivery"){
+            let returnPrice;
+            const date=new Date();
+            updateData.products.forEach((product) => {
+                if (String(product.productId)=== productId) {
+                    returnPrice = product.totalPrice;
+                }
+            });
+            console.log('return price:',returnPrice);
+    
+            await User.findOneAndUpdate(
+                { _id: userId }, 
+                { 
+                    $inc: { walletAmount: returnPrice }, 
+                    $push: { 
+                        walletHistory: {
+                            amount: returnPrice,
+                            description: text,
+                            date: date
+                        }
+                    }
+                }
+            );
+        }
+        
         if(updateData){
             res.status(200).json({changed:true,updateData})
         }
@@ -239,7 +269,48 @@ const cancelProductOrder=async (req,res)=>{
 
 const returnProductOrder=async (req,res)=>{
     try {
+        console.log('!!!!!!!!hey reached return product order!!!1');
+
+        const userId=req.session.userId;
+        const {orderId,productId,text}=req.body;
+        console.log('orderId,productId',orderId,productId);
+
+        const updateData=await Order.findOneAndUpdate({_id:orderId,'products.productId':productId},
+        {
+            $set:{'products.$.productStatus':'returned'}
+
+        },{new:true})
         
+        let returnPrice;
+        const date=new Date();
+        const product = await Products.findOne({ _id: productId });
+        const productName = product.name;
+        console.log('productname:',productName);
+        const description=`returned product ${productName}`;
+        updateData.products.forEach((product) => {
+            if (String(product.productId)=== productId) {
+                returnPrice = product.totalPrice;
+            }
+        });
+        console.log('return price:',returnPrice);
+
+        await User.findOneAndUpdate(
+            { _id: userId }, 
+            { 
+                $inc: { walletAmount: returnPrice }, 
+                $push: { 
+                    walletHistory: {
+                        amount: returnPrice,
+                        description: description,
+                        date: date
+                    }
+                }
+            }
+        );
+
+        if(updateData){
+            res.status(200).json({changed:true,updateData})
+        }
 
 
         

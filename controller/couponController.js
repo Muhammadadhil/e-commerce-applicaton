@@ -113,6 +113,8 @@ const verifyCoupon=async (req,res)=>{
         const orderSubTotal=req.query.total;
         console.log('orderSubTotal:',orderSubTotal);
         const currentDate=new Date();
+        console.log('currentDate:',currentDate);
+
         const couponData=await Coupon.findOne({couponCode:userEnteredCode,expiryDate:{$gte:currentDate}});
         console.log('couponData:',couponData);
         console.log('couponData.criteriaAmount:',couponData.criteriaAmount);

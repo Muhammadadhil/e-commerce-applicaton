@@ -128,12 +128,20 @@
                                     <thead>
                                         <tr>
                                             <th class="name">Date</th>
-                                            <th class="date">status</th>
+                                            <th class="date">Description</th>
                                             <th class="action">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        <%if(userData.walletHistory){%>
+                                            <%userData.walletHistory.forEach((transaction)=>{%>
+                                                <tr>
+                                                    <td><%=transaction.date.toLocaleDateString("en-US", dateOption)%></td>
+                                                    <td><%=transaction.description%></td>
+                                                    <td><%=transaction.amount%></td>
+                                                </tr>
+                                            <%})%>
+                                        <%}%>
                                     </tbody>
                                 </table>
                             </div>

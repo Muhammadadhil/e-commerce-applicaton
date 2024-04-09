@@ -90,7 +90,8 @@ const loadAccount=async (req,res)=>{
         // console.log('address:',address);
         // console.log('orders:',userOrders);
         const {itemsCount}=await getCartDetails(user);
-        res.render('account',{user,itemsCount,userData,address,userOrders});
+        const dateOption={ weekday: 'short' , year: 'numeric' , month: 'short' , day: 'numeric' };
+        res.render('account',{user,itemsCount,userData,address,userOrders,dateOption});
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500')

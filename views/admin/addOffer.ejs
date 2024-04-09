@@ -64,10 +64,10 @@
 <%-include('../layouts/adminFooter')%>
 
 <script>
-    const today = new Date().toISOString().split('T')[0];
-    console.log('today:',today);
-    let expiryDate = document.getElementById('expiryDate').setAttribute('min',today).value;
-
+    // const today = new Date().toISOString().split('T')[0];
+    // console.log('today:',today);
+    // let expiryDate = document.getElementById('expiryDate').setAttribute('min',today).value;
+    // console.log(expiryDate);
     document.addEventListener("DOMContentLoaded", function() {
     
     const offerTypeSelect = document.getElementById("offerType");
@@ -96,7 +96,7 @@ function ValidateOfferForm(event) {
     const product = document.getElementById('selectedProduct').value;
     const category = document.getElementById('selectedCategory').value;
     const discountPercentage = document.getElementById('discountPercentage').value;
-    let expiryDate = document.getElementById('expiryDate').setAttribute('min',today).value;
+    let expiryDate = document.getElementById('expiryDate').value;
 
     const nameError = document.getElementById('nameError');
     const expirydateError = document.getElementById('expirydateError');

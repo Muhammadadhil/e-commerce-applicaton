@@ -77,6 +77,8 @@
 
                                     <%}else if(product.productStatus=='canceled'){%>
                                         <h5><a id="cancelButton" href="/productDetails?id=<%=product.productId._id%>" class="btn" style="background-color: rgb(51, 255, 0)">buy again</a></h5>
+                                    <%}else if(product.productStatus=='returned'){%>
+                                        <p>Product Returned</p>
                                     <%}else{%>
                                         <h5><a id="cancelButton" onclick="cancelOrder('<%=orderData._id%>','<%= product.productId._id %>')" class="btn" style="background-color: rgb(255, 208, 0)">cancel</a></h5>
                                     <%}%>
@@ -116,15 +118,36 @@
                 }
                 return value;
             }
-           
+
         });
 
         if(text){
-            axios.post('/returnProduct')
+            fetch("/returnProduct", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify({
+                    orderId,
+                    productId,
+                    text
+                }),
+            })
+            .then((res)=>res.json())
+            .then((data)=>{
+                // console.log('data:',data);
+
+                const updatedProduct=data.updateData.products.find((product)=> productId==productId);
+                console.log('updatedProduct:',updatedProduct);
+                Swal.fire({
+                    title: "done!",
+                    text: "Your amount will be credited to your wallet and we will pick the product within 2 days",
+                }).then(()=>{
+                    window.location.reload();
+                })
+            })
         }
     }
-
-
 
     async function cancelOrder(orderId,productId) {
         const { value: text } = await Swal.fire({

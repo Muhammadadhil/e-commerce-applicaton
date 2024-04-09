@@ -34,7 +34,9 @@
                                             <a href="/productDetails?id=<%=product.productId._id%>"><%=product.productId.name%></a>
                                         </h6>
                                         <div class="product-prices">
-                                            <span class="old-price">₹1000.00</span>
+                                            <%if(product.productId.productDiscount || product.productId.categoryDiscount){%>
+                                                <span class="old-price">₹<%=product.productId.orgPrice%></span>
+                                            <%}%>
                                             <span class="sale-price">₹<%=product.productId.price%></span>
                                         </div>
                                         <div class="product-size-color">
@@ -277,8 +279,7 @@
 
 <script>
     function addProductQuantity(productId, count) {
-        console.log("add product qunatity function reached!!!");
-
+        
         fetch("/addToCart", {
             method: "POST",
             headers: {

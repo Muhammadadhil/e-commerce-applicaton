@@ -44,6 +44,8 @@
                           Filter by category:
                         </a>
                         <ul class="dropdown-menu border-0" role="menu">
+                            <li><a class="dropdown-item" href="/shop" >All</a></li>
+
                             <%categories.forEach((category)=>{%>
                                 <li><a class="dropdown-item" onclick="filterCategory('<%=category._id%>')" ><%=category.name%></a></li>
                             <%})%>
