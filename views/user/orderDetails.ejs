@@ -19,7 +19,7 @@
         <hr />
         <br />
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <h3 class="mt-4 text-warning">ORDER DETAILS</h3>
                 <br />
                 <h4 class="name text-muted">OrderId: <%=orderData._id%></h4>
@@ -33,7 +33,22 @@
                     <br />
                 </p>
             </div>
-            <div class=" col-md-12 ">
+            <div class="col-md-6  text-end mt-5">
+                <p></p>
+                <p>
+                    Amount after all discount: <br>
+                    <b>Order total:</b><%=orderData.subTotal%>
+                </p>
+                <%if(orderData.orderStatus==='pending' && orderData.subTotal>0){%>
+                    <div>
+                        <button onclick="razorpayPayment('<%=JSON.stringify(orderData)%>')">pay now</button><br>
+                        <small>(buy the products which you have choosed)</small>
+                    </div>
+                <%}%>
+                <p><b>Order status:</b><%=orderData.orderStatus%></p>
+
+            </div>
+            <div class="col-md-12 ">
                 <% if (orderData.products.length > 0) { %>
                 <h3 class="mb-4 mt-5">Ordered Products</h3>
                 <div class="table-responsive ">
@@ -48,7 +63,7 @@
                                 <th class="actions fw-bold">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="text-center">
+                        <div class="text-center">
                             <% orderData.products.forEach((product, index)=> { %>
                             <tr>
                                 <td><%=index+1%></td>
@@ -73,8 +88,7 @@
                                 </td>
                                 <td> 
                                     <%if(product.productStatus=='delivered'){%>
-                                    <h5><a onclick="returnOrder('<%=orderData._id%>','<%= product.productId._id %>')" class="btn" style="background-color: rgb(240, 88, 0)">Return</a></h5>
-
+                                        <h5><a onclick="returnOrder('<%=orderData._id%>','<%= product.productId._id %>')" class="btn" style="background-color: rgb(240, 88, 0)">Return</a></h5>
                                     <%}else if(product.productStatus=='canceled'){%>
                                         <h5><a id="cancelButton" href="/productDetails?id=<%=product.productId._id%>" class="btn" style="background-color: rgb(51, 255, 0)">buy again</a></h5>
                                     <%}else if(product.productStatus=='returned'){%>
@@ -85,25 +99,83 @@
                                 </td>
                             </tr>
                             <%})%>
-                        </tbody>
+                        </div>
                     </table>        
                 </div>
                 <% } %>
             </div>
-            <div>
-                <p></p>
-                <p>
-                    Amount after all discount: <br>
-                    <b>Order total:</b><%=orderData.subTotal%>
-                </p>
-                <p><b>Order status:</b><%=orderData.orderStatus%></p>
-
-            </div>
-        
             
         </div>
     </div>
 </div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    
+        function payAgain(orderId){
+            axios.get(`/paytheAmount?id=${orderId}`)
+            .then((response)=>{
+                             
+            })
+        }
+
+    function razorpayPayment(order){
+
+    console.log('pay again: order:',order);
+
+    var options = {
+        "key": "rzp_test_bHCQ2sAI4219I7", 
+        "amount": order.subTotal, 
+        "currency": "INR",
+        "name": "furbar", 
+        "description": "Test Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": order._id, 
+        // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+        "handler": function (response){                              //handler after payment success
+            console.log('response:',response);
+            verifyPayment(response,order);
+        },
+        "prefill": { 
+            "name": "muhammad adhil", 
+            "email": "aadhi@gmail.com", 
+            "contact": "9000090000" 
+        },
+        "notes": {
+            "address": "Razorpay Corporate Office"
+        },
+        "theme": {  
+            "color": "#f2a100"
+        }
+    };
+
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+        alert(response.error.description);
+        // window.location.href=`/detailsOrder?id=${order.receipt}`
+    });
+
+    rzp1.open();
+    }
+
+    function verifyPayment(response,order){
+    fetch('/verifyPayment',{
+        method:"POST",
+        headers:{
+            "content-type": "application/json;charset=utf-8"
+        },
+        body:JSON.stringify({
+            response,
+            order
+        })
+    })
+    .then((res)=>res.json())
+    .then((data)=>{
+        if(data.statusChanged){
+            window.location.href=`/orderSuccess?id=${data.orderId}`
+        }
+    })   
+    }
+</script>
 
 <script>
     async function returnOrder(orderId,productId){
@@ -156,74 +228,59 @@
     }
 
     async function cancelOrder(orderId,productId) {
-        const { value: text } = await Swal.fire({
-            input: "textarea",
-            inputLabel: "Reason for cancel",
-            inputPlaceholder: "Type your message here...",
-
-            inputAttributes: {
-                "aria-label": "Type your message here",
-            },
+        Swal.fire({
+            
+            text: "if you cancel this may be you dont get this product at this price",
+            icon: "warning",
             showCancelButton: true,
-            preConfirm:(value)=>{
-                if(!value){
-                    Swal.showValidationMessage("Please enter a reason for cancel.");
-                }
-                return value;
-            }
-           
-        });
-        if(text){
-            fetch("/cancelProductOrder", {
-                method: "POST",
-                headers: {
-                    "content-type": "application/json;charset=utf-8",
-                },
-                body: JSON.stringify({
-                    orderId,
-                    productId,
-                    text
-                }),
-            })
-            
-            .then((res)=>res.json())
-            .then((data)=>{
-                // console.log('data:',data);
-                
-                const updatedProduct=data.updateData.products.find((product)=> productId==productId);
-                console.log('updatedProduct:',updatedProduct);
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, cancel it"
+            }).then((result) => {
+            if (result.isConfirmed) {
 
-                if(data.updateData.payment==='online' && data.updateData.orderStatus=='placed'){
-                        Swal.fire({
-                        title: "product order canceled",
-                        text: "Your amount will be credited to your wallet ",
-                        }).then(()=>{
-                            window.location.reload();
-                        })
-
-                }else{
-                    Swal.fire({
-                    title: "canceled ",
-                    text: "canceled product order",
-                }).then(()=>{
-                    window.location.reload()
+                fetch("/cancelProductOrder", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json;charset=utf-8",
+                    },
+                    body: JSON.stringify({
+                        orderId,
+                        productId
+                    }),
                 })
-                }
-
-                const statusElement=document.getElementById('reloadPart');
-                statusElement.innerHTML=`<h5 id="reloadPart">${updatedProduct.productStatus}</h5>`;
-
-            })
             
-            .catch((error) => {
-            // Handle errors
-            console.error(error);
-            Swal.fire({
-                title: "Error",
-                text: "An error occurred while canceling the order.",
-                icon: "error"
-            });
-        });  
-        }          
+                .then((res)=>res.json())
+                .then((data)=>{
+                    // console.log('data:',data);
+                    
+                    const updatedProduct=data.updateData.products.find((product)=> productId==productId);
+                    console.log('updatedProduct:',updatedProduct);
+
+                    if(data.updateData.payment==='online' && data.updateData.orderStatus=='placed'){
+                            Swal.fire({
+                            title: "product order canceled",
+                            text: "Your amount will be credited to your wallet ",
+                            }).then(()=>{
+                                window.location.reload();
+                            })
+
+                    }else{
+                        Swal.fire({
+                        title: "canceled ",
+                        text: "canceled product order",
+                    }).then(()=>{
+                        window.location.reload()
+                    })
+                    }
+
+                    const statusElement=document.getElementById('reloadPart');
+                    statusElement.innerHTML=`<h5 id="reloadPart">${updatedProduct.productStatus}</h5>`;
+
+                })
+            }
+        }); 
+
+            
     }
 </script>

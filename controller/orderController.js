@@ -224,6 +224,7 @@ const loadOrderDetails=async (req,res)=>{
         const cartDetails=await Cart.findOne({userId:user});
         const itemsCount=cartDetails?.product.length;
         const orderData=await Order.findOne({_id:orderId}).populate(populateOption);
+        console.log('orderData:',orderData);
         res.render('orderDetails',{user,orderData,itemsCount});
         
     } catch (error) {
@@ -244,8 +245,7 @@ const cancelProductOrder=async (req,res)=>{
             $set:{'products.$.productStatus':'canceled'}
 
         },{new:true})
-        console.log('updateData:',updateData);
-
+        
         if(updateData.payment!=="cash on delivery"){
             let returnPrice;
             const date=new Date();
@@ -255,7 +255,8 @@ const cancelProductOrder=async (req,res)=>{
                 }
             });
             console.log('return price:',returnPrice);
-    
+            
+            //adding amount to wallet
             await User.findOneAndUpdate(
                 { _id: userId }, 
                 { 
@@ -269,6 +270,8 @@ const cancelProductOrder=async (req,res)=>{
                     }
                 }
             );
+            //decreasing order total amount 
+            await Order.findByIdAndUpdate({_id:orderId},{$inc:{subTotal:-returnPrice}});
         }
         
         if(updateData){
@@ -332,6 +335,22 @@ const returnProductOrder=async (req,res)=>{
     }
 }
 
+//pay again when it is pending
+const payAgain=async (req,res)=>{
+    try {
+        console.log('reqdched pay agian!!!');
+        const currentOrderId=req.query.id;
+        console.log('currentOrderId:',currentOrderId);
+
+        
+
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
+
 
 module.exports={
     loadCheckoutPage,
@@ -340,5 +359,6 @@ module.exports={
     loadOrderDetails,
     cancelProductOrder,
     verifyOnlinePayment,
-    returnProductOrder
+    returnProductOrder,
+    payAgain
 }

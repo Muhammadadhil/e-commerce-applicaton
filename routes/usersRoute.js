@@ -78,6 +78,9 @@ router.get('/detailsOrder',auth.isLogin,orderController.loadOrderDetails);
 router.post('/cancelProductOrder',orderController.cancelProductOrder);
 router.post('/verifyPayment',orderController.verifyOnlinePayment);
 router.post('/returnProduct',orderController.returnProductOrder);
+router.get('/paytheAmount',auth.isLogin,orderController.payAgain);
+
+
 
 
 //coupon

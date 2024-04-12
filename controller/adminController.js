@@ -264,6 +264,7 @@ const changeOrderStatus=async (req,res)=>{
         res.status(500).render('error-500') 
     }
 }
+
 //load sales report page
 const loadSalesReport=async(req,res)=>{
     try {
@@ -301,40 +302,54 @@ const loadSalesReport=async(req,res)=>{
             break;
 
             case 'weekly':
-                orders=[] 
-                orders= await weeklyReport();
+                orders=[]
+                orders= await generateReport('$week');
                 dateOrTime='week'
                 break;
 
             case 'monthly':
                 orders=[] 
-                orders= await monthlyReport();
+                orders= await generateReport('$month');
                 dateOrTime='month'
                 break;    
 
             case 'yearly':
                 orders=[] 
-                orders= await yearlyReport();  
+                orders= await generateReport('$year');  
                 dateOrTime='year'  
                 break;
         }
 
         const startDate=req.query.start;
         const endDate=req.query.end;
-        console.log('startDate:',startDate)
-        console.log('endDate:',endDate)
-
+        
         if(startDate && endDate){
             orders=await customReport(startDate,endDate);
         }
 
-        console.log('orders:',orders);
-        console.log('filterCriteria:',filterCriteria);
         res.render('salesReport',{orders,dateOptions,filterCriteria,overallData,dateOrTime})
 
     } catch (error) {
         console.log(error.message);
         res.status(500).render('error-500') 
+    }
+}
+
+const generateReport=async (timeUnit)=>{
+    try {
+        const orderDatas=await Order.aggregate([
+            { 
+                $group: {
+                    _id: { [timeUnit]: "$orderDate" },
+                    totalSalesCount: { $sum: 1},
+                    totalRevenue:{$sum:'$subTotal'},
+                }
+            }
+        ]);
+        return orderDatas;
+
+    } catch (error) {
+        console.log(error.message);
     }
 }
 
@@ -372,64 +387,6 @@ const customReport=async (start,end)=>{
         ]);
         return orderDatas;
 
-    } catch (error) {
-        console.log(error.message);
-    }
-}
-
-const weeklyReport=async ()=>{
-    try {
-        const orderDatas=await Order.aggregate([
-            { 
-                $group: {
-                    _id: { $week: "$orderDate" },
-                    totalSalesCount: { $sum: 1},
-                    totalRevenue:{$sum:'$subTotal'},
-                }
-            }
-        ]);
-        return orderDatas;
-
-    } catch (error) {
-        console.log(error.message);
-    }
-}
-
-const monthlyReport=async ()=>{
-    try {
-
-        const orderDatas=await Order.aggregate([
-            {
-                $group: {
-                    _id:{$month: "$orderDate"} ,
-                    totalSalesCount: { $sum: 1},
-                    totalRevenue:{$sum:'$subTotal'},
-                }
-            }
-        ]);
-
-        return orderDatas;
-        
-    } catch (error) {
-        console.log(error.message);
-    }
-}
-
-
-const yearlyReport=async ()=>{
-    try {
-        const orderDatas=await Order.aggregate([
-            { 
-                $group: {
-                    _id: { $year: "$orderDate" },
-                    totalSalesCount: { $sum: 1},
-                    totalRevenue:{$sum:'$subTotal'},
-                }
-            }
-        ]);
-
-        return orderDatas;
-        
     } catch (error) {
         console.log(error.message);
     }
