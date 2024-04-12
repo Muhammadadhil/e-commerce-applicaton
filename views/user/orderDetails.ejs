@@ -91,8 +91,13 @@
                 <% } %>
             </div>
             <div>
-                <p>Amount after all discount</p>
-                <p><b>Order total:</b><%=orderData.subTotal%></p>
+                <p></p>
+                <p>
+                    Amount after all discount: <br>
+                    <b>Order total:</b><%=orderData.subTotal%>
+                </p>
+                <p><b>Order status:</b><%=orderData.orderStatus%></p>
+
             </div>
         
             
@@ -102,6 +107,7 @@
 
 <script>
     async function returnOrder(orderId,productId){
+
         const { value: text } = await Swal.fire({
             input: "textarea",
             inputLabel: "Reason for returning product",
@@ -179,18 +185,30 @@
                     text
                 }),
             })
+            
             .then((res)=>res.json())
             .then((data)=>{
                 // console.log('data:',data);
                 
                 const updatedProduct=data.updateData.products.find((product)=> productId==productId);
                 console.log('updatedProduct:',updatedProduct);
-                Swal.fire({
+
+                if(data.updateData.payment==='online' && data.updateData.orderStatus=='placed'){
+                        Swal.fire({
+                        title: "product order canceled",
+                        text: "Your amount will be credited to your wallet ",
+                        }).then(()=>{
+                            window.location.reload();
+                        })
+
+                }else{
+                    Swal.fire({
                     title: "canceled ",
                     text: "canceled product order",
                 }).then(()=>{
                     window.location.reload()
                 })
+                }
 
                 const statusElement=document.getElementById('reloadPart');
                 statusElement.innerHTML=`<h5 id="reloadPart">${updatedProduct.productStatus}</h5>`;

@@ -81,13 +81,13 @@ router.post('/returnProduct',orderController.returnProductOrder);
 
 
 //coupon
-router.get('/applyCoupon',couponController.verifyCoupon)
-router.post('/removeCoupon',couponController.removeCoupon)
+router.get('/applyCoupon',auth.isLogin,couponController.verifyCoupon);
+router.post('/removeCoupon',auth.isLogin,couponController.removeCoupon);
 
 //wishlist
-router.get('/wishlist',userHelpController.loadWishlist)
-router.post('/addTowishlist',userHelpController.addItemToWishlist);
-router.get('/removeItemFromWishlist',userHelpController.removeFromWishlist);
+router.get('/wishlist',auth.isLogin,userHelpController.loadWishlist);
+router.post('/addTowishlist',auth.isLogin,userHelpController.addItemToWishlist);
+router.get('/removeItemFromWishlist',auth.isLogin,userHelpController.removeFromWishlist);
 
 //logout
 router.get('/logout',userController.userLogout);

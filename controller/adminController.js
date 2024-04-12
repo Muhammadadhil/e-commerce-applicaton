@@ -99,13 +99,12 @@ const loadCategory=async (req,res)=>{
 const addCategory=async (req,res)=>{
     try {
         const {name,description}=req.body;
-        const existingName= await Category.findOne({name:name});
+        const existingName= await Category.findOne({name:{$regex:new RegExp(name,'i')}});
 
-        console.log('already exist in db:',existingName);
         if(existingName){
             return res.json({added:false,message:'category already exist'})
         }
-        console.log('name and description:',name,description);
+        
         const newCategory=new Category({
             name:name,
             description:description,
@@ -278,7 +277,7 @@ const loadSalesReport=async(req,res)=>{
             minute: 'numeric',
             second: 'numeric'
         };
-        console.log('filterCriteria:',filterCriteria)
+        console.log('filterCriteria:',filterCriteria);
 
         let orders=[];
         let dateOrTime='';

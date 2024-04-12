@@ -9,52 +9,72 @@
         <div class="checkout-info">
             <p class="info-header">
                 <i class="fa fa-exclamation-circle"></i> Have a coupon?
-                <a data-bs-toggle="collapse" href="#coupon">Click here to enter your code</a>
+                <a  data-bs-toggle="modal" data-bs-target="#couponModel">Click here to enter your code</a>
             </p>
-
-            <div class="collapse" id="coupon">
-                <div class="card-body">
-                    <form action="">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="single-form">
-                                    <input type="text" placeholder="Coupon code" id="couponCode" required />
-                                    <span id="couponCodeError" class="text-danger"></span>
-                                    <span id="couponCodeSuccess" class="text-success "></span>
-
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="single-form">
-                                    <button onclick="applyCoupon(event)" class="btn btn-primary btn-hover-dark">Coupon</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="row">
-                   <div class="col-lg-3 mt-4 mb-4">
-                        <%if(coupons){%>
-                            <%coupons.forEach((coupon)=>{%>
-                                <div class="card coupon-card border-2 rounded-3 mb-2">
-                                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                                        <i class="fa fa-gift" aria-hidden="true"></i>
-                                        <h5 class="coupon-tag"><%=coupon.couponName%></h5>
-                                        <p class="coupon-text">
-                                            Code: <b><%=coupon.couponCode%></b> <br />
-                                            Discount Amount: <b><%=coupon.discountAmount%> </b><br />
-                                            Critria Amount: <b><%=coupon.criteriaAmount%></b> 
-                                            
-                                        </p>
-                                        <p class="text-muted ">
-                                            Copy the code
-                                        </p>
+            <!-- Modal -->
+            <div class="modal fade" id="couponModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Coupon</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card-body">
+                            <form action="">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="single-form">
+                                            <input type="text" placeholder="Coupon code" id="couponCode" required />
+                                            <span id="couponCodeError" class="text-danger"></span>
+                                            <span id="couponCodeSuccess" class="text-success "></span>
+        
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="single-form">
+                                            <button onclick="applyCoupon(event)" class="btn btn-primary btn-hover-dark">Coupon</button>
+                                        </div>
                                     </div>
                                 </div>
-                            <%})%>
-                        <%}%>
+                            </form>
+                            <div class="row">
+                           <div class="col-lg-3 mt-4 mb-4">
+                                <%if(coupons){%>
+                                    <%coupons.forEach((coupon)=>{%>
+                                        
+                                            <div class="card coupon-card border-2 rounded-3 mb-2">
+                                                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                                    <i class="fa fa-gift" aria-hidden="true"></i>
+                                                    <h5 class="coupon-tag"><%=coupon.couponName%></h5>
+                                                    <p class="coupon-text">
+                                                        Code: <b><%=coupon.couponCode%></b> <br />
+                                                        Discount Amount: <b><%=coupon.discountAmount%> </b><br />
+                                                        Critria Amount: <b><%=coupon.criteriaAmount%></b> 
+                                                        
+                                                    </p>
+                                                    <p class="text-muted ">
+                                                        Copy the code
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        
+                                    <%})%>
+                                <%}%>
+                            </div>
+                            </div>
+                        </div>  
                     </div>
-                    </div>
-                </div>  
+                    
+                </div>
+                </div>
+            </div>
+
+
+            <div class="collapse" id="coupon">
+                
             </div>
         </div>
         <div class="single-form checkbox-checkbox mb-5">
@@ -331,6 +351,11 @@
                                             </td>
                                             <td class="Product-price">
                                                 <p>₹<%=subTotal%></p>
+
+                                                <a style="color: black; text-decoration: none;" onmouseover="this.style.color='#f2a100'" onmouseout="this.style.color='black'"
+                                                data-bs-toggle="modal" data-bs-target="#couponModel">apply coupon
+                                                </a>
+                                                    
                                             </td>
                                         </tr>
                                     <%}%>
@@ -565,7 +590,7 @@
             "image": "https://example.com/your_logo",
             "order_id": order.id, 
             // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
-            "handler": function (response){                          //handler after payment success
+            "handler": function (response){                              //handler after payment success
                 console.log('response:',response);
                 verifyPayment(response,order);
             },
@@ -578,7 +603,7 @@
                 "address": "Razorpay Corporate Office"
             },
             "theme": {  
-                "color": "#3399cc"
+                "color": "#f2a100"
             }
         };
 

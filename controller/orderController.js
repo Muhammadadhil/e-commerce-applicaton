@@ -11,8 +11,8 @@ const User=require('../model/userModel');
 
 let instance = new Razorpay(
     {
-        key_id: process.env.razorpay_key_id,
-        key_secret: process.env.razorpay_key_secret 
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET 
     }
 )
 
@@ -43,7 +43,7 @@ const loadCheckoutPage=async (req,res)=>{
             return total+current.productId.price*current.quantity
         },0);
         const currentDate=new Date();
-        const coupons=await Coupon.find({activationDate:{$lte:currentDate}})
+        const coupons=await Coupon.find({activationDate:{$lte:currentDate},expiryDate:{$gte:currentDate}});
 
         res.render('checkout',{user,itemsCount,userAddresses,cartDetails,subTotal,coupons});
         
@@ -76,8 +76,8 @@ const placeOrder=async (req,res)=>{
         const populateOption={
             path:'product.productId',
             model:'products'
-            
         }
+
         const cartData=await Cart.findOne({userId:userId}).populate(populateOption).populate('couponDiscount');
         
         const subTotal=(cartData?.product.reduce((total,current)=> total+current.productId.price*current.quantity,0)) - (cartData?.couponDiscount?.discountAmount ?? 0);
@@ -116,6 +116,12 @@ const placeOrder=async (req,res)=>{
                         $inc:{quantity:-item.quantity}
                     })
             }
+            if(req.session.couponUsed){
+                await Coupon.findOneAndUpdate(
+                    {_id:couponUsed._id},
+                    {$addToSet:{usedUser:userId}}
+                );
+            }
             await Cart.deleteMany({});
             // res.redirect(`/orderSuccess?id=${orderDetails._id}`);
             res.status(200).json({codSuccess:true,orderId});
@@ -127,6 +133,7 @@ const placeOrder=async (req,res)=>{
                 currency: "INR",
                 receipt: orderId,
             };
+
             //creating instace for razorpay order
             instance.orders.create(options,(err,order)=>{
                 if(err){
@@ -136,7 +143,6 @@ const placeOrder=async (req,res)=>{
                 res.json({onlineSuccess:true,order})
                 
             });
-            await Cart.deleteMany({});
         }
 
     } catch (error) {
@@ -149,7 +155,8 @@ const placeOrder=async (req,res)=>{
 //verify razorpay payment
 const verifyOnlinePayment=async (req,res)=>{
     try {
-        console.log('verify payment route reacheddd!!!');
+        const userId=req.session.userId;
+        console.log('verify payment route reacheddd!!');
         const {response,order}=req.body;
         console.log(req.body);
 
@@ -158,26 +165,33 @@ const verifyOnlinePayment=async (req,res)=>{
         hmac=hmac.digest('hex'); 
 
         if(hmac == response.razorpay_signature){
-            // console.log('!!!signature verified!!!!');
+            
             const orderId=order.receipt;
             await Order.findByIdAndUpdate({_id:order.receipt},{$set:{ orderStatus:'placed'}});
-            orderItems.forEach(async()=>{
-                console.log('count it !!!!!!!!f!!!!!1');
-            })
-            // decreasing ordered products quantiy
-            console.log('orderItems:',orderItems);
-
             
+            console.log('orderItems:',orderItems);
+            
+            // decreasing ordered products quantiy
             for(const item of orderItems){
-                // await Order.findOneByIdAndUpdate({_id:order.receipt},{$set:{'products.$.productStatus':'placed'}});
+                await Order.findOneAndUpdate({_id:order.receipt,'products.productId':item.productId},{$set:{'products.$.productStatus':'placed'}});
                 await Products.updateOne({_id:item.productId},{
                     $inc:{quantity:-item.quantity}
                 })
             }
+            console.log('session:',req.session);
+            console.log('req.session.couponused:',req.session.couponUsed);
+            const couponUsed=req.session.couponUsed;
+            if(couponUsed){
+                await Coupon.findOneAndUpdate(
+                    {_id:couponUsed._id},
+                    {$addToSet:{usedUser:userId}}
+                );
+                console.log('applied coupon stored in coupon usedUser')
+            }
+            await Cart.deleteMany({});
+
             res.json({statusChanged:true,orderId});
         
-        }else{
-
         }
 
     } catch (error) {
@@ -312,14 +326,11 @@ const returnProductOrder=async (req,res)=>{
             res.status(200).json({changed:true,updateData})
         }
 
-
-        
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500');
     }
 }
-
 
 
 module.exports={

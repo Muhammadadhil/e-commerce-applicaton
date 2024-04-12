@@ -20,7 +20,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="myform">
+                    <form id="myform" autocomplete="off">
                         <div class="mb-4">
                             <label for="product_name" class="form-label">Name</label>
                             <input type="text" placeholder="Type here" class="form-control" id="categoryName" />
@@ -115,6 +115,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
 
+     // Reset form fields when modal is closed
+     document.getElementById('addCategory').addEventListener('hidden.bs.modal', function () {
+        document.getElementById('myform').reset();
+    });
+    
     document.getElementById('addCategory-submit').addEventListener('click',(event)=>{
         event.preventDefault();
         const name=document.getElementById('categoryName').value;

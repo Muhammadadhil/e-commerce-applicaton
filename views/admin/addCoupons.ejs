@@ -62,6 +62,12 @@
     </section>
 
     <script>
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('activationdate').setAttribute('min',today);
+        document.getElementById('expirydate').setAttribute('min',today);
+
+
+
         function generateRandomString(length) {
             var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             var randomString = '';
@@ -81,24 +87,21 @@
         function ValidateForm(event){
             
         const nameInput = document.getElementById('name').value;
-        console.log('nameINput:',nameInput);
 
         const codeInput = document.getElementById('code').value;
-        console.log('codeInput:',codeInput);
 
         let discountInput = document.getElementById('discount').value;
         discountInput=Number(discountInput);
-        console.log('discountInput:',discountInput);
 
         let criteriaAmountInput = document.getElementById('criteriAmount').value;
-        criteriaAmountInput=Number(criteriaAmountInput)
-        console.log('criteriaAmountInput:',criteriaAmountInput);
+        criteriaAmountInput=Number(criteriaAmountInput);
+        const activationdate=document.getElementById('activationdate').value;
+        const expirydate= document.getElementById('expirydate').value;
 
 
         const nameError = document.getElementById('nameError');
         const codeError = document.getElementById('codeError');
         const discountError = document.getElementById('discountError');
-        const activationdateError = document.getElementById('activationdateError');
         const expirydateError = document.getElementById('expirydateError');
         const criteriaAmountError = document.getElementById('criteriamountError');
         const useLimitError = document.getElementById('useLimitError');
@@ -128,8 +131,13 @@
             criteriaAmountError.innerHTML='criterai amount field should not empty';
             return false;
         }
+        if(expirydate<activationdate){
+            expirydateError.innerHTML='expiry date should not less than activation date'
+            return false;
+        }
     
         return true;
+
         } 
     </script>
 

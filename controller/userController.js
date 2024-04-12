@@ -91,6 +91,7 @@ const loadAccount=async (req,res)=>{
         // console.log('orders:',userOrders);
         const {itemsCount}=await getCartDetails(user);
         const dateOption={ weekday: 'short' , year: 'numeric' , month: 'short' , day: 'numeric' };
+        userData.walletHistory.sort((a,b)=> new Date(b.date)-new Date(a.date));
         res.render('account',{user,itemsCount,userData,address,userOrders,dateOption});
     } catch (error) {
         console.log(error.message);
@@ -326,8 +327,8 @@ const transpoter=nodemailer.createTransport({
     secure:false,
     requireTLS:true,
     auth:{
-        user:process.env.user_email,
-        pass:process.env.user_password
+        user:process.env.USER_EMAIL,
+        pass:process.env.USER_PASSWORD
     }
 });
 

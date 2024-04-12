@@ -64,12 +64,11 @@
 <%-include('../layouts/adminFooter')%>
 
 <script>
-    // const today = new Date().toISOString().split('T')[0];
-    // console.log('today:',today);
-    // let expiryDate = document.getElementById('expiryDate').setAttribute('min',today).value;
-    // console.log(expiryDate);
+    const today = new Date().toISOString().split('T')[0];   
+    let expiryDate = document.getElementById('expiryDate').setAttribute('min',today);
+ 
     document.addEventListener("DOMContentLoaded", function() {
-    
+
     const offerTypeSelect = document.getElementById("offerType");
     const productDiv = document.getElementById("productDiv");
     const categoryDiv = document.getElementById("categoryDiv");
@@ -89,7 +88,6 @@
 
 function ValidateOfferForm(event) {
     event.preventDefault();
-
 
     const name = document.getElementById('name').value;
     const offerType = document.getElementById('offerType').value;

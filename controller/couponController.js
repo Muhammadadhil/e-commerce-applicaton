@@ -6,7 +6,7 @@ const Cart=require('../model/cartModel');
 const listCoupons=async (req,res)=>{
     try {
             const currentDate=new Date();
-            
+
             const coupons=await Coupon.find({});
             res.render('coupons',{coupons})
 
@@ -122,7 +122,7 @@ const verifyCoupon=async (req,res)=>{
             return res.json({coupon:'criteria didnot reached',couponData});
         }
         console.log('couponData:',couponData);
-        // if(couponData.)
+        
         const useridExist=couponData.usedUser.includes(userId);
         
         if(couponData){
@@ -134,11 +134,17 @@ const verifyCoupon=async (req,res)=>{
                 { $set: { couponDiscount: couponData._id} },
                 { new: true }
               );
+              
             console.log('cartResult:',cartResult);
-            await Coupon.findOneAndUpdate(
-                {_id:couponData._id},
-                {$addToSet:{usedUser:userId}}
-            );
+
+            req.session.couponUsed=couponData;
+            console.log('req.sesion in coupon:',req.session);
+            console.log('req.session.couponused:',req.session.couponUsed);
+
+            // await Coupon.findOneAndUpdate(
+            //     {_id:couponData._id},
+            //     {$addToSet:{usedUser:userId}}
+            // );
             res.json({verify:true,couponData,cartResult})
         }else{
             res.json({verify:false})
