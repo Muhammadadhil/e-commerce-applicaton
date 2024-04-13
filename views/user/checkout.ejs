@@ -370,7 +370,6 @@
                                     <div class="single-payment">
                                         <div class="payment-radio radio">
                                             <p class="Product-name fw-bold ">Payment method</p>
-                                            
                                             <input type="radio" name="paymentmethod" value="online" id="bank" />
                                             <label for="bank"><span></span>Online-Razorpay</label>
                                         </div>
@@ -378,16 +377,34 @@
                                 </li>
                                 <li>
                                     <div class="single-payment">
-                                        <div class="payment-radio radio">
-                                            <input type="radio" name="paymentmethod" value="cash on delivery" id="cash" />
-                                            <label for="cash"><span></span> Cash on Delivery</label>
-
+                                        <div class="payment-radio radio  ">
+                                            <%if(!subTotal>=1000){%>
+                                                <input type="radio" name="paymentmethod" value="cash on delivery" id="cash"  />
+                                                <label for="cash"><span></span> Cash on Delivery</label><br>
+                                            <%}else{%>
+                                                <small class="text-muted ">(cash on delivery is not supported for this order)</small><br>
+                                            <%}%>
+                                            <small class="text-danger " id="CODError" ></small>            
+  
                                             <div class="payment-details">
                                                 <p>Pay with cash upon delivery.</p>
                                             </div>
                                         </div>
                                     </div>
                                 </li>
+                                <li>
+                                    <div class="single-payment">
+                                        <div class="payment-radio radio">
+                                            <input type="radio" name="paymentmethod" value="wallet" id="wallet" />
+                                            <label for="wallet"><span></span> Wallet</label>
+
+                                            <div class="payment-details">
+                                                <p>Pay with cash with your wallet money.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                
                                 <span class="text-danger" id="paymentMethod-Error"></span>
                             </ul>
 
@@ -483,6 +500,7 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
+    
     function removeCoupon(couponId){
         console.log(couponId);
         axios.post('/removeCoupon',{
@@ -609,8 +627,9 @@
 
         var rzp1 = new Razorpay(options);
         rzp1.on('payment.failed', function (response){
-            alert(response.error.description);
-            // window.location.href=`/detailsOrder?id=${order.receipt}`
+            // alert(response.error.description);
+            window.location.href=`/orderFailure?id=${order.receipt}`
+
         });
 
         rzp1.open();

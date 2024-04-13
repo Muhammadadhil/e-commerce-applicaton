@@ -9,6 +9,7 @@ const crypto =require('crypto');
 const Coupon=require('../model/couponModel');
 const User=require('../model/userModel');
 
+
 let instance = new Razorpay(
     {
         key_id: process.env.RAZORPAY_KEY_ID,
@@ -53,8 +54,6 @@ const loadCheckoutPage=async (req,res)=>{
     }
 }
 
-let orderItems={};
-
 //place order post 
 const placeOrder=async (req,res)=>{
     try {
@@ -85,7 +84,7 @@ const placeOrder=async (req,res)=>{
         console.log('cartData:',cartData);
         console.log('subtotal:',subTotal);
 
-        orderItems=cartData.product.map((product,index)=>({
+        let orderItems=cartData.product.map((product,index)=>({
             productId:product.productId,
             quantity:product.quantity,
             price:product.productId.price,
@@ -160,7 +159,7 @@ const verifyOnlinePayment=async (req,res)=>{
         const {response,order}=req.body;
         console.log(req.body);
 
-        let hmac=crypto.createHmac('sha256',process.env.razorpay_key_secret);
+        let hmac=crypto.createHmac('sha256',process.env.RAZORPAY_KEY_SECRET);
         hmac.update(response.razorpay_order_id + '|' + response.razorpay_payment_id);
         hmac=hmac.digest('hex'); 
 
@@ -168,11 +167,11 @@ const verifyOnlinePayment=async (req,res)=>{
             
             const orderId=order.receipt;
             await Order.findByIdAndUpdate({_id:order.receipt},{$set:{ orderStatus:'placed'}});
+    
+            const orderData=await Order.findOne({_id:order.receipt},{products:1});
             
-            console.log('orderItems:',orderItems);
-            
-            // decreasing ordered products quantiy
-            for(const item of orderItems){
+            // decreasing ordered products quantiy & change product status
+            for(const item of orderData.products){
                 await Order.findOneAndUpdate({_id:order.receipt,'products.productId':item.productId},{$set:{'products.$.productStatus':'placed'}});
                 await Products.updateOne({_id:item.productId},{
                     $inc:{quantity:-item.quantity}
@@ -202,15 +201,30 @@ const verifyOnlinePayment=async (req,res)=>{
 
 const loadSuccessPage=async (req,res)=>{
     try {
+        const user=req.session.userId;
         const orderId=req.query.id;
-        res.render('orderSuccess',{orderId});
-        
+        const cartDetails=await Cart.findOne({userId:user});
+        const itemsCount=cartDetails?.product.length;
+        res.render('orderSuccess',{orderId,user,itemsCount});
+         3
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500');
     }
 }
 
+const loadFailurePage=async (req,res)=>{
+    try {
+        const user=req.session.userId;
+        const orderId=req.query.id;
+        const cartDetails=await Cart.findOne({userId:user});
+        const itemsCount=cartDetails?.product.length;
+        res.render('orderFailure',{orderId,user,itemsCount});
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
 const loadOrderDetails=async (req,res)=>{
     try {
 
@@ -339,23 +353,41 @@ const returnProductOrder=async (req,res)=>{
 const payAgain=async (req,res)=>{
     try {
         console.log('reqdched pay agian!!!');
-        const currentOrderId=req.query.id;
-        console.log('currentOrderId:',currentOrderId);
+        const orderId=req.query.id;
+        const orderData=await Order.findOne({_id:orderId});
+        console.log('currentOrderId:',orderId);
+
+        const options={
+            amount: orderData.subTotal*100,
+            currency: "INR",
+            receipt: orderId
+        };
+
+        //creating instace for razorpay order
+        instance.orders.create(options,(err,order)=>{
+            if(err){
+                console.log("error:",err);
+            }
+            console.log("new Order:",order);
+            res.json({createInstance:true,order});
+            
+        });
+
 
         
-
-
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500');
     }
 }
 
+cosns 
 
 module.exports={
     loadCheckoutPage,
     placeOrder,
     loadSuccessPage,
+    loadFailurePage,
     loadOrderDetails,
     cancelProductOrder,
     verifyOnlinePayment,

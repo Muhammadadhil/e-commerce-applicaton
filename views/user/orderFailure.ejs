@@ -1,0 +1,23 @@
+<%-include('../layouts/header.ejs')%>
+
+
+<div class="section section-padding mt-5 ">
+
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 mt-5">
+          <div class="card custom-card mt-2 d-flex align-items-center ">
+            <div class="card-body text-center ">
+              <h1 class="text-danger ">order failed</h1> 
+              <p>your payment is failed due to some reasons<br/> you can but these products at any time</p>
+              
+              <a href="/detailsOrder?id=<%=orderId%>"><button class="btn btn-primary btn-hover-dark">view order details</button></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+</div>
+
+<%-include('../layouts/footer.ejs')%>

@@ -74,12 +74,12 @@ router.get('/checkout',auth.isLogin,orderController.loadCheckoutPage);
 //order
 router.post('/placeOrder',auth.isLogin,orderController.placeOrder);
 router.get('/orderSuccess',auth.isLogin,orderController.loadSuccessPage);
+router.get('/orderFailure',auth.isLogin,orderController.loadFailurePage);
 router.get('/detailsOrder',auth.isLogin,orderController.loadOrderDetails);
 router.post('/cancelProductOrder',orderController.cancelProductOrder);
 router.post('/verifyPayment',orderController.verifyOnlinePayment);
 router.post('/returnProduct',orderController.returnProductOrder);
 router.get('/paytheAmount',auth.isLogin,orderController.payAgain);
-
 
 
 

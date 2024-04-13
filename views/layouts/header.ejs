@@ -13,16 +13,20 @@
 
         <!-- CSS
 	============================================ -->
-        <!-- font awesome icons-->  
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <!-- font awesome icons-->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
 
         <!-- notyf toast-->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">       
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" />
 
         <!-- fast bootstrap for toast-->
-        <link href="https://cdn.jsdelivr.net/npm/fastbootstrap@2.2.0/dist/css/fastbootstrap.min.css" rel="stylesheet" integrity="sha256-V6lu+OdYNKTKTsVFBuQsyIlDiRWiOmtC8VQ8Lzdm2i4=" crossorigin="anonymous">
-            
-    
+        <link
+            href="https://cdn.jsdelivr.net/npm/fastbootstrap@2.2.0/dist/css/fastbootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha256-V6lu+OdYNKTKTsVFBuQsyIlDiRWiOmtC8VQ8Lzdm2i4="
+            crossorigin="anonymous"
+        />
+
         <!-- Icon Font CSS -->
         <link rel="stylesheet" href="user/assets/css/plugins/pe-icon-7-stroke.css" />
         <link rel="stylesheet" href="user/assets/css/plugins/font-awesome.min.css" />
@@ -41,11 +45,9 @@
         <link rel="stylesheet" href="user/assets/css/style.css" />
 
         <!-- fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-
-        
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
     </head>
 
     <body>
@@ -89,18 +91,17 @@
 
                                 <a class="action" href="/account" role="button"><i class="pe-7s-user"></i></a>
                                 <%}else{%>
-                                <a class="action" href="/login" role="button"><i class="pe-7s-user "></i></a>
+                                <a class="action" href="/login" role="button"><i class="pe-7s-user"></i></a>
                                 <%}%>
                             </div>
                             <%if(locals.user){%>
-                                <a class="action" href="/wishlist"><i class="pe-7s-like"></i></a>
+                            <a class="action" href="/wishlist"><i class="pe-7s-like"></i></a>
                             <%}else{%>
-                                <a class="action" onclick="showLoginAlert()"><i class="pe-7s-like"></i></a>
-                            <%}%>
-                            <%if(locals.user){%>
-                                <a class="action" href="/cart"><i class="pe-7s-shopbag"></i><span class="number"><%=itemsCount%></span></a>
+                            <a class="action" onclick="showLoginAlert()"><i class="pe-7s-like"></i></a>
+                            <%}%> <%if(locals.user){%>
+                            <a class="action" href="/cart"><i class="pe-7s-shopbag"></i><span class="number"><%=itemsCount%></span></a>
                             <%}else{%>
-                                <a class="action" onclick="showLoginAlert()"><i class="pe-7s-shopbag"></i></a>
+                            <a class="action" onclick="showLoginAlert()"><i class="pe-7s-shopbag"></i></a>
                             <%}%>
                         </div>
                         <!-- Header Meta End -->
@@ -138,25 +139,19 @@
                             <!-- Header Action Start -->
                             <div class="header-meta">
                                 <div class="dropdown">
-                                    <a class="action" href="#" role="button" data-bs-toggle="dropdown"><i class="pe-7s-user"></i></a>
+                                    <%if(locals.user){%>
 
-                                    <ul class="dropdown-menu dropdown-profile">
-                                        <li>
-                                            <%if(locals.user){%>
-                                                <a href="/account" role="button">My Account</i></a>
-                                            <%}else{%>
-                                                <a  href="/login" role="button">My Account</i></a>
-                                            <%}%>
-                                            
-                                        </li>
-                                        <li><a href="">Checkout</a></li>
-                                        <li><a href="/login">Sign In</a></li>
-                                    </ul>
+                                    <a class="action" href="/account" role="button"><i class="pe-7s-user"></i></a>
+                                    <%}else{%>
+                                    <a class="action" href="/login" role="button"><i class="pe-7s-user"></i></a>
+                                    <%}%>
                                 </div>
-                                <a class="action" href="/cart">
-                                    <i class="pe-7s-shopbag"></i>
-                                    <span class="number">300</span>
-                                </a>
+
+                                <%if(locals.user){%>
+                                <a class="action" href="/cart"><i class="pe-7s-shopbag"></i><span class="number"><%=itemsCount%></span></a>
+                                <%}else{%>
+                                <a class="action" onclick="showLoginAlert()"><i class="pe-7s-shopbag"></i></a>
+                                <%}%>
                             </div>
                             <!-- Header Action End -->
                         </div>
@@ -221,27 +216,27 @@
                     title: "You need to log in!",
                     text: "Please log in ",
                     icon: "warning",
-                    confirmButtonText:"login",
+                    confirmButtonText: "login",
                     showCancelButton: true,
                     // confirmButtonClass: 'btn btn-success',
                     customClass: {
-                        confirmButton: 'custom-confirm-button',
-                        cancelButton: 'custom-cancel-button'
-                    }
+                        confirmButton: "custom-confirm-button",
+                        cancelButton: "custom-cancel-button",
+                    },
                 })
-                // Swal.fire({
-                //     title: "You need to log in!",
-                //     text: "Please log in to view your cart.",
-                //     type: "warning",
-                //     showCancelButton: true,
-                //     confirmButtonColor: "#DD6B55",
-                //     confirmButtonText: "login"
-                // })
-                .then((result)=>{
-                    if(result.isConfirmed){
-                        window.location.href='/login';
-                    }
-                });
+                    // Swal.fire({
+                    //     title: "You need to log in!",
+                    //     text: "Please log in to view your cart.",
+                    //     type: "warning",
+                    //     showCancelButton: true,
+                    //     confirmButtonColor: "#DD6B55",
+                    //     confirmButtonText: "login"
+                    // })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "/login";
+                        }
+                    });
             }
         </script>
         <!-- off Canvas End -->
