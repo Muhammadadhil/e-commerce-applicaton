@@ -14,7 +14,7 @@ router.set('views','./views/admin');
 
 router.get('/',auth.isAdminLogout,adminController.loginLoad);
 router.post('/login',adminController.verifyAdmin);
-router.get('/home',auth.isAdminLogin,adminController.loadHome);
+router.get('/home',auth.isAdminLogin,adminController.loadDashBoard);
 router.get('/logout',adminController.adminLogout);
 
 //customers or users route
@@ -43,6 +43,8 @@ router.patch('/productBlockUnblock',auth.isAdminLogin,productController.blockPro
 router.get('/orders',auth.isAdminLogin,adminController.loadOrderList);
 router.get('/orderDetails',auth.isAdminLogin,adminController.loadOrderDetails);
 router.post('/changeOrderStatus',adminController.changeOrderStatus);
+router.post('/getChartData',auth.isAdminLogin,adminController.chartData);
+
 
 //coupons
 router.get('/coupons',auth.isAdminLogin,couponController.listCoupons);

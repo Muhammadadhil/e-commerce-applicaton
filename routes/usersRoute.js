@@ -82,7 +82,6 @@ router.post('/returnProduct',orderController.returnProductOrder);
 router.get('/paytheAmount',auth.isLogin,orderController.payAgain);
 
 
-
 //coupon
 router.get('/applyCoupon',auth.isLogin,couponController.verifyCoupon);
 router.post('/removeCoupon',auth.isLogin,couponController.removeCoupon);

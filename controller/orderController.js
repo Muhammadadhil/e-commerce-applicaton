@@ -115,6 +115,9 @@ const placeOrder=async (req,res)=>{
                         $inc:{quantity:-item.quantity}
                     })
             }
+            console.log('req.session:',req.session)
+            console.log('req.session.couponUsed:',req.session.couponUsed)
+
             if(req.session.couponUsed){
                 await Coupon.findOneAndUpdate(
                     {_id:couponUsed._id},
@@ -373,15 +376,11 @@ const payAgain=async (req,res)=>{
             
         });
 
-
-        
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500');
     }
 }
-
-cosns 
 
 module.exports={
     loadCheckoutPage,
@@ -392,5 +391,5 @@ module.exports={
     cancelProductOrder,
     verifyOnlinePayment,
     returnProductOrder,
-    payAgain
+    payAgain,
 }

@@ -5,6 +5,7 @@ const Order=require('../model/orderModel');
 const Products=require('../model/productsModel');
 const Coupon=require('../model/couponModel');
 
+
 //load admin login page
 const loginLoad=async (req,res)=>{
     try {
@@ -45,10 +46,52 @@ const verifyAdmin=async (req,res)=>{
         res.status(500).render('error-500') 
     }
 }
-//load the home page
-const loadHome=async (req,res)=>{
+//load the dashboard
+const loadDashBoard=async (req,res)=>{
     try {
-        res.render('adminDashboard')
+
+        const OrdersCount=await Order.find({}).count();
+        const productsCount=await Products.find({}).count();
+        const CategoryCount=await Category.find({}).count();
+
+        const overallData=await Order.aggregate([
+            {
+                $group:{
+                    _id:"",
+                    totalSalesCount:{$sum:1},
+                    totalRevenue:{$sum:'$subTotal'}
+                }
+                
+            }
+        ])
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth() + 1; // Month is zero-based, so add 1 to get the current month
+
+        const monthlyData = await Order.aggregate([
+            {
+                $match: {
+                    orderDate: {
+                        $gte: new Date(currentDate.getFullYear(), currentMonth - 1, 1), // First day of the current month
+                        $lt: new Date(currentDate.getFullYear(), currentMonth, 1) // First day of the next month
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: { $month: '$orderDate' },
+                    totalSalesCount: { $sum: 1 },
+                    totalRevenue: { $sum: '$subTotal' }
+                }
+            }
+        ]);
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        const monthId=monthlyData[0]._id;
+        const monthName=monthNames[monthId-1];
+    
+        res.render('adminDashboard',{OrdersCount,productsCount,CategoryCount,overallData,monthlyData,monthName})
+
     } catch (error) {
         console.log(error.message);
         res.status(500).render('error-500') 
@@ -284,6 +327,7 @@ const loadSalesReport=async(req,res)=>{
         let dateOrTime='';
         // orders=await Order.find({}).populate('userId').sort({orderDate:-1});
         const overallData=await Order.aggregate([
+            {$match:{orderStatus:{$ne:"pending"}}},
             { 
                 $group:{
                     _id:'',
@@ -338,6 +382,7 @@ const loadSalesReport=async(req,res)=>{
 const generateReport=async (timeUnit)=>{
     try {
         const orderDatas=await Order.aggregate([
+            {$match:{orderStatus:{$ne:"pending"}}},
             { 
                 $group: {
                     _id: { [timeUnit]: "$orderDate" },
@@ -356,6 +401,7 @@ const generateReport=async (timeUnit)=>{
 const dialyReport=async ()=>{
 
     const orderDatas=await Order.aggregate([
+        {$match:{orderStatus:{$ne:"pending"}}},
         {
             $group: {
                 _id: { $dateToString: { format: "%d-%m-%Y", date: "$orderDate" } },
@@ -392,10 +438,83 @@ const customReport=async (start,end)=>{
     }
 }
 
+
+const chartData=async (req,res)=>{
+    try {
+    
+        const {chartType}=req.body;
+        console.log('chartType:',chartType);
+
+        let barData;
+        
+        if(chartType=='monthly'){
+            await monthlyData();
+        }else{
+            await yearlyData();
+        }
+
+    
+         async function monthlyData(){
+            
+            const salesData=await Order.aggregate([
+                {$match:{orderStatus:{$ne:"pending"}}},
+                {
+                    $group:{
+                        _id:{$month:"$orderDate"},
+                        monthlySalesCount: { $sum: 1},
+                        monthlyRevenue:{$sum:'$subTotal'},
+                    }
+                }    
+            ]);
+            console.log('salesData:',salesData);
+            barData=new Array(12).fill(0);
+            salesData.forEach((item)=>{
+                const monthIndex=item._id-1;
+                barData[monthIndex]=item.monthlyRevenue;
+            })
+            console.log('barData:',barData);
+         }
+
+         async function yearlyData(){
+            
+            const salesData=await Order.aggregate([
+                {$match:{orderStatus:{$ne:"pending"}}},
+                {
+                    $group:{
+                        _id:{$year:"$orderDate"},
+                        yearlySalesCount: { $sum: 1},
+                        yearlyRevenue:{$sum:'$subTotal'},
+                    }
+                }    
+            ]);
+            console.log('salesData:',salesData);
+            
+            barData=new Array(10).fill(0);
+            salesData.forEach((item)=>{
+                const yearIndex=item._id-2018
+                console.log('yearIndex:',yearIndex);
+                barData[yearIndex]=item.yearlyRevenue;
+            })
+            // for(let i=0;i<barData.length;i++){
+            //     barData[i]=salesData[i]
+            // }
+        }
+        
+        console.log('barData:',barData);
+        res.json({barData})
+
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
+
+
 module.exports={
     loginLoad,
     verifyAdmin,
-    loadHome,
+    loadDashBoard,
     loadCustomers,
     userBlock,
     loadCategory,
@@ -407,5 +526,6 @@ module.exports={
     loadOrderList,
     loadOrderDetails,
     changeOrderStatus,
-    loadSalesReport
+    loadSalesReport,
+    chartData
 }

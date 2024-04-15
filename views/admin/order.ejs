@@ -5,7 +5,7 @@
             <h2 class="content-title card-title">Orders List</h2> 
         </div>
     </div>
-    <button class="btn btn-light mb-3">Return requests</button>
+    
     <div class="card mb-4">
         <div class="card-body" >
             <table class="table "id='reloadDiv'>
@@ -25,8 +25,8 @@
                     <%orders.forEach((order,i)=>{%>
                         <tr>
                             <td><%=i+1%></td>
-                            <td><%=order.orderDate.toLocaleDateString('en-US',dateOptions)%></td>
                             <td><%=order._id%></td>
+                            <td><%=order.orderDate.toLocaleDateString('en-US',dateOptions)%></td>
                             <td><%=order.payment%></td>
                             <td><%=order.products.length%></td>
                             <td><%=order.subTotal%></td>
