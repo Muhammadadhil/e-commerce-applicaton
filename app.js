@@ -50,7 +50,6 @@ app.use('/*',(req,res)=>{
     res.status(404).render('user/error-404')
 })   
 
-
 const port=process.env.PORT;
 
 app.listen(port,()=>console.log(`server running on the port http://localhost:${port}`));

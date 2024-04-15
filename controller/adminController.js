@@ -6,6 +6,7 @@ const Products=require('../model/productsModel');
 const Coupon=require('../model/couponModel');
 
 
+
 //load admin login page
 const loginLoad=async (req,res)=>{
     try {
@@ -65,14 +66,15 @@ const loadDashBoard=async (req,res)=>{
             }
         ])
         const currentDate = new Date();
-        const currentMonth = currentDate.getMonth() + 1; // Month is zero-based, so add 1 to get the current month
+        const currentMonth = currentDate.getMonth() + 1; 
 
+        //monthly data section
         const monthlyData = await Order.aggregate([
             {
                 $match: {
                     orderDate: {
-                        $gte: new Date(currentDate.getFullYear(), currentMonth - 1, 1), // First day of the current month
-                        $lt: new Date(currentDate.getFullYear(), currentMonth, 1) // First day of the next month
+                        $gte: new Date(currentDate.getFullYear(), currentMonth - 1, 1), 
+                        $lt: new Date(currentDate.getFullYear(), currentMonth, 1) 
                     }
                 }
             },
@@ -89,8 +91,72 @@ const loadDashBoard=async (req,res)=>{
         ];
         const monthId=monthlyData[0]._id;
         const monthName=monthNames[monthId-1];
-    
-        res.render('adminDashboard',{OrdersCount,productsCount,CategoryCount,overallData,monthlyData,monthName})
+
+        //best selling product
+        const bestSoldProducts = await Order.aggregate([
+            { $unwind: '$products' },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'products.productId',
+                    foreignField: '_id',
+                    as: 'productDetails'
+                }
+            },
+            { $unwind: '$productDetails' },
+            {
+                $group: {
+                    _id: '$products.productId',
+                    count: { $sum: '$products.quantity' },
+                    name: { $first: '$productDetails.name' }
+                }
+            },
+            { $sort: { count: -1 } },
+            { $limit: 5 }
+        ]);
+        
+        // const bestSoldProducts=await Promise.all(bestSellingProducts.map(async (product)=>{
+        //     const count=product.count;
+        //     const productDetails=await Products.findOne({_id:product._id});
+        //     return {count,productDetails};
+        // }))
+
+        //best selling Category
+        const bestSoldCategory=await Order.aggregate([
+            {$unwind:'$products'},
+            {$lookup:
+                {
+                    from:'products',
+                    localField:'products.productId',
+                    foreignField:'_id',
+                    as:'productDetails'
+                }
+            },
+            {$unwind:'$productDetails'},
+            {$lookup:
+                {
+                    from:'categories',
+                    localField:'productDetails.categoryId',
+                    foreignField:'_id',
+                    as:'categoryDetails'
+                }
+            },
+            {$unwind:'$categoryDetails'},
+            {$group:{_id:'$categoryDetails.name',count:{$sum:1}}},
+            {$sort:{count:-1}},
+            {$limit:5}
+        ])
+
+        res.render('adminDashboard', {
+            OrdersCount,
+            productsCount,
+            CategoryCount,
+            overallData,
+            monthlyData,
+            monthName,
+            bestSoldProducts,
+            bestSoldCategory
+        });        
 
     } catch (error) {
         console.log(error.message);
@@ -466,13 +532,14 @@ const chartData=async (req,res)=>{
                     }
                 }    
             ]);
-            console.log('salesData:',salesData);
+
+            // console.log('salesData:',salesData);
             barData=new Array(12).fill(0);
+            
             salesData.forEach((item)=>{
                 const monthIndex=item._id-1;
                 barData[monthIndex]=item.monthlyRevenue;
             })
-            console.log('barData:',barData);
          }
 
          async function yearlyData(){
@@ -487,7 +554,6 @@ const chartData=async (req,res)=>{
                     }
                 }    
             ]);
-            console.log('salesData:',salesData);
             
             barData=new Array(10).fill(0);
             salesData.forEach((item)=>{
@@ -495,12 +561,8 @@ const chartData=async (req,res)=>{
                 console.log('yearIndex:',yearIndex);
                 barData[yearIndex]=item.yearlyRevenue;
             })
-            // for(let i=0;i<barData.length;i++){
-            //     barData[i]=salesData[i]
-            // }
         }
         
-        console.log('barData:',barData);
         res.json({barData})
 
         

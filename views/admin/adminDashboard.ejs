@@ -84,6 +84,71 @@
             </div>
         </div> -->
     </div>
+    <div class="row">
+        <div class=" col-lg-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">5 Best selling product</h5>
+                    <table class="table ">
+                        <thead>
+                            <tr>
+                                <th>no.</th>
+                                <th>product</th>
+                                <th>count</th>
+    
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%if(bestSoldProducts){%>
+                                <%bestSoldProducts.forEach((product,i)=>{%>
+                                    <tr>
+                                        <td><%=i+1%></td>
+                                        <td><%=product.name%></td>
+                                        <td><%=product.count%></td>
+        
+                                    </tr>
+                                <%})%>
+                            <%}%>
+                        </tbody>
+                        
+                    </table>
+                    
+                </div>
+            </div>
+        
+        </div>
+        <div class=" col-lg-6">
+            <div class="card mb-4">
+                <article class="card-body">
+                    <h5 class="card-title">Best selling category</h5>
+                    
+                    <table class="table ">
+                        <thead>
+                            <tr>
+                                <th>no.</th>
+                                <th>category</th>
+                                <th>count</th>
+    
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%if(bestSoldCategory){%>
+                                <%bestSoldCategory.forEach((category,i)=>{%>
+                                    <tr>
+                                        <td><%=i+1%></td>
+                                        <td><%=category._id%></td>
+                                        <td><%=category.count%></td>
+        
+                                    </tr>
+                                <%})%>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </article>
+            </div>
+        
+        </div>
+    </div>
     
     
 </section>
