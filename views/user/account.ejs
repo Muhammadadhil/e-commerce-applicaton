@@ -84,7 +84,6 @@
                                                 <th class="date">Date</th>
                                                 <th class="total">Amount</th>
                                                 <th class="payment">Payment</th>
-                                                <th class="invoice">invoice</th>
                                                 <th class="action">details</th>
                                             </tr>
                                         </thead>
@@ -95,7 +94,6 @@
                                                 <td><%=order.orderDate.toLocaleDateString('en-US', { weekday: 'short' , year: 'numeric' , month: 'short' , day: 'numeric' })%></td>
                                                 <td>₹<%=order.subTotal%></td>
                                                 <td><%=order.payment%></td>
-                                                <td></td>
                                                 <td>
                                                     <a href="/detailsOrder?id=<%=order._id%>">view details</a>
                                                 </td>

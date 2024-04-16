@@ -41,11 +41,17 @@
                 </p>
                 <%if(orderData.orderStatus==='pending' && orderData.subTotal>0){%>
                     <div>
-                        <button onclick="payAgain('<%=orderData._id%>')">pay now</button><br>
+                        <button class="btn btn-primary " onclick="payAgain('<%=orderData._id%>')">pay now</button><br>
                         <small>(buy the products which you have choosed)</small>
                     </div>
                 <%}%>
                 <p><b>Order status:</b><%=orderData.orderStatus%></p>
+                <%if(orderData.orderStatus==='delivered'){%>
+                    <a href="/salesInvoice?id=<%=orderData._id%>"><button class="btn btn-secondary " >download invoice</button></a>
+                <%}%>
+                
+
+
 
             </div>
             <div class="col-md-12 ">

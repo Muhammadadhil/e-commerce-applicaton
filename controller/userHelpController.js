@@ -5,6 +5,7 @@ const userController=require('../controller/userController')
 const bcrypt=require('bcrypt');
 const Wishlist=require('../model/wishlistModel');
 const Cart=require('../model/cartModel');
+const Orders=require('../model/orderModel');
 
 
 
@@ -223,6 +224,26 @@ const removeFromWishlist= async (req,res)=>{
     } 
 }
 
+//invoice
+const loadInvoice=async (req,res)=>{
+    try {
+        const orderId=req.query.id;
+        const populateOption=[
+            {
+                path:'products.productId',
+                model:'products'
+            }
+        ]
+        const order=await Orders.findOne({_id:orderId}).populate(populateOption);
+        console.log('invoce orders:',order);
+        res.render('invoice',{order});
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).render('Error-500');
+    }
+}
+
 module.exports={
     loadForgotPassword,
     forgetPassword,
@@ -232,5 +253,6 @@ module.exports={
     updateNewPassword,
     loadWishlist,
     addItemToWishlist,
-    removeFromWishlist
+    removeFromWishlist,
+    loadInvoice
 }

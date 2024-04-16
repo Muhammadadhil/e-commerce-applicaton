@@ -14,6 +14,7 @@
                         <th>No.</th>
                         <th scope="col">Order Id</th>
                         <th scope="col">Order Date</th>
+                        <th scope="col">Order Status</th>
                         <th scope="col">Payment</th>
                         <th scope="col">No.of items</th>
                         <th scope="col">Total amount</th>
@@ -27,6 +28,7 @@
                             <td><%=i+1%></td>
                             <td><%=order._id%></td>
                             <td><%=order.orderDate.toLocaleDateString('en-US',dateOptions)%></td>
+                            <td><%=order.orderStatus%></td>
                             <td><%=order.payment%></td>
                             <td><%=order.products.length%></td>
                             <td><%=order.subTotal%></td>

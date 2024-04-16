@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>furbar Invoice receipt </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" />
+    
+</head>
+<body>
+    <div class="receipt-content" style="background: #f2f2f5;">
+        <div class="container bootstrap snippets bootdey">
+            <div class="row">
+                <div class="col-md-12" id="invoice-part">
+                    
+                    <div class="invoice-wrapper" style="background: #fff; border: 1px solid #e3e5eb; box-shadow: 0px 0px 1px #ccc; padding: 80px 80px 200px; margin-top: 40px; border-radius: 4px; max-width: 1000px; margin-left: 73px;">
+                        <div class="intro">
+                            <img src="user/assets/images/logo.png" width="154" height="46" alt="Logo" />
+                        </div>
+                        <div class="payment-info" style="margin-top: 25px; padding-top: 15px;">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <span>Order No.</span><br>
+                                    <strong><%=order._id%></strong>
+                                </div>
+                                <div class="col-sm-6 text-right">
+                                    <span>Payment Date</span><br>
+                                    <strong><%=order.orderDate.toLocaleDateString('en-US',{ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })%></strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="payment-details" style="border-top: 2px solid #ebecee; margin-top: 30px; padding-top: 20px; line-height: 22px;">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <span>Address</span>br
+                                    <strong> <%=order.deliveryAddress.name%> </strong>
+                                    <p>
+                                        <%=order.deliveryAddress.email%> <br>
+                                        <%=order.deliveryAddress.city%> <br>
+                                        <%=order.deliveryAddress.state%> <br>
+                                        <%=order.deliveryAddress.address%> <br>
+                                        <%=order.deliveryAddress.pincode%> <br>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line-items" style="margin-top: 40px;">
+                            <div class="headers clearfix" style="color: #a9b0bb; font-size: 13px; letter-spacing: 0.3px; border-bottom: 2px solid #ebecee; padding-bottom: 4px;">
+                                <div class="row">
+                                    <div class="col-xs-4">Description</div>
+                                    <div class="col-xs-3">Quantity</div>
+                                    <div class="col-xs-5 text-right">Amount</div>
+                                </div>
+                            </div>
+                            <div class="items">
+                                <%order.products.forEach((product)=>{%>
+                                    <div class="row item">
+                                        <div class="col-xs-4 desc"><%=product.productId.name%></div>
+                                        <div class="col-xs-3 qty"><%=product.quantity%></div>
+                                        <div class="col-xs-5 amount text-right"><%=product.productId.price*product.quantity%></div>
+                                    </div>
+                                <%})%>
+                            </div>
+                            <div class="total  row " style="margin-top: 30px;">
+                                <p class="extra-notes col-sm-6">
+                                    <strong>Extra Notes</strong>
+                                    Thanks a lot.
+                                </p>
+                                <div class="col-sm-6 text-right">
+                                    <div class="field mt-1">Subtotal <span>₹<%=order.subTotal%></span></div>
+                                    <div class="field mt-3 ">Shipping <span>free</span></div>
+                                    <!-- <div class="field">Discount <span>nil</span></div> -->
+                                    <div class="field grand-total mt-5">Total <span class="text-success">₹<%=order.subTotal%></span></div>
+                                </div>
+                            </div>
+                            <div class="print" style="margin-top: 50px; text-align: center;">
+                                <button onclick="printRecipt()">
+                                    <i class="fa fa-print"></i>
+                                    Print this receipt
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer" style="margin-top: 40px; margin-bottom: 110px; text-align: center; font-size: 12px; color: #969cad;">
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                        &copy; furbar
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js" integrity="sha512-YcsIPGdhPK4P/uRW6/sruonlYj+Q7UHWeKfTAkBW+g83NKM+jMJFJ4iAPfSnVp7BKD4dKMHmVSvICUbE/V1sSw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        function printRecipt(){
+            const invoicePart=document.getElementById('invoice-part');
+            html2pdf(invoicePart,{
+                filename:'furbar-invoice'
+            })
+        }
+    </script>
+    <!-- <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript"></script>
+</body>
+</html>

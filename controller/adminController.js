@@ -362,12 +362,22 @@ const changeOrderStatus=async (req,res)=>{
     try {
         console.log("reached here in update status");
         const {orderId,productId,status}=req.body;
-        
-        await Order.findOneAndUpdate(
-            {_id:orderId,'products.productId':productId},
-            {$set:{'products.$.productStatus':status}},
-            {new:true}
+    
+        const updatedOrder = await Order.findOneAndUpdate(
+            { _id: orderId, 'products.productId': productId },
+            { $set: { 'products.$.productStatus': status } },
+            { new: true }
         );
+        if(updatedOrder.products.every(product => product.productStatus === 'delivered')){
+            await Order.findOneAndUpdate(
+                {_id:orderId},
+                {$set:{orderStatus:'delivered'}},
+                {new:true}
+            );
+        }
+        console.log('updatedOrder:',updatedOrder);
+
+        
     } catch (error) {
         console.log(error.message);
         res.status(500).render('error-500') 
@@ -402,7 +412,6 @@ const loadSalesReport=async(req,res)=>{
                 }
             }
         ])
-        console.log('overallData:',overallData);
 
         switch(filterCriteria){
             

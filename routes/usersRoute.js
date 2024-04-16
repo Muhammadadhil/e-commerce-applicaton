@@ -81,6 +81,8 @@ router.post('/verifyPayment',orderController.verifyOnlinePayment);
 router.post('/returnProduct',orderController.returnProductOrder);
 router.get('/paytheAmount',auth.isLogin,orderController.payAgain);
 
+//invoice
+router.get('/salesInvoice',auth.isLogin,userHelpController.loadInvoice);
 
 //coupon
 router.get('/applyCoupon',auth.isLogin,couponController.verifyCoupon);
