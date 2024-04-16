@@ -235,7 +235,6 @@ const loadInvoice=async (req,res)=>{
             }
         ]
         const order=await Orders.findOne({_id:orderId}).populate(populateOption);
-        console.log('invoce orders:',order);
         res.render('invoice',{order});
 
     } catch (error) {

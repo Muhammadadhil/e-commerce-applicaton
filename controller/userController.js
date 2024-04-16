@@ -30,7 +30,7 @@ const getCartDetails=async (userId)=>{
 const loadHomePage=async (req,res)=>{
     try {
         const user=req.session.userId;
-        console.log(`hello aadhi,this is user : ${user}`);
+        console.log(`hey , logged user : ${user}`);
         // const blockedMessage=req.flash('blocked')
         const {itemsCount}=await getCartDetails(user);
         res.render('home',{user,itemsCount})
@@ -150,7 +150,7 @@ const loadShop=async (req,res)=>{
     try {
         
         const user=req.session.userId;
-
+        //sorting products
         let sortOption={};
         switch(req.query.sort){
             case '3':
@@ -174,33 +174,45 @@ const loadShop=async (req,res)=>{
                 break;    
         }
 
+        //filtering by category
         const filterCriteria=req.query.filter;
         let filterQuery={};
         if(filterCriteria){
             filterQuery={categoryId:filterCriteria}
         }
 
+        //pagination
+        let page=1;
+        if(req.query.page){
+            page=Number(req.query.page);
+        }
 
+        let limit=6;
+        const products=await Products.find(filterQuery)
+            .populate('categoryId')
+            .sort(sortOption)
+            .limit(limit*1)
+            .skip((page-1)*limit)
+            .exec();
 
-        // console.log('sortOption:',sortOption);
+        const productsCount=await Products.find(filterQuery).sort(sortOption).countDocuments();
+        const pagesCount=Math.ceil(productsCount/limit);
 
-        // const value=req.query.search;
-        // console.log('value:',value);
-
-        // const regObj=new RegExp(value,'i');
-        // console.log('regObj:',regObj);
-        // const searchCriteria={
-        //     $or:[
-        //         {name:{$regex:regObj}},
-        //         {description:{$regex:regObj}}
-        //     ]
-        // }
-
-        const products=await Products.find(filterQuery).populate('categoryId').sort(sortOption);
+        let nextPage=1;
+        if(page*limit<productsCount){
+            nextPage=page+1;
+        }
+        let previousPage=1;
+        if(page>1){
+            previousPage=page-1;
+        }
+    
         const categories=await Category.find();
         const wishlist=await Wishlist.findOne({userId:user},{'products.productId':1,_id:0});
+
         const {itemsCount}=await getCartDetails(user);
-        res.render('shop',{products,user,itemsCount,categories,wishlist});
+        res.render('shop',{products,user,itemsCount,categories,wishlist,pagesCount,nextPage,previousPage});
+
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500')

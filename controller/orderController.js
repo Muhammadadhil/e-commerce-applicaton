@@ -160,7 +160,6 @@ const verifyOnlinePayment=async (req,res)=>{
         const userId=req.session.userId;
         console.log('verify payment route reacheddd!!');
         const {response,order}=req.body;
-        console.log(req.body);
 
         let hmac=crypto.createHmac('sha256',process.env.RAZORPAY_KEY_SECRET);
         hmac.update(response.razorpay_order_id + '|' + response.razorpay_payment_id);
@@ -180,8 +179,8 @@ const verifyOnlinePayment=async (req,res)=>{
                     $inc:{quantity:-item.quantity}
                 })
             }
-            console.log('session:',req.session);
-            console.log('req.session.couponused:',req.session.couponUsed);
+            // console.log('session:',req.session);
+            // console.log('req.session.couponused:',req.session.couponUsed);
             const couponUsed=req.session.couponUsed;
             if(couponUsed){
                 await Coupon.findOneAndUpdate(
@@ -209,7 +208,7 @@ const loadSuccessPage=async (req,res)=>{
         const cartDetails=await Cart.findOne({userId:user});
         const itemsCount=cartDetails?.product.length;
         res.render('orderSuccess',{orderId,user,itemsCount});
-         3
+        
     } catch (error) {
         console.log(error.message);
         res.status(500).render('Error-500');
@@ -241,7 +240,6 @@ const loadOrderDetails=async (req,res)=>{
         const cartDetails=await Cart.findOne({userId:user});
         const itemsCount=cartDetails?.product.length;
         const orderData=await Order.findOne({_id:orderId}).populate(populateOption);
-        console.log('orderData:',orderData);
         res.render('orderDetails',{user,orderData,itemsCount});
         
     } catch (error) {

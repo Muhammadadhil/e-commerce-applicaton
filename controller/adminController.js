@@ -166,13 +166,17 @@ const loadDashBoard=async (req,res)=>{
 //load the users page
 const loadCustomers=async (req,res)=>{
     try {
-        const customers=await User.find({})
-        // console.log('users:',customers);
-        res.render('customers',{users:customers})
+        const result=res.paginatedResult;
+        const customers=await User.find({});
+        if(result){
+            res.render('customers',{users:result.users,result})
+        }else{
+            res.render('customers',{users:customers})
+        }
+        
     } catch (error) {
         console.log(error.message);
         res.status(500).render('error-500') 
-
     }
 }
 
@@ -290,10 +294,9 @@ const blockCategory=async (req,res)=>{
         categoryData.isBlocked=!categoryData.isBlocked ;
         await categoryData.save();
         
-        const isBlocked=categoryData.isBlocked;6
+        const isBlocked=categoryData.isBlocked;
         
         const productsData=await Products.updateMany({categoryId:categoryId},{$set:{isCategoryBlocked:isBlocked}})
-        console.log('productsData:',productsData);
     
         res.json({updated:true});
         
@@ -348,7 +351,7 @@ const loadOrderDetails=async (req,res)=>{
         const orderData=await Order.findOne({_id:orderId}).populate(populateOption);
         const address=await Order.findOne({_id:orderId},{deliveryAddress:1,_id:0}); 
         
-        console.log('orderData:',orderData,"address:",address);
+        // console.log('orderData:',orderData,"address:",address);
 
         res.render('orderDetails',{address,orderData});
 
@@ -375,9 +378,7 @@ const changeOrderStatus=async (req,res)=>{
                 {new:true}
             );
         }
-        console.log('updatedOrder:',updatedOrder);
 
-        
     } catch (error) {
         console.log(error.message);
         res.status(500).render('error-500') 

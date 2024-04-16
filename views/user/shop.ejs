@@ -97,7 +97,7 @@
                                                         <%}%>
                                                     </div>
                                                 </div>
-                                                <ul class="product-meta">
+                                                <ul class="product-meta">   
                                                     <li>
                                                         <%if(locals.user){%>
                                                             <a class="action" onclick="addToCart('<%=product._id%>')"><i class="pe-7s-shopbag"></i></a>
@@ -122,19 +122,22 @@
                                         </div>
                                     <%}%>
                                 <%})%>    
-                                
+                                        
                             </div>
                            <!-- Shop Product Wrapper End -->
                     </div>
                 </div>
                 <!-- Page pagination Start -->
+                
                 <div class="page-pagination">
                     <ul class="pagination justify-content-center">
-                        <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-left"></i></a></li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link active" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a></li>
+                        <li class="page-item"><a class="page-link" href="/shop?page=<%=previousPage%>"><i class="fa fa-angle-left"></i></a></li>
+                        
+                        <%for(let i=1;i<=pagesCount;i++){%>
+                            <li class="page-item"><a class="page-link" href="/shop?page=<%=i%>"><%=i%></a></li>
+                        <%}%>
+                        
+                        <li class="page-item"><a class="page-link" href="/shop?page=<%=nextPage%>"><i class="fa fa-angle-right"></i></a></li>
                     </ul>
                 </div>
                 <!-- Page pagination End -->
@@ -182,6 +185,11 @@
     </div>
   </div>
 <script>
+    function getPagination(pageNum){
+        req.query.page=pageNum;
+
+    }
+
     function addToWishlist(productId){
 
         axios.post('/addTowishlist',{

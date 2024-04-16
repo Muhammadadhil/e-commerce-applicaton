@@ -8,7 +8,7 @@ const productController=require('../controller/productController');
 const couponController=require('../controller/couponController');
 const offerController=require('../controller/offerController');
 // const orderController=require('../controller/orderController');
-
+const paginatedResult=require('../middleware/pagination');
 
 router.set('views','./views/admin');
 
@@ -18,7 +18,7 @@ router.get('/home',auth.isAdminLogin,adminController.loadDashBoard);
 router.get('/logout',adminController.adminLogout);
 
 //customers or users route
-router.get('/customers',auth.isAdminLogin,adminController.loadCustomers);
+router.get('/customers',auth.isAdminLogin,paginatedResult(),adminController.loadCustomers);
 router.patch('/blockAndUnblock',auth.isAdminLogin,adminController.userBlock);
 
 //category routes

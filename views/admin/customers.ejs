@@ -61,13 +61,14 @@
     <div class="pagination-area mt-30 mb-50">
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-start">
-                <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                <li class="page-item"><a class="page-link" href="#">02</a></li>
-                <li class="page-item"><a class="page-link" href="#">03</a></li>
-                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                <li class="page-item"><a class="page-link" href="#">16</a></li>
                 <li class="page-item">
-                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                    <a class="page-link" href="/admin/customers?page=<%=result.previousPage%>"><i class="material-icons md-chevron_left"></i></a>
+                </li>
+                <%for(let i=1;i<=result?.pagesCount;i++){%>
+                    <li class="page-item active"><a class="page-link" href="/admin/customers?page=<%=i%>"><%=i%></a></li>
+                <%}%>
+                <li class="page-item">
+                    <a class="page-link" href="/admin/customers?page=<%=result.nextPage%>"><i class="material-icons md-chevron_right"></i></a>
                 </li>
             </ul>
         </nav>
