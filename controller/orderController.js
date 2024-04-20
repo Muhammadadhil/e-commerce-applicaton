@@ -115,6 +115,7 @@ const placeOrder=async (req,res)=>{
                         $inc:{quantity:-item.quantity}
                     })
             }
+            console.log('in place order coupon partttttttttttttt');
             console.log('req.session:',req.session)
             console.log('req.session.couponUsed:',req.session.couponUsed)
 

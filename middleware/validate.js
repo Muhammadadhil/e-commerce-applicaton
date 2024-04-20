@@ -12,7 +12,6 @@ const { schema } = require('../model/userModel')
 //     })
 // });
 
-
 // const AddressSchema=Joi.object({
 //     name: Joi.string().required(),
 //     landmark: Joi.string().required(),
@@ -23,6 +22,7 @@ const { schema } = require('../model/userModel')
 //     pincode: Joi.number().required(),
 //     email: Joi.string().email().required(),
 // })
+
 const AddressSchema = Joi.object({
     name: Joi.string().required().messages({
         'any.required': 'Name is required.',
@@ -63,7 +63,8 @@ const AddressSchema = Joi.object({
 const validateAddress=(req,res,next)=>{
     const { addressId, ...bodyWithoutAddressId } = req.body;
 
-    console.log('etheeeennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
+    console.log('reached hereeeeeeeee in validate adddresssssssssssssssss');
+    
     const {error}=AddressSchema.validate(req.bodyWithoutAddressId);
 
     if(error){

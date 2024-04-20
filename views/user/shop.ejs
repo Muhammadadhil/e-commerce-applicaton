@@ -1,245 +1,339 @@
 <%-include('../layouts/header.ejs')%>
 <style>
-    .fa-regular {    
-         color: black; 
+    .fa-regular {
+        color: black;
     }
 
     .fa-solid {
-        color: red; 
+        color: red;
     }
 </style>
 
-    <!-- Shop Section Start -->
-    <div class="section section-padding mt-5">
-        <div class="container mt-3">
-            <!-- Product Section Wrapper Start -->
-            <div class="product-section-wrapper mt-5">
-                <!-- Shop top Bar Start -->
-                <div class="shop-top-bar">
-                    <!-- <div class="shop-text">
+<!-- Shop Section Start -->
+<div class="section section-padding mt-5">
+    <div class="container mt-3">
+        <!-- Product Section Wrapper Start -->
+        <div class="product-section-wrapper mt-5">
+            <!-- Shop top Bar Start -->
+            <div class="shop-top-bar">
+                <!-- <div class="shop-text">
                         <p>
                             <span>12</span> Product Found of <span>30</span>
                         </p>
                     </div> -->
-                    <div class="shop-tabs">
-                        <ul class="nav">
-                            <li>
-                                <button class="active" data-bs-toggle="tab" data-bs-target="#grid">
-                                    <i class="fa fa-th"></i>
-                                </button>
-                            </li>
-                            <li>
-                                <button data-bs-toggle="tab" data-bs-target="#list">
-                                    <i class="fa fa-list"></i>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="widget-search">
-                            <input type="text" oninput="searchProducts(this.value)" placeholder="Search Your Product">
-                            <button><i class="fa fa-search"></i></button>
-                    </div>
-                    <div class="dropdown dropdown-hover">
-                        <a class="btn btn-light  dropdown-toggle" href="#" role="button">
-                          Filter by category:
-                        </a>
-                        <ul class="dropdown-menu border-0" role="menu">
-                            <li><a class="dropdown-item" href="/shop" >All</a></li>
-
-                            <%categories.forEach((category)=>{%>
-                                <%if(!category.isBlocked){%>
-                                    <li><a class="dropdown-item" onclick="filterCategory('<%=category._id%>')" ><%=category.name%></a></li>
-                                <%}%>
-                            <%})%>
-                        </ul>
-                    </div>
-                    
-                    <div class="dropdown dropdown-hover">
-                        <a class="btn btn-light  dropdown-toggle" href="#" role="button">
-                          Sort by:
-                        </a>
-                        <ul class="dropdown-menu border-0" role="menu">
-                          <!-- <li><a class="dropdown-item" onclick="sortProducts('1')" >Popularity</a></li>
-                          <li><a class="dropdown-item" onclick="sortProducts('2')" >Featured</a></li> -->
-                          <li><a class="dropdown-item" onclick="sortProducts('3')" >New arrivals</a></li>
-                          <li><a class="dropdown-item" onclick="sortProducts('4')" >Price low to high</a></li>
-                          <li><a class="dropdown-item" onclick="sortProducts('5')" >Price high to low</a></li>
-                          <li><a class="dropdown-item" onclick="sortProducts('6')" >A to Z</a></li>
-                          <li><a class="dropdown-item" onclick="sortProducts('7')" >Z to A</a></li>
-
-                        </ul>
-                    </div>
-                    
+                <div class="widget-search">
+                    <input type="text" oninput="searchProducts(this.value)" placeholder="Search Your Product" />
+                    <button><i class="fa fa-search"></i></button>
                 </div>
-                <!-- Shop top Bar End -->
 
-                <div class="tab-content mb-5 ">
-                    <div class="tab-pane fade show active" id="grid">
+                <div class="shop-tabs">
+                    <ul class="nav">
+                        <li>
+                            <button class="active" data-bs-toggle="tab" data-bs-target="#grid">
+                                <i class="fa fa-th"></i>
+                            </button>
+                        </li>
+                        <li>
+                            <button data-bs-toggle="tab" data-bs-target="#list">
+                                <i class="fa fa-list"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="dropdown dropdown-hover">
+                    <a class="btn btn-light  dropdown-toggle" href="#" role="button">
+                      Filter by category:
+                    </a>
+                    <ul class="dropdown-menu border-0" role="menu">
+                        <li><a class="dropdown-item" href="/shop" >All</a></li>
+
+                        <%categories.forEach((category)=>{%>
+                            <%if(!category.isBlocked){%>
+                                <li><a class="dropdown-item" onclick="filterCategory('<%=category._id%>')" ><%=category.name%></a></li>
+                            <%}%>
+                        <%})%>
+                    </ul>
+                </div>
+
+                <div class="dropdown dropdown-hover">
+                    <a class="btn btn-light dropdown-toggle" href="#" role="button"> Sort by: </a>
+                    <ul class="dropdown-menu border-0" role="menu">
+                        <!-- <li><a class="dropdown-item" onclick="sortProducts('1')" >Popularity</a></li>
+                          <li><a class="dropdown-item" onclick="sortProducts('2')" >Featured</a></li> -->
+                        <li><a class="dropdown-item" onclick="sortProducts('3')">New arrivals</a></li>
+                        <li><a class="dropdown-item" onclick="sortProducts('4')">Price low to high</a></li>
+                        <li><a class="dropdown-item" onclick="sortProducts('5')">Price high to low</a></li>
+                        <li><a class="dropdown-item" onclick="sortProducts('6')">A to Z</a></li>
+                        <li><a class="dropdown-item" onclick="sortProducts('7')">Z to A</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Shop top Bar End -->
+            <div class="row">
+                <div class="col-lg-3">
+                    <!-- Sidebar Start -->
+                    <div class="sidebar">
+                        <!-- Sidebar Widget Start -->
+                        <!-- Sidebar Widget Start -->
+                        <div class="sidebar-widget">
+                            <h4 class="widget-title">Filter By Categories</h4>
+
+                            <div class="widget-checkbox widget-categories">
+                                <ul class="checkbox-items">
+                                    <li>
+                                        <input type="radio" id="categoryAll" onchange="filterCategory('allCategory')" <%if(filterCriteria=='allCategory'){%>checked<%}%>/>
+                                        <label for="categoryAll"> <span></span>All category</label>
+                                    </li>
+                                    <%categories.forEach((category,i)=>{%> <%if(!category.isBlocked){%>
+                                    <li>
+                                        <input type="radio" id="category<%=i%>" onchange="filterCategory('<%=category._id%>')" <%if(filterCriteria==category._id){%>checked<%}%>/>
+                                        <label for="category<%=i%>"> <span></span><%=category.name%></label>
+                                    </li>
+                                    <%}%> <%})%>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Sidebar Widget End -->
+                        <div class="sidebar-widget">
+                            <h4 class="widget-title">Filter By Price</h4>
+
+                            <div class="widget-price">
+                                <input id="price-range" type="text" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sidebar End -->
+                </div>
+                <div class="tab-content mb-5 col-lg-9" >
+                    <div class="tab-pane fade show active " id="grid">
                         <!-- Shop Product Wrapper Start -->
                         <div class="shop-product-wrapper">
                             <div id="productPart" class="row">
-                                
-                                <%products.forEach((product)=>{%> 
-                                    
-                                    <%if(!product.isDeleted && !product.isCategoryBlocked){%>
-                                        <div class="col-lg-4 col-sm-6">
-                                            <!-- Single Product Start -->
-                                            <div class="single-product">
-                                                <a href="/productDetails?id=<%=product._id%>"><img src="/multer/products/<%=product.images.image1%>" width="270" height="303" alt="product" /></a>
-                                                <div class="product-content">
-                                                    <h4 class="title">
-                                                        <a href=""><%=product.name%></a>
-                                                    </h4>
-                                                    <div class="price">
-                                                        <span class="sale-price">₹<%=product.price%></span>
-                                                        <%if(product.productDiscount || product.categoryDiscount){%>
-                                                            <span class="old-price">₹<%=product.orgPrice%></span>
-                                                        <%}%>
-                                                    </div>
-                                                </div>
-                                                <ul class="product-meta">   
-                                                    <li>
-                                                        <%if(locals.user){%>
-                                                            <a class="action" onclick="addToCart('<%=product._id%>')"><i class="pe-7s-shopbag"></i></a>
-                                                        <%}else{%>
-                                                            <a class="action"  onclick="showLoginAlert()"><i class="pe-7s-shopbag"></i></a> 
-                                                        <%}%>
-                                                        
-                                                    </li>
-                                                    <li id="wishlist-icon">
-                                                        <%if(locals.user){%>
-                                                            <a id="wishlstIcon" class="action" onclick="addToWishlist('<%=product._id%>')" >
-                                                                <i id="wishlistIcon-<%=product._id%>" class="<%=wishlist?.products?.some((item)=>item.productId.equals(product._id))?'fa-solid':'fa-regular' %> fa-heart"></i>   
-                                                            </a>
-                                                        <%}else{%>
-                                                            <a class="action"  onclick="showLoginAlert()"><i class="pe-7s-like"></i></a> 
-
-                                                        <%}%>
-                                                    </li>
-                                                </ul>
+                                <%products.forEach((product)=>{%> <%if(!product.isDeleted && !product.isCategoryBlocked){%>
+                                <div class="col-lg-4 col-sm-6">
+                                    <!-- Single Product Start -->
+                                    <div class="single-product">
+                                        <a href="/productDetails?id=<%=product._id%>"><img src="/multer/products/<%=product.images.image1%>" width="270" height="303" alt="product" /></a>
+                                        <div class="product-content">
+                                            <h4 class="title">
+                                                <a href=""><%=product.name%></a>
+                                            </h4>
+                                            <div class="price">
+                                                <span class="sale-price">₹<%=product.price%></span>
+                                                <%if(product.productDiscount || product.categoryDiscount){%>
+                                                <span class="old-price">₹<%=product.orgPrice%></span>
+                                                <%}%>
                                             </div>
-                                            <!-- Single Product End -->
                                         </div>
-                                    <%}%>
-                                <%})%>    
-                                        
+                                        <ul class="product-meta">
+                                            <li>
+                                                <%if(locals.user){%>
+                                                <a class="action" onclick="addToCart('<%=product._id%>')"><i class="pe-7s-shopbag"></i></a>
+                                                <%}else{%>
+                                                <a class="action" onclick="showLoginAlert()"><i class="pe-7s-shopbag"></i></a>
+                                                <%}%>
+                                            </li>
+                                            <li id="wishlist-icon">
+                                                <%if(locals.user){%>
+                                                <a id="wishlstIcon" class="action" onclick="addToWishlist('<%=product._id%>')">
+                                                    <i
+                                                        id="wishlistIcon-<%=product._id%>"
+                                                        class="<%=wishlist?.products?.some((item)=>item.productId.equals(product._id))?'fa-solid':'fa-regular' %> fa-heart"
+                                                    ></i>
+                                                </a>
+                                                <%}else{%>
+                                                <a class="action" onclick="showLoginAlert()"><i class="pe-7s-like"></i></a>
+
+                                                <%}%>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- Single Product End -->
+                                </div>
+                                <%}%> <%})%>
                             </div>
-                           <!-- Shop Product Wrapper End -->
+                            <!-- Shop Product Wrapper End -->
+                        </div>
                     </div>
                 </div>
-                <!-- Page pagination Start -->
-                
-                <div class="page-pagination">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item"><a class="page-link" href="/shop?page=<%=previousPage%>"><i class="fa fa-angle-left"></i></a></li>
-                        
-                        <%for(let i=1;i<=pagesCount;i++){%>
-                            <li class="page-item"><a class="page-link" href="/shop?page=<%=i%>"><%=i%></a></li>
-                        <%}%>
-                        
-                        <li class="page-item"><a class="page-link" href="/shop?page=<%=nextPage%>"><i class="fa fa-angle-right"></i></a></li>
-                    </ul>
+                <div class="tab-content mb-5 col-lg-9" >
+                    <div class="tab-pane fade" id="list">
+                        <!-- Shop Product Wrapper Start -->
+                        <div class="shop-product-wrapper">
+                            <!-- Single Product Start -->
+                            <div class="single-product-02 product-list">
+                                <div class="product-images">
+                                    <a href="#"><img src="assets/images/product/product-01.jpg" width="270" height="303" alt="product" /></a>
+
+                                    <ul class="product-meta">
+                                        <li>
+                                            <a class="action" data-bs-toggle="modal" data-bs-target="#quickView" href="#"><i class="pe-7s-search"></i></a>
+                                        </li>
+                                        <li>
+                                            <a class="action" href="#"><i class="pe-7s-shopbag"></i></a>
+                                        </li>
+                                        <li>
+                                            <a class="action" href="#"><i class="pe-7s-like"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="product-content">
+                                    <h4 class="title">
+                                        <a href="product-details.html">Elona bedside grey table</a>
+                                    </h4>
+                                    <div class="price">
+                                        <span class="sale-price">$40.00</span>
+                                    </div>
+                                    <p>
+                                        Block out the haters with the fresh adidas® Originals Kaval Windbreaker Jacket. Part of the Kaval Collection. Regular fit is eased, but not sloppy, and perfect
+                                        for any activity. Plain-woven jacket specifically constructed for freedom of movement.
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- Single Product End -->
+                        </div>
+                        <!-- Shop Product Wrapper End -->
+                    </div>
                 </div>
-                <!-- Page pagination End -->
             </div>
+            <!-- Page pagination Start -->
+
+            <div class="page-pagination">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link" href="/shop?page=<%=previousPage%>"><i class="fa fa-angle-left"></i></a>
+                    </li>
+
+                    <%for(let i=1;i<=pagesCount;i++){%>
+                    <li class="page-item"><a class="page-link" href="/shop?page=<%=i%>"><%=i%></a></li>
+                    <%}%>
+
+                    <li class="page-item">
+                        <a class="page-link" href="/shop?page=<%=nextPage%>"><i class="fa fa-angle-right"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Page pagination End -->
+
             <!-- Product Section Wrapper End -->
         </div>
     </div>
     <!-- Shop Section End -->
+
+    <!-- addtoCart extra Toast -->
+    <div class="toast-container position-fixed top-0 end-0 p-6">
+        <div class="toast" id="addToExisting" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-body">
+                <div class="d-flex gap-4">
+                    <span><i class="fa-solid fa-circle-check fa-lg icon-success"></i></span>
+                    <div class="d-flex flex-column flex-grow-1 gap-2">
+                        <div class="d-flex align-items-center">
+                            <span class="fw-semibold">item already in the cart</span>
+                            <button type="button" class="btn-close btn-close-sm ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <span>added 1 more</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- addtoCart Toast -->
+    <div class="toast-container position-fixed top-0 end-0 p-6">
+        <div class="toast" id="addedTocart" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-body">
+                <div class="d-flex gap-4">
+                    <span><i class="fa-solid fa-circle-check fa-lg icon-success"></i></span>
+                    <div class="d-flex flex-column flex-grow-1 gap-2">
+                        <div class="d-flex align-items-center">
+                            <span class="fw-semibold">item added to you cart</span>
+                            <button type="button" class="btn-close btn-close-sm ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('[data-bs-toggle="tab"]');
+            const tabContents = document.querySelectorAll('.tab-content .tab-pane');
     
-<!-- addtoCart extra Toast -->
-<div class="toast-container position-fixed top-0 end-0  p-6">
-    <div class="toast" id="addToExisting" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-body">
-        <div class="d-flex gap-4">
-          <span><i class="fa-solid fa-circle-check fa-lg icon-success"></i></span>
-          <div class="d-flex flex-column flex-grow-1 gap-2">
-            <div class="d-flex align-items-center">
-              <span class="fw-semibold">item already in the cart</span>
-              <button type="button" class="btn-close btn-close-sm ms-auto" data-bs-dismiss="toast"
-                aria-label="Close"></button>
-            </div>
-            <span>added 1 more</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Hide all tab contents
+                    tabContents.forEach(content => {
+                        content.classList.remove('show', 'active');
+                    });
+    
+                    // Show the clicked tab content
+                    const targetId = button.getAttribute('data-bs-target');
+                    const targetContent = document.querySelector(targetId);
+                    if (targetContent) {
+                        targetContent.classList.add('show', 'active');
+                    }
+                });
+            });
+        });
+        
+    </script>
+    <script>
+        function getPagination(pageNum) {
+            req.query.page = pageNum;
+        }
 
-<!-- addtoCart Toast -->
-<div class="toast-container position-fixed top-0 end-0  p-6">
-    <div class="toast" id="addedTocart" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-body">
-        <div class="d-flex gap-4">
-          <span><i class="fa-solid fa-circle-check fa-lg icon-success"></i></span>
-          <div class="d-flex flex-column flex-grow-1 gap-2">
-            <div class="d-flex align-items-center">
-              <span class="fw-semibold">item added to you cart</span>
-              <button type="button" class="btn-close btn-close-sm ms-auto" data-bs-dismiss="toast"
-                aria-label="Close"></button>
-            </div>
-            
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-<script>
-    function getPagination(pageNum){
-        req.query.page=pageNum;
+        function addToWishlist(productId) {
+            axios
+                .post("/addTowishlist", {
+                    productId,
+                })
+                .then((response) => {
+                    console.log(response);
+                    // console.log(response.data.newWishlist.products);
 
-    }
+                    const icon = document.getElementById(`wishlistIcon-${productId}`);
+                    if (response.data.added) {
+                        icon.classList.remove("fa-regular");
+                        icon.classList.add("fa-solid");
+                    } else if (response.data.removed) {
+                        icon.classList.remove("fa-solid");
+                        icon.classList.add("fa-regular");
+                    }
+                });
+        }
+        function filterCategory(filterCategory) {
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set("filter", filterCategory);
+            window.location.href = currentUrl.href;
 
-    function addToWishlist(productId){
+            const categoryLinks = document.querySelectorAll(".dropdown-item");
+            categoryLinks.forEach((item) => {
+                item.classList.remove("active");
+            });
 
-        axios.post('/addTowishlist',{
-            productId
-        })
-        .then((response)=>{
-            console.log(response)
-            // console.log(response.data.newWishlist.products);
-            
-            const icon=document.getElementById(`wishlistIcon-${productId}`);
-            if(response.data.added){
-                icon.classList.remove('fa-regular');
-                icon.classList.add('fa-solid');
-            } else if(response.data.removed){
-                icon.classList.remove('fa-solid');
-                icon.classList.add('fa-regular')
+            const clickedLink = document.querySelector(`a[onclick*="${filterCategory}"]`);
+            if (clickedLink) {
+                clickedLink.classList.add("active");
             }
-            
-        })
-    }    
-    function filterCategory(filterCategory){
-        const currentUrl=new URL(window.location.href);
-        console.log('currentUrl:',currentUrl);
-        currentUrl.searchParams.set('filter',filterCategory);
-        window.location.href=currentUrl.href;
+        }
 
-    }
+        function searchProducts(value) {
+            const reloadPart = document.getElementById("productPart");
 
-
-    function searchProducts(value){
-
-        const reloadPart=document.getElementById('productPart');
-
-        fetch(`/search?searchKey=${value}`)
-        .then((res)=>res.json())
-        .then((data)=>{
-
-            if(data.products.length==0){
-
-                reloadPart.innerHTML=`<div class="alert alert-primary  mt-5" role="alert">
+            fetch(`/search?searchKey=${value}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.products.length == 0) {
+                        reloadPart.innerHTML = `<div class="alert alert-primary  mt-5" role="alert">
                     <strong>No products found!</strong> Your search did not match any products.
                 </div>`;
-            }else{
+                    } else {
+                        reloadPart.innerHTML = "";
 
-                reloadPart.innerHTML='';
-
-                data.products.forEach((product) => {
-                if (!product.isDeleted && !product.categoryId.isBlocked) {
-                    
-                    const productHTML = `
+                        data.products.forEach((product) => {
+                            if (!product.isDeleted && !product.categoryId.isBlocked) {
+                                const productHTML = `
                         <div class="col-lg-4 col-sm-6">
                             <!-- Single Product Start -->
                             <div class="single-product">
@@ -263,24 +357,22 @@
                         </div>
                     `;
 
-                    // Append the product HTML to reloadPart
-                    reloadPart.insertAdjacentHTML('beforeend', productHTML);
-                }
-            })
-            }
-        })
-    }
+                                // Append the product HTML to reloadPart
+                                reloadPart.insertAdjacentHTML("beforeend", productHTML);
+                            }
+                        });
+                    }
+                });
+        }
 
-    function sortProducts(criteria){
+        function sortProducts(criteria) {
+            const currentUrl = new URL(window.location.href);
+            console.log("currentUrl:", currentUrl);
+            currentUrl.searchParams.set("sort", criteria);
+            window.location.href = currentUrl.href;
+        }
 
-        const currentUrl=new URL(window.location.href);
-        console.log('currentUrl:',currentUrl);
-        currentUrl.searchParams.set('sort',criteria);
-        window.location.href=currentUrl.href;
-
-    }
-
-    function showLoginAlert() {
+        function showLoginAlert() {
             Swal.fire({
                 title: "You need to log in!",
                 text: "Please log in ",
@@ -292,16 +384,15 @@
                     confirmButton: "custom-confirm-button",
                     cancelButton: "custom-cancel-button",
                 },
-            })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "/login";
-                    }
-                });
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/login";
+                }
+            });
         }
 
-    function addToCart(productId) {
-            let count=1;
+        function addToCart(productId) {
+            let count = 1;
             fetch("/addToCart", {
                 method: "POST",
                 headers: {
@@ -309,48 +400,42 @@
                 },
                 body: JSON.stringify({
                     productId,
-                    count
+                    count,
                 }),
             })
-            .then(response => response.json())
-            .then((data)=>{
-                console.log('data from the server:',data);
-                if(data.added){
-    
-                    const addToExisting = document.getElementById("addToExisting");
-                    const toast = new bootstrap.Toast(addToExisting);
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("data from the server:", data);
+                    if (data.added) {
+                        const addToExisting = document.getElementById("addToExisting");
+                        const toast = new bootstrap.Toast(addToExisting);
                         toast.show();
-                        
-                }else if(data.addedToCart=='not done'){
-                    console.log('reached productDetails page error part : failed to add item');
+                    } else if (data.addedToCart == "not done") {
+                        console.log("reached productDetails page error part : failed to add item");
 
-                    const addToCartError=document.getElementById('addToCartError');
-                    // // const icon=document.getElementById('error-icon');
-                    // // icon.hidden=false;
-                    addToCartError.innerHTML='failed to add item';
-                    setTimeout(()=>{
-                        addToCartError.innerHTML='';
-                    },5000)
-
-                }else if(data.addedNew){
-    
-                    const addedToCart = document.getElementById("addedTocart");
-                    const toast=new bootstrap.Toast(addedToCart);
-                    toast.show();
-
-                }else if(!data.added){
-                    //if total quantity exceeded
-                    window.location.href='/cart'
-
-                }else{
-                    console.log('Unknown resssssponse from the servver!!');
-                }
-            })
-            .catch((err)=>{
-                console.error('Errrror:',err);
-            })
+                        const addToCartError = document.getElementById("addToCartError");
+                        // // const icon=document.getElementById('error-icon');
+                        // // icon.hidden=false;
+                        addToCartError.innerHTML = "failed to add item";
+                        setTimeout(() => {
+                            addToCartError.innerHTML = "";
+                        }, 5000);
+                    } else if (data.addedNew) {
+                        const addedToCart = document.getElementById("addedTocart");
+                        const toast = new bootstrap.Toast(addedToCart);
+                        toast.show();
+                    } else if (!data.added) {
+                        //if total quantity exceeded
+                        window.location.href = "/cart";
+                    } else {
+                        console.log("Unknown resssssponse from the servver!!");
+                    }
+                })
+                .catch((err) => {
+                    console.error("Errrror:", err);
+                });
         }
-</script>
+    </script>
 
-
-<%-include('../layouts/footer.ejs')%>
+    <%-include('../layouts/footer.ejs')%>
+</div>

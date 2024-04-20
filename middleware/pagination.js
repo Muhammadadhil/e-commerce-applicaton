@@ -1,8 +1,8 @@
-const Users=require('../model/userModel');
+// const Users=require('../model/userModel');
 
-function paginatedResult(){
-    
+function paginatedResult(model){
     return async (req,res,next)=>{
+        console.log('model:',model);
 
         let page=1;
         if(req.query.page){
@@ -12,7 +12,7 @@ function paginatedResult(){
         let result={};
         let limit=5;
 
-        const count=await Users.find().countDocuments();
+        const count=await model.find().countDocuments();
         result.pagesCount=Math.ceil(count/limit);
         
         result.nextPage=1;
@@ -24,9 +24,10 @@ function paginatedResult(){
         if(page>1){
             result.previousPage=page-1;
         }
+        result.currentPage=page;
 
         try {
-            result.users=await Users.find().limit(limit*1).skip((page-1)*limit).exec();
+            result.users=await model.find().limit(limit*1).skip((page-1)*limit).exec();
             console.log('result:',result);
             res.paginatedResult=result; //send the result object as response
             next();

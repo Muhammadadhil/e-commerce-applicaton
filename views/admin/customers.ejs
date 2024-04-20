@@ -53,7 +53,6 @@
                     <%}%>
                 </tbody>
             </table>
-            
         </div>
         <!-- card-body end// -->
     </div>
@@ -65,7 +64,7 @@
                     <a class="page-link" href="/admin/customers?page=<%=result.previousPage%>"><i class="material-icons md-chevron_left"></i></a>
                 </li>
                 <%for(let i=1;i<=result?.pagesCount;i++){%>
-                    <li class="page-item active"><a class="page-link" href="/admin/customers?page=<%=i%>"><%=i%></a></li>
+                    <li class="page-item <%if(result.currentPage===i){%>active<%}%>"> <a class="page-link" href="/admin/customers?page=<%=i%>"><%=i%></a></li>
                 <%}%>
                 <li class="page-item">
                     <a class="page-link" href="/admin/customers?page=<%=result.nextPage%>"><i class="material-icons md-chevron_right"></i></a>

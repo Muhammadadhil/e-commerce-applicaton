@@ -14,7 +14,6 @@ const Wishlist=require('../model/wishlistModel');
 const {registerationSchema}=require('../middleware/validate');
 const { date } = require('joi');
 
-
 //getting cart items count
 const getCartDetails=async (userId)=>{
     try {
@@ -174,18 +173,22 @@ const loadShop=async (req,res)=>{
                 break;    
         }
 
-        //filtering by category
-        const filterCriteria=req.query.filter;
-        let filterQuery={};
-        if(filterCriteria){
-            filterQuery={categoryId:filterCriteria}
-        }
-
         //pagination
         let page=1;
         if(req.query.page){
             page=Number(req.query.page);
         }
+
+        
+        //filtering by category
+        let filterCriteria=req.query.filter || 'allCategory';
+        
+        let filterQuery={};
+        if(filterCriteria){
+            page=1;
+            filterCriteria=='allCategory'?filterQuery={}: filterQuery={categoryId:filterCriteria}            
+        }
+        
 
         let limit=6;
         const products=await Products.find(filterQuery)
@@ -211,7 +214,7 @@ const loadShop=async (req,res)=>{
         const wishlist=await Wishlist.findOne({userId:user},{'products.productId':1,_id:0});
 
         const {itemsCount}=await getCartDetails(user);
-        res.render('shop',{products,user,itemsCount,categories,wishlist,pagesCount,nextPage,previousPage});
+        res.render('shop',{products,user,itemsCount,categories,filterCriteria,wishlist,pagesCount,nextPage,previousPage});
 
     } catch (error) {
         console.log(error.message);
