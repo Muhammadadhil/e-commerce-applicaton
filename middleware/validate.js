@@ -62,6 +62,7 @@ const AddressSchema = Joi.object({
 
 const validateAddress=(req,res,next)=>{
     const { addressId, ...bodyWithoutAddressId } = req.body;
+    
 
     console.log('reached hereeeeeeeee in validate adddresssssssssssssssss');
     

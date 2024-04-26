@@ -25,7 +25,7 @@
                     <%if(users.length>0){%>
                         <%users.forEach((user,i)=>{%>
                             <tr>
-                                <%if(!user.isAdmin){%>
+                                
                                     <td><%=i+1%></td>
                                     <td><%=`${user.firstName} ${user.lastname}`%></td>
                                     <td><b><%=user.email%></b></td>
@@ -42,7 +42,7 @@
                                             <a class="unBlock-user"onclick="blockUnblock('<%=user._id%>')">Unblock</a>
                                         <%}%>
                                     </td> 
-                                <%}%>    
+                                
                             </tr>
                         <%})%>
                        

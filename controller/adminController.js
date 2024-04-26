@@ -167,7 +167,10 @@ const loadDashBoard=async (req,res)=>{
 const loadCustomers=async (req,res)=>{
     try {
         const result=res.paginatedResult;
-        const customers=await User.find({});
+        const customers=await User.find({isAdmin:false});
+        // result.users=result.users.filter((val,i)=>{
+        //     return val.isAdmin!==true
+        // })
         if(result){
             res.render('customers',{users:result.users,result})
         }else{
@@ -394,9 +397,6 @@ const loadSalesReport=async(req,res)=>{
             year: 'numeric',
             month: 'short',
             day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric'
         };
         console.log('filterCriteria:',filterCriteria);
 
@@ -418,24 +418,28 @@ const loadSalesReport=async(req,res)=>{
             
             case 'daily':
             orders=await dialyReport();
+            console.log('daily orders:',orders);
             dateOrTime='day';
             break;
 
             case 'weekly':
                 orders=[]
-                orders= await generateReport('$week');
+                orders= await weeklyReport();
+                console.log('weekly orders:',orders);
                 dateOrTime='week'
                 break;
 
             case 'monthly':
                 orders=[] 
-                orders= await generateReport('$month');
+                orders= await monthlyReport('$month');
+                console.log('monthly orders:',orders);
+
                 dateOrTime='month'
                 break;    
 
             case 'yearly':
                 orders=[] 
-                orders= await generateReport('$year');  
+                orders= await yearlyReport('$year');  
                 dateOrTime='year'  
                 break;
         }
@@ -455,16 +459,19 @@ const loadSalesReport=async(req,res)=>{
     }
 }
 
-const generateReport=async (timeUnit)=>{
+
+const weeklyReport=async ()=>{
     try {
         const orderDatas=await Order.aggregate([
-            {$match:{orderStatus:{$ne:"pending"}}},
             { 
                 $group: {
-                    _id: { [timeUnit]: "$orderDate" },
+                    _id: { $week: "$orderDate" },
                     totalSalesCount: { $sum: 1},
                     totalRevenue:{$sum:'$subTotal'},
                 }
+            },
+            {
+                $sort: { "_id": 1 } // Sort by week number
             }
         ]);
         return orderDatas;
@@ -473,6 +480,67 @@ const generateReport=async (timeUnit)=>{
         console.log(error.message);
     }
 }
+// const generateReport=async (timeUnit)=>{
+//     try {
+//         console.log('timeUnit:',timeUnit);
+//         const orderDatas=await Order.aggregate([
+//             {$match:{orderStatus:{$ne:"pending"}}}, 
+//             { 
+//                 $group: {
+//                     _id: { '$month': "$orderDate" },
+//                     totalSalesCount: { $sum: 1},
+//                     totalRevenue:{$sum:'$subTotal'},
+//                 }
+//             }
+//         ]);
+//         return orderDatas;
+
+//     } catch (error) {09
+//         console.log(error.message);
+//     }
+// }
+
+
+const monthlyReport=async ()=>{
+    try {
+
+        const orderDatas=await Order.aggregate([
+            {
+                $group: {
+                    _id:{$month: "$orderDate"} ,
+                    totalSalesCount: { $sum: 1},
+                    totalRevenue:{$sum:'$subTotal'},
+                }
+            }
+        ]);
+
+        return orderDatas;
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const yearlyReport=async ()=>{
+    try {
+        const orderDatas=await Order.aggregate([
+            { 
+                $group: {
+                    _id: { $year: "$orderDate" },
+                    totalSalesCount: { $sum: 1},
+                    totalRevenue:{$sum:'$subTotal'},
+                }
+            }
+        ]);
+
+        return orderDatas;
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 const dialyReport=async ()=>{
 
@@ -482,7 +550,7 @@ const dialyReport=async ()=>{
             $group: {
                 _id: { $dateToString: { format: "%d-%m-%Y", date: "$orderDate" } },
                 totalSalesCount: { $sum: 1},
-                totalRevenue:{$sum:'$subTotal'},
+                totalRevenue:{$sum:'$subTotal'},   
             }
         },{$sort:{_id:-1}}
     ]);

@@ -13,8 +13,9 @@ function paginatedResult(model){
         let limit=5;
 
         const count=await model.find().countDocuments();
+        console.log('docCount:',count);
         result.pagesCount=Math.ceil(count/limit);
-        
+        console.log('result.pagesCount:',result.pagesCount);
         result.nextPage=1;
         if(page*limit<count){
             result.nextPage=page+1;

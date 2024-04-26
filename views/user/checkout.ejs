@@ -90,72 +90,72 @@
                     <!-- Checkout Form Start -->
                     <div class="checkout-form">
                         <div class="checkout-title">
-                            <h4 class="title">Billing Address new:</h4>
+                            <h4 class="title">Add New Billing Address:</h4>
                         </div>
+                        <form id="addAddressExtra" action="" onsubmit="return addAddressExtra()" method="">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="single-form">
+                                        <input type="text" name="name" id="name" placeholder="name" />
+                                        <p id="nameError" class="error-message text-danger "></p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="single-form">
+                                        <input type="text" name="phone" id="phone" placeholder="mobile number" />
+                                        <p id="mobileError" class="error-message text-danger  "></p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="single-form">
+                                        <input type="text" name="email" id="email" placeholder="Email address" />
+                                        <p id="emailError" class="error-message text-danger "></p>
+                                    </div>
+                                </div>
+    
+                                <div class="col-sm-12">
+                                    <div class="single-form">
+                                        <input type="text" name="address" id="address" placeholder="Flat, House no., Building, Company, Apartment" />
+                                        <p id="addressError" class="error-message text-danger "></p>
+                                    </div>
+                                </div>
+    
+                                <div class="col-sm-12">
+                                    <div class="single-form">
+                                        <input type="text" name="landmark" id="landmark" placeholder="Landmark" value="" />
+                                        <p id="landmarkError" class="error-message text-danger "></p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="single-form">
+                                        <input type="text" name="city" id="city" placeholder="city" />
+                                        <p id="cityError" class="error-message text-danger"></p>
 
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="single-form">
-                                    <input type="text" name="nameeee" id="name" placeholder="name" />
-                                    <p id="nameError" class="error-message"></p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="single-form">
+                                        <input type="text" name="state" id="state" placeholder="state" />
+                                        <p id="stateError" class="error-message text-danger "></p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="single-form">
+                                        <input type="text" name="pincode" id="pincode" placeholder="Pincode" />
+                                        <p id="pincodeError" class="error-message text-danger "></p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="single-form">
-                                    <input type="text" name="phone" id="phone" placeholder="mobile number" />
-                                    <p id="mobileError" class="error-message"></p>
-                                </div>
+                            <div class="single-form">
+                                <button type="submit"  class="btn btn-primary btn-hover-dark d-block">add address</button>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="single-form">
-                                    <input type="text" name="email" id="email" placeholder="Email address" />
-                                    <p id="emailError" class="error-message"></p>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="single-form">
-                                    <input type="text" name="address" id="address" placeholder="Flat, House no., Building, Company, Apartment" />
-                                    <p id="addressError" class="error-message"></p>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="single-form">
-                                    <input type="text" name="landmark" id="landmark" placeholder="Landmark" value="" />
-                                    <p id="landmarkError" class="error-message"></p>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="single-form">
-                                    <input type="text" name="city" id="city" placeholder="city" />
-                                    <p id="pincodeError" class="error-message"></p>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="single-form">
-                                    <input type="text" name="state" id="state" placeholder="state" />
-                                    <p id="pincodeError" class="error-message"></p>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="single-form">
-                                    <input type="text" name="pincode" id="pincode" placeholder="Pincode" />
-                                    <p id="pincodeError" class="error-message"></p>
-                                </div>
-                            </div>
-                            
-                        </div>
+                        </form>
                     </div>
-                    <div class="single-form">
-                        <button type="button" onclick="addAddress()" class="btn btn-primary btn-hover-dark d-block">add address</button>
-                    </div>
-
                     <!-- Checkout Form End -->
                 </div>
             </div>
         </div>
-        <form id="addAddress" method="post" action="/placeOrder">
+        
         <%if(!userAddresses?.address.length<1){%>
             <div class="col checkout-form">
                 <div class="checkout-title">
@@ -199,76 +199,75 @@
                         <div class="row">
                             <div class="col-lg-7">
                                 <!-- Checkout Form Start -->
+                                                        
                                 <div class="checkout-form">
                                     <div class="checkout-title">
-                                        <h4 class="title">Billing Address new:</h4>
+                                        <h4 class="title">Add Billing Address</h4>
                                     </div>
-            
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="single-form">
-                                                <input type="text" name="name" id="name" placeholder="name" />
-                                                <p id="nameError" class="error-message"></p>
+                                    <form id="newAddress2" action="" onsubmit="return addAddress()" method="">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="single-form">
+                                                    <input type="text" name="name" id="name" placeholder="name" />
+                                                    <p id="nameError" class="error-message text-danger "></p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="single-form">
-                                                <input type="text" name="phone" id="phone" placeholder="mobile number" />
-                                                <p id="mobileError" class="error-message"></p>
+                                            <div class="col-sm-6">
+                                                <div class="single-form">
+                                                    <input type="text" name="phone" id="phone" placeholder="mobile number" />
+                                                    <p id="mobileError" class="error-message text-danger  "></p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="single-form">
-                                                <input type="text" name="email" id="email" placeholder="Email address" />
-                                                <p id="emailError" class="error-message"></p>
+                                            <div class="col-sm-6">
+                                                <div class="single-form">
+                                                    <input type="text" name="email" id="email" placeholder="Email address" />
+                                                    <p id="emailError" class="error-message text-danger "></p>
+                                                </div>
                                             </div>
-                                        </div>
-            
-                                        <div class="col-sm-12">
-                                            <div class="single-form">
-                                                <input type="text" name="address" id="address" placeholder="Flat, House no., Building, Company, Apartment" />
-                                                <p id="addressError" class="error-message"></p>
+                
+                                            <div class="col-sm-12">
+                                                <div class="single-form">
+                                                    <input type="text" name="address" id="address" placeholder="Flat, House no., Building, Company, Apartment" />
+                                                    <p id="addressError" class="error-message text-danger "></p>
+                                                </div>
                                             </div>
-                                        </div>
-            
-                                        <div class="col-sm-12">
-                                            <div class="single-form">
-                                                <input type="text" name="landmark" id="landmark" placeholder="Landmark" value="" />
-                                                <p id="landmarkError" class="error-message"></p>
+                
+                                            <div class="col-sm-12">
+                                                <div class="single-form">
+                                                    <input type="text" name="landmark" id="landmark" placeholder="Landmark" value="" />
+                                                    <p id="landmarkError" class="error-message text-danger "></p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="single-form">
-                                                <input type="text" name="city" id="city" placeholder="city" />
-                                                <p id="pincodeError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="single-form">
-                                                <input type="text" name="state" id="state" placeholder="state" />
-                                                <p id="pincodeError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="single-form">
-                                                <input type="text" name="pincode" id="pincode" placeholder="Pincode" />
-                                                <p id="pincodeError" class="error-message"></p>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                                <div class="single-form">
-                                    <button type="button" onclick="addAddress()" class="btn btn-primary btn-hover-dark d-block">add address</button>
-                                </div>
+                                            <div class="col-sm-12">
+                                                <div class="single-form">
+                                                    <input type="text" name="city" id="city" placeholder="city" />
+                                                    <p id="cityError" class="error-message text-danger"></p>
 
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="single-form">
+                                                    <input type="text" name="state" id="state" placeholder="state" />
+                                                    <p id="stateError" class="error-message text-danger "></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="single-form">
+                                                    <input type="text" name="pincode" id="pincode" placeholder="Pincode" />
+                                                    <p id="pincodeError" class="error-message text-danger "></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="single-form">
+                                            <button type="submit"  class="btn btn-primary btn-hover-dark d-block">add address</button>
+                                        </div>
+                                    </form>
+                                </div>
                                 <!-- Checkout Form End -->
                         </div>
                             
                 <%}%>
-        
                 <!-- order area -->
-
                 <div class="col-lg-5 mb-5">
                     <div class="checkout-order">
                         <div class="checkout-title">
@@ -415,7 +414,6 @@
                     </div>
                 </div>
             </div>
-        </form>
         
     </div>
 </div>
@@ -435,7 +433,7 @@
                         <div class="col-md-6">
                             <div class="single-form">
                                 <input type="text" name="name" />
-                                <p id="nameError" class="error-message"></p>
+                                <p id="nameError" class="error-message text-danger"></p>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -555,11 +553,31 @@
         })
     }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+
 
 <script>
+    const notyf = new Notyf({
+        position: {
+            x: 'right',
+            y: 'top',
+    }});
+
     function placeOrder(){
-        
-        const addressId=document.getElementById('addressId').value;
+        console.log('place order methodd');
+        let addressId=document.getElementById('addressId')
+        console.log('addressid:',addressId);
+
+        if(addressId==null){
+            console.log('no address');
+            notyf.error('please add an address first');         
+            return
+        }else{
+            console.log('place order methodd ok');
+            addressId=addressId.value;
+            console.log('address added id:',addressId);
+        }
+
         const paymentMethodElement=document.querySelector('.checkout-payment input[name="paymentmethod"]:checked');
         let paymentMethod='';
         
@@ -738,15 +756,219 @@
     }
 
     function addAddress() {
-        const name = document.getElementById("name").value;
-        const phone = document.getElementById("phone").value;
-        const email = document.getElementById("email").value;
-        const address = document.getElementById("address").value;
-        const landmark = document.getElementById("landmark").value;
-        const city = document.getElementById("city").value;
-        const state = document.getElementById("state").value;
-        const pincode = document.getElementById("pincode").value;
+        console.log('in adddd aaaadresssssssssssssss');
+        
+        const name = document.querySelector("#newAddress2 input[name='name']").value;
+        const phone = document.querySelector("#newAddress2 input[name='phone']").value;
+        const email = document.querySelector("#newAddress2 input[name='email']").value;
+        const address = document.querySelector("#newAddress2 input[name='address']").value;
+        const landmark = document.querySelector("#newAddress2 input[name='landmark']").value;
+        const city = document.querySelector("#newAddress2 input[name='city']").value;
+        const state = document.querySelector("#newAddress2 input[name='state']").value;
+        const pincode = document.querySelector("#newAddress2 input[name='pincode']").value;
 
+        console.log("Name:", name);
+        console.log("Phone:", phone);
+        console.log("Email:", email);
+        console.log("Address:", address);
+        console.log("Landmark:", landmark);
+        console.log("City:", city);
+        console.log("State:", state);
+        console.log("Pincode:", pincode);
+        
+
+        // Validation for each field
+        const nameError =document.querySelector('#newAddress2 #nameError');
+        console.log(nameError);
+        if (!name.trim()) {
+            console.log('name error und');
+            nameError.innerHTML = 'Name should not be empty';
+            return false;
+            console.log(nameError);
+
+        } else {
+            console.log('name error llyaaa');
+            nameError.textContent = '';
+        } 
+
+        const phoneError = document.querySelector('#newAddress2 #mobileError');
+        if (!phone.trim()) {
+            phoneError.textContent = 'Phone should not be empty';
+            return false;
+        } else {
+            phoneError.textContent = '';
+        }
+
+        const emailError = document.querySelector('#newAddress2 #emailError');
+        if (!email.trim()) {
+            emailError.textContent = 'Email should not be empty';
+            return false;
+        } else {
+            emailError.textContent = '';
+        }
+
+        const addressError = document.querySelector('#newAddress2 #addressError');
+        if (!address.trim()) {
+            addressError.textContent = 'Address should not be empty';
+            return false;
+        } else {
+            addressError.textContent = '';
+        }
+
+        const landmarkError = document.querySelector('#newAddress2 #landmarkError');
+        if (!landmark.trim()) {
+            landmarkError.textContent = 'Landmark should not be empty';
+            return false;
+        } else {
+            landmarkError.textContent = '';
+        }
+
+        const cityError =document.querySelector('#newAddress2 #cityError');
+        if (!city.trim()) {
+            cityError.textContent = 'City should not be empty';
+            return false;
+        } else {
+            cityError.textContent = '';
+        }
+
+        const stateError = document.querySelector('#newAddress2 #stateError');
+        if (!state.trim()) {
+            stateError.textContent = 'State should not be empty';
+            return false;
+        } else {
+            stateError.textContent = '';
+        }
+
+        const pincodeError = document.querySelector('#newAddress2 #pincodeError');
+        if (!pincode.trim()) {
+            pincodeError.textContent = 'Pincode should not be empty';
+            return false;
+        } else {
+            pincodeError.textContent = '';
+        }
+        console.log("add address body:", name, phone, email, address, landmark, state, city, pincode);
+
+        fetch("/addAddress", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({
+                name,
+                phone,
+                email,
+                address,
+                landmark,
+                state,
+                city,
+                pincode,
+            }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.added) {
+                    window.location.reload();
+                } else if(!data.validate){
+                    alert('joi error')
+                    console.log('joi error details:',data.message)
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    function addAddressExtra() {
+        console.log('in adddd aaaadresssssssssssssss');
+        
+        const name = document.querySelector("#addAddressExtra input[name='name']").value;
+        const phone = document.querySelector("#addAddressExtra input[name='phone']").value;
+        const email = document.querySelector("#addAddressExtra input[name='email']").value;
+        const address = document.querySelector("#addAddressExtra input[name='address']").value;
+        const landmark = document.querySelector("#addAddressExtra input[name='landmark']").value;
+        const city = document.querySelector("#addAddressExtra input[name='city']").value;
+        const state = document.querySelector("#addAddressExtra input[name='state']").value;
+        const pincode = document.querySelector("#addAddressExtra input[name='pincode']").value;
+
+        console.log("Name:", name);
+        console.log("Phone:", phone);
+        console.log("Email:", email);
+        console.log("Address:", address);
+        console.log("Landmark:", landmark);
+        console.log("City:", city);
+        console.log("State:", state);
+        console.log("Pincode:", pincode);
+        
+
+        // Validation for each field
+        const nameError =document.querySelector('#addAddressExtra #nameError');
+        console.log(nameError);
+        if (!name.trim()) {
+            console.log('name error und');
+            nameError.innerHTML = 'Name should not be empty';
+            return false;
+            console.log(nameError);
+
+        } else {
+            console.log('name error llyaaa');
+            nameError.textContent = '';
+        } 
+
+        const phoneError = document.querySelector('#addAddressExtra #mobileError');
+        if (!phone.trim()) {
+            phoneError.textContent = 'Phone should not be empty';
+            return false;
+        } else {
+            phoneError.textContent = '';
+        }
+
+        const emailError = document.querySelector('#addAddressExtra #emailError');
+        if (!email.trim()) {
+            emailError.textContent = 'Email should not be empty';
+            return false;
+        } else {
+            emailError.textContent = '';
+        }
+
+        const addressError = document.querySelector('#addAddressExtra #addressError');
+        if (!address.trim()) {
+            addressError.textContent = 'Address should not be empty';
+            return false;
+        } else {
+            addressError.textContent = '';
+        }
+
+        const landmarkError = document.querySelector('#addAddressExtra #landmarkError');
+        if (!landmark.trim()) {
+            landmarkError.textContent = 'Landmark should not be empty';
+            return false;
+        } else {
+            landmarkError.textContent = '';
+        }
+
+        const cityError =document.querySelector('#addAddressExtra #cityError');
+        if (!city.trim()) {
+            cityError.textContent = 'City should not be empty';
+            return false;
+        } else {
+            cityError.textContent = '';
+        }
+
+        const stateError = document.querySelector('#addAddressExtra #stateError');
+        if (!state.trim()) {
+            stateError.textContent = 'State should not be empty';
+            return false;
+        } else {
+            stateError.textContent = '';
+        }
+
+        const pincodeError = document.querySelector('#addAddressExtra #pincodeError');
+        if (!pincode.trim()) {
+            pincodeError.textContent = 'Pincode should not be empty';
+            return false;
+        } else {
+            pincodeError.textContent = '';
+        }
         console.log("add address body:", name, phone, email, address, landmark, state, city, pincode);
 
         fetch("/addAddress", {

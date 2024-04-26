@@ -34,27 +34,12 @@
                             </button>
                         </li>
                         <li>
-                            <button data-bs-toggle="tab" data-bs-target="#list">
+                            <button data-bs-toggle="tab" data-bs-target="">
                                 <i class="fa fa-list"></i>
                             </button>
                         </li>
                     </ul>
                 </div>
-                <div class="dropdown dropdown-hover">
-                    <a class="btn btn-light  dropdown-toggle" href="#" role="button">
-                      Filter by category:
-                    </a>
-                    <ul class="dropdown-menu border-0" role="menu">
-                        <li><a class="dropdown-item" href="/shop" >All</a></li>
-
-                        <%categories.forEach((category)=>{%>
-                            <%if(!category.isBlocked){%>
-                                <li><a class="dropdown-item" onclick="filterCategory('<%=category._id%>')" ><%=category.name%></a></li>
-                            <%}%>
-                        <%})%>
-                    </ul>
-                </div>
-
                 <div class="dropdown dropdown-hover">
                     <a class="btn btn-light dropdown-toggle" href="#" role="button"> Sort by: </a>
                     <ul class="dropdown-menu border-0" role="menu">
@@ -67,6 +52,8 @@
                         <li><a class="dropdown-item" onclick="sortProducts('7')">Z to A</a></li>
                     </ul>
                 </div>
+
+                
             </div>
             <!-- Shop top Bar End -->
             <div class="row">
@@ -94,13 +81,7 @@
                             </div>
                         </div>
                         <!-- Sidebar Widget End -->
-                        <div class="sidebar-widget">
-                            <h4 class="widget-title">Filter By Price</h4>
-
-                            <div class="widget-price">
-                                <input id="price-range" type="text" />
-                            </div>
-                        </div>
+                        
                     </div>
                     <!-- Sidebar End -->
                 </div>
@@ -159,46 +140,61 @@
                 <div class="tab-content mb-5 col-lg-9" >
                     <div class="tab-pane fade" id="list">
                         <!-- Shop Product Wrapper Start -->
+                        <div class="col-lg-4 col-sm-6">
                         <div class="shop-product-wrapper">
-                            <!-- Single Product Start -->
-                            <div class="single-product-02 product-list">
-                                <div class="product-images">
-                                    <a href="#"><img src="assets/images/product/product-01.jpg" width="270" height="303" alt="product" /></a>
+                            <%products.forEach((product)=>{%> <%if(!product.isDeleted && !product.isCategoryBlocked){%>
 
-                                    <ul class="product-meta">
-                                        <li>
-                                            <a class="action" data-bs-toggle="modal" data-bs-target="#quickView" href="#"><i class="pe-7s-search"></i></a>
-                                        </li>
-                                        <li>
-                                            <a class="action" href="#"><i class="pe-7s-shopbag"></i></a>
-                                        </li>
-                                        <li>
-                                            <a class="action" href="#"><i class="pe-7s-like"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
+
+                            <!-- Single Product Start -->
+                            <div class="single-product">
+                                <a href="/productDetails?id=<%=product._id%>"><img src="/multer/products/<%=product.images.image1%>" width="270" height="303" alt="product" /></a>
                                 <div class="product-content">
                                     <h4 class="title">
-                                        <a href="product-details.html">Elona bedside grey table</a>
+                                        <a href=""><%=product.name%></a>
                                     </h4>
                                     <div class="price">
-                                        <span class="sale-price">$40.00</span>
+                                        <span class="sale-price">₹<%=product.price%></span>
+                                        <%if(product.productDiscount || product.categoryDiscount){%>
+                                        <span class="old-price">₹<%=product.orgPrice%></span>
+                                        <%}%>
+                                        
                                     </div>
-                                    <p>
-                                        Block out the haters with the fresh adidas® Originals Kaval Windbreaker Jacket. Part of the Kaval Collection. Regular fit is eased, but not sloppy, and perfect
-                                        for any activity. Plain-woven jacket specifically constructed for freedom of movement.
-                                    </p>
                                 </div>
+                                <ul class="product-meta">
+                                    <li>
+                                        <%if(locals.user){%>
+                                        <a class="action" onclick="addToCart('<%=product._id%>')"><i class="pe-7s-shopbag"></i></a>
+                                        <%}else{%>
+                                        <a class="action" onclick="showLoginAlert()"><i class="pe-7s-shopbag"></i></a>
+                                        <%}%>
+                                    </li>
+                                    <li id="wishlist-icon">
+                                        <%if(locals.user){%>
+                                        <a id="wishlstIcon" class="action" onclick="addToWishlist('<%=product._id%>')">
+                                            <i
+                                                id="wishlistIcon-<%=product._id%>"
+                                                class="<%=wishlist?.products?.some((item)=>item.productId.equals(product._id))?'fa-solid':'fa-regular' %> fa-heart"
+                                            ></i>
+                                        </a>
+                                        <%}else{%>
+                                        <a class="action" onclick="showLoginAlert()"><i class="pe-7s-like"></i></a>
+
+                                        <%}%>
+                                    </li>
+                                </ul>
                             </div>
                             <!-- Single Product End -->
+                            <%}%>
+                        <%})%>
                         </div>
+                    </div>
                         <!-- Shop Product Wrapper End -->
                     </div>
                 </div>
             </div>
             <!-- Page pagination Start -->
 
-            <div class="page-pagination">
+            <div class="page-pagination mb-5">
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
                         <a class="page-link" href="/shop?page=<%=previousPage%>"><i class="fa fa-angle-left"></i></a>
