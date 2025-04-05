@@ -1,14 +1,32 @@
-.profileImage-section{
-    width: 100px; /* Adjust the width and height as needed */
-  height: 100px;
-  border-radius: 50%; /* Makes the image circular */
-  overflow: hidden; /* Hides overflow content beyond the circular shape */
-  border: 2px solid #fff; /* Optional: Adds a border around the image */
-  display: flex;
-  justify-content: center;
+body {
+    font-family: 'fontspring-bold', sans-serif;
 }
 
-.profileImage-section img{
+@font-face {
+  font-family: 'fontspring-bold';
+  src: url('../fonts/Fontspring-bold.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.profileImage-section {
+    width: 100px; /* Adjust the width and height as needed */
+    height: 100px;
+    border-radius: 50%; /* Makes the image circular */
+    overflow: hidden; /* Hides overflow content beyond the circular shape */
+    border: 2px solid #fff; /* Optional: Adds a border around the image */
+    display: flex;
+    justify-content: center;
+}
+
+.profileImage-section img {
     width: 100%; /* Makes the image fill the container */
     height: auto; /* Maintains the aspect ratio of the image */
 }
+
+.title-landingpage {
+    font-size: 45px;
+    color: #202020;
+}
+
+

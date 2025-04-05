@@ -1,5 +1,3 @@
-// const Users=require('../model/userModel');
-
 function paginatedResult(model){
     return async (req,res,next)=>{
         console.log('model:',model);

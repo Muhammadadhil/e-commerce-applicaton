@@ -119,31 +119,6 @@ const editProfile=async (req,res)=>{
     }
 }
 
-const loadBlogPage=async (req,res)=>{
-    try {
-        const user=req.session.userId;
-        const {itemsCount}=await getCartDetails(user);
-        res.render('blog',{user,itemsCount});
-        
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).render('Error-500')
-    }
-}
-
-const loadContactPage=async (req,res)=>{
-    try {
-        const user=req.session.userId;
-        const {itemsCount}=await getCartDetails(user);
-        res.render('contact',{user,itemsCount});
-        
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).render('Error-500')
-    }
-}
-
-
 //loading the shop page
 const loadShop=async (req,res)=>{
     try {
@@ -520,8 +495,6 @@ module.exports={
     loginCheck,
     loadProductDetails,
     userLogout,
-    loadBlogPage,
-    loadContactPage,
     editProfile,
     otpVerificationEmail,
     searchProducts,

@@ -29,13 +29,6 @@ router.get('/shop',auth.isUserBlocled,userController.loadShop);
 router.get('/productDetails',auth.isUserBlocled,userController.loadProductDetails);
 router.get('/search',userController.searchProducts);
 
-
-//blog
-router.get('/blog',auth.isUserBlocled,userController.loadBlogPage);
-
-//contact
-router.get('/contact',auth.isUserBlocled,userController.loadContactPage);
-
 //cart
 router.get('/cart',auth.isUserBlocled,auth.isLogin,cartController.loadCartPage);
 router.post('/addToCart',auth.isLogin,cartController.addProductsToCart);
@@ -95,10 +88,6 @@ router.get('/removeItemFromWishlist',auth.isLogin,userHelpController.removeFromW
 
 //logout
 router.get('/logout',userController.userLogout);
-
-
-
-
 
 
 

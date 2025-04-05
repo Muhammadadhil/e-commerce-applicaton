@@ -1,28 +1,6 @@
 const Joi=require('joi')
 const { schema } = require('../model/userModel')
 
-// const registerationSchema=Joi.object({
-//     firstName:Joi.string().required(),
-//     lastName: Joi.string().required(),
-//     email:Joi.string().email().required(),
-//     mobile:Joi.string().required(),
-//     password:Joi.string().min(6).required(),
-//     confirmPassword:Joi.string().valid(Joi.ref('password')).required().messages({
-//         'any.only': 'Password and Confirm Password must match',
-//     })
-// });
-
-// const AddressSchema=Joi.object({
-//     name: Joi.string().required(),
-//     landmark: Joi.string().required(),
-//     city: Joi.string().required(),
-//     phone: Joi.number().required(),
-//     address: Joi.string().required(),
-//     state: Joi.string().required(),
-//     pincode: Joi.number().required(),
-//     email: Joi.string().email().required(),
-// })
-
 const AddressSchema = Joi.object({
     name: Joi.string().required().messages({
         'any.required': 'Name is required.',
@@ -62,14 +40,9 @@ const AddressSchema = Joi.object({
 
 const validateAddress=(req,res,next)=>{
     const { addressId, ...bodyWithoutAddressId } = req.body;
-    
-
-    console.log('reached hereeeeeeeee in validate adddresssssssssssssssss');
-    
     const {error}=AddressSchema.validate(req.bodyWithoutAddressId);
 
     if(error){
-        // console.log('joi: errror detailss:',error.details);
         return res.status(400).json({validate:false,message:error.details});
     }
 

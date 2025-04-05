@@ -254,7 +254,6 @@ const cancelProductOrder=async (req,res)=>{
     try {
         const userId=req.session.userId;
         const {orderId,productId,text}=req.body;
-        console.log('orderId,productId',orderId,productId);
 
         const updateData=await Order.findOneAndUpdate({_id:orderId,'products.productId':productId},
         {
@@ -262,7 +261,7 @@ const cancelProductOrder=async (req,res)=>{
 
         },{new:true})
         
-        if(updateData.payment!=="cash on delivery"){
+        if(updateData.payment !== "cash on delivery"){
             let returnPrice;
             const date=new Date();
             updateData.products.forEach((product) => {
