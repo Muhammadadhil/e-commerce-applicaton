@@ -1,12 +1,9 @@
 <%- include('../layouts/header.ejs') -%>
-<!-- <a href="/logout" class="btn btn-close mt-5"> Logout</a> -->
 <!-- My Account Section Start -->
-
 <!-- Button trigger modal -->
 <div class="section section-padding mt-4">
     <div class="container">
         <hr />
-
         <div class="row gy-4 mt-5">
             <div class="col-md-3">
                 <!-- My Account Menu Start -->
@@ -49,7 +46,7 @@
                                     <div class="user-info-card">
                                         <div class="card-body">
                                             <ol class="user-info">
-                                                <li class="">Firstname: <span style="font-weight: 200"><%=userData.firstName%></span></li>
+                                                <li class="info-label">Firstname:<%=userData.firstName%></li>
                                                 <br />
                                                 <li class="info-label">Lastname:<%=userData.lastname%></li>
                                                 <br />
@@ -171,7 +168,7 @@
                                     </div>
                                 </div>
                                 <% }) %> <% } else { %>
-                                <div class="col-md-12 my-account-address account-wrapper">
+                                <div class="col-md-12 my-account-address account-wrapper mt-5">
                                     <p>No Addresses found</p>
                                 </div>
                                 <% } %>
@@ -418,7 +415,6 @@
     <!-- My Account Section End -->
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
 
     <script>
         function formatDate(dateString) {
@@ -436,7 +432,6 @@
             const state = document.querySelector('#addAddressModal input[name="state"]').value;
             const city = document.querySelector('#addAddressModal input[name="city"]').value;
             const pincode = document.querySelector('#addAddressModal input[name="pincode"]').value;
-            // const addressId=document.querySelector('#addAddressModal input[name="addressId"]').value;
 
             console.log("bod:", name, phone, email, address, landmark, state, city, pincode);
             const commonError = document.getElementById("AddAddressError");
@@ -476,8 +471,6 @@
         }
 
         function removeAddress(addressId) {
-            console.log("reched delete address::::::::::::");
-
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",

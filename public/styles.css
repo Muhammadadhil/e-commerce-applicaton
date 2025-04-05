@@ -3,3 +3,13 @@ body {
 }
 
 
+body {
+    font-family: 'fontspring-bold', sans-serif;
+}
+
+@font-face {
+  font-family: 'fontspring-bold';
+  src: url('../fonts/Fontspring-bold.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
