@@ -35,38 +35,38 @@
                                         <%=i+1%>
                                     </td>
                                     <td class="product-thumb">
-                                        <a href="/productDetails?id=<%=item.productId._id%>"><img   src="/multer/products/<%=item.productId.images?.image1%>" alt="**" /></a>
+                                        <a href="/productDetails?id=<%=item.productId?._id%>"><img   src="<%=item.productId?.images?.image1%>" alt="**" /></a>
                                     </td>
                                     <td class="product-info">
                                         <h6 class="name">
-                                            <a href="/productDetails?id=<%=item.productId._id%>"><%=item.productId.name%></a>
+                                            <a href="/productDetails?id=<%=item.productId?._id%>"><%=item.productId?.name%></a>
                                         </h6>
                                         <div class="product-prices">
-                                            <%if(item.productId.productDiscount || item.productId.categoryDiscount){%>
-                                                <span class="old-price">₹<%=item.productId.orgPrice%></span>
+                                            <%if(item.productId?.productDiscount || item.productId?.categoryDiscount){%>
+                                                <span class="old-price">₹<%=item.productId?.orgPrice%></span>
                                             <%}%>
                                             <!-- <span class="old-price"></span> -->
-                                            <span class="sale-price">₹<%=item.productId.price%></span>
+                                            <span class="sale-price">₹<%=item.productId?.price%></span>
                                         </div>
                                         <div class="product-size-color">
-                                            <p><span class="text-muted"><%=item.productId.description%></span></p>
+                                            <p><span class="text-muted"><%=item.productId?.description%></span></p>
                                         </div>
                                         <div class="mt-2">
                                             <span class="text-muted lable">Stock:</span>
-                                            <%if(item.productId.quantity<1){%>
+                                            <%if(item.productId?.quantity<1){%>
                                             <span class="value text-danger">Sold Out</span>
-                                            <%}else if(item.productId.quantity>11){%>
+                                            <%}else if(item.productId?.quantity>11){%>
                                             <span class="value">Available</span>
-                                            <%}else if(item.productId.quantity<11) {%>
+                                            <%}else if(item.productId?.quantity<11) {%>
                                             <span class="value text-danger">hurry! only few left</span>
                                             <%}%>
                                         </div>
                                     </td>
                                     <td class="product-action">
-                                        <a onclick="addToCart('<%=item.productId._id%>')" class="btn btn-dark btn-hover-primary">add to cart</a>
+                                        <a onclick="addToCart('<%=item.productId?._id%>')" class="btn btn-dark btn-hover-primary">add to cart</a>
                                     </td>
                                     <td class="product-action">
-                                        <button onclick="removeItem('<%=item.productId._id%>')" class="alert-success border-0 ">
+                                        <button onclick="removeItem('<%=item.productId?._id%>')" class="alert-success border-0 ">
                                             remove
                                         </button>
                                     </td>
@@ -175,7 +175,7 @@
 <script>
 
     function removeItem(productId){
-        axios.get(`/removeItemFromWishlist?id=${productId}`)
+        axios.delete(`/wishlist/${productId}`)
         .then((res)=>{
             if(res.data.removed){
                 window.location.reload();

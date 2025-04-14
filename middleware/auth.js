@@ -60,12 +60,9 @@ const isUserBlocled=async (req,res,next)=>{
     try{
         const user=req.session.userId
         const blockedUser=await User.findOne({_id:user,isBlocked:true});
-        // console.log('blockedUser:',blockedUser);
         if(blockedUser){
             delete req.session.userId;
-            // req.flash('blocked','you are blocked by admin')
             res.redirect('/');
-            
         }else{
             next();
         }

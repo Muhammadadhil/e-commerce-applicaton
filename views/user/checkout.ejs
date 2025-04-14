@@ -1,87 +1,72 @@
 <%-include('../layouts/header')%>
 
-
-
 <!-- Checkout Section Start -->
 <div class="section section-padding mt-5">
     <div class="container">
-    
         <div class="checkout-info">
             <p class="info-header">
                 <i class="fa fa-exclamation-circle"></i> Have a coupon?
-                <a  data-bs-toggle="modal" data-bs-target="#couponModel">Click here to enter your code</a>
+                <a data-bs-toggle="modal" data-bs-target="#couponModel">Click here to enter your code</a>
             </p>
             <!-- Modal -->
             <div class="modal fade" id="couponModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Coupon</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="card-body">
-                            <form action="">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="single-form">
-                                            <input type="text" placeholder="Coupon code" id="couponCode" required />
-                                            <span id="couponCodeError" class="text-danger"></span>
-                                            <span id="couponCodeSuccess" class="text-success "></span>
-        
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Coupon</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card-body">
+                                <form action="">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="single-form">
+                                                <input type="text" placeholder="Coupon code" id="couponCode" required />
+                                                <span id="couponCodeError" class="text-danger"></span>
+                                                <span id="couponCodeSuccess" class="text-success"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="single-form">
+                                                <button onclick="applyCoupon(event)" class="btn btn-primary btn-hover-dark">Apply Coupon</button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
-                                        <div class="single-form">
-                                            <button onclick="applyCoupon(event)" class="btn btn-primary btn-hover-dark">Coupon</button>
+                                </form>
+                                <div class="row">
+                                    <div class="col-lg-3 mt-4 mb-4">
+                                        <%if(coupons){%> <%coupons.forEach((coupon)=>{%>
+
+                                        <div class="card coupon-card border-2 rounded-3 mb-2">
+                                            <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                                <i class="fa fa-gift" aria-hidden="true"></i>
+                                                <h5 class="coupon-tag"><%=coupon.couponName%></h5>
+                                                <p class="coupon-text">
+                                                    Code: <b><%=coupon.couponCode%></b> <br />
+                                                    Discount Amount: <b><%=coupon.discountAmount%> </b><br />
+                                                    Critria Amount: <b><%=coupon.criteriaAmount%></b>
+                                                </p>
+                                                <p class="text-muted">Copy the code</p>
+                                            </div>
                                         </div>
+
+                                        <%})%> <%}%>
                                     </div>
                                 </div>
-                            </form>
-                            <div class="row">
-                           <div class="col-lg-3 mt-4 mb-4">
-                                <%if(coupons){%>
-                                    <%coupons.forEach((coupon)=>{%>
-                                        
-                                            <div class="card coupon-card border-2 rounded-3 mb-2">
-                                                <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                                                    <i class="fa fa-gift" aria-hidden="true"></i>
-                                                    <h5 class="coupon-tag"><%=coupon.couponName%></h5>
-                                                    <p class="coupon-text">
-                                                        Code: <b><%=coupon.couponCode%></b> <br />
-                                                        Discount Amount: <b><%=coupon.discountAmount%> </b><br />
-                                                        Critria Amount: <b><%=coupon.criteriaAmount%></b> 
-                                                        
-                                                    </p>
-                                                    <p class="text-muted ">
-                                                        Copy the code
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        
-                                    <%})%>
-                                <%}%>
                             </div>
-                            </div>
-                        </div>  
+                        </div>
                     </div>
-                    
-                </div>
                 </div>
             </div>
 
-
-            <div class="collapse" id="coupon">
-                
-            </div>
+            <div class="collapse" id="coupon"></div>
         </div>
         <div class="single-form checkbox-checkbox mb-5">
             <input type="checkbox" id="shipping" />
-            <label for="shipping">
-                <span></span> Ship to a different
-                address?</label>
+            <label for="shipping"> <span></span> Ship to a different address?</label>
         </div>
 
         <div class="checkout-shipping">
@@ -97,57 +82,56 @@
                                 <div class="col-sm-12">
                                     <div class="single-form">
                                         <input type="text" name="name" id="name" placeholder="name" />
-                                        <p id="nameError" class="error-message text-danger "></p>
+                                        <p id="nameError" class="error-message text-danger"></p>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="single-form">
                                         <input type="text" name="phone" id="phone" placeholder="mobile number" />
-                                        <p id="mobileError" class="error-message text-danger  "></p>
+                                        <p id="mobileError" class="error-message text-danger"></p>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="single-form">
                                         <input type="text" name="email" id="email" placeholder="Email address" />
-                                        <p id="emailError" class="error-message text-danger "></p>
+                                        <p id="emailError" class="error-message text-danger"></p>
                                     </div>
                                 </div>
-    
+
                                 <div class="col-sm-12">
                                     <div class="single-form">
                                         <input type="text" name="address" id="address" placeholder="Flat, House no., Building, Company, Apartment" />
-                                        <p id="addressError" class="error-message text-danger "></p>
+                                        <p id="addressError" class="error-message text-danger"></p>
                                     </div>
                                 </div>
-    
+
                                 <div class="col-sm-12">
                                     <div class="single-form">
                                         <input type="text" name="landmark" id="landmark" placeholder="Landmark" value="" />
-                                        <p id="landmarkError" class="error-message text-danger "></p>
+                                        <p id="landmarkError" class="error-message text-danger"></p>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="single-form">
                                         <input type="text" name="city" id="city" placeholder="city" />
                                         <p id="cityError" class="error-message text-danger"></p>
-
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="single-form">
                                         <input type="text" name="state" id="state" placeholder="state" />
-                                        <p id="stateError" class="error-message text-danger "></p>
+                                        <p id="stateError" class="error-message text-danger"></p>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="single-form">
                                         <input type="text" name="pincode" id="pincode" placeholder="Pincode" />
-                                        <p id="pincodeError" class="error-message text-danger "></p>
+                                        <p id="pincodeError" class="error-message text-danger"></p>
                                     </div>
                                 </div>
                             </div>
                             <div class="single-form">
-                                <button type="submit"  class="btn btn-primary btn-hover-dark d-block">add address</button>
+                                <button type="submit" class="btn btn-primary btn-hover-dark d-block">add address</button>
                             </div>
                         </form>
                     </div>
@@ -155,160 +139,149 @@
                 </div>
             </div>
         </div>
-        
+
         <%if(!userAddresses?.address.length<1){%>
-            <div class="col checkout-form">
-                <div class="checkout-title">
-                    <h4 class="title">Billing Address</h4>
+        <div class="col checkout-form">
+            <div class="checkout-title">
+                <h4 class="title">Billing Address</h4>
+            </div>
+            <div class="row">
+                <div class="col-lg-7">
+                    <%if(userAddresses){%> <%userAddresses?.address.forEach((address,index)=>{%>
+                    <div class="text-start">
+                        <br />
+                        <div class="card card-dashboard">
+                            <div class="card-body" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1)">
+                                <input type="radio" id="addressId" name="addressId" value="<%=address._id%>" <%if(index==0){%> checked <%}%> >
+                                <p>
+                                    Name: <%=address.name%> <br />
+                                    Mobile: <%=address.phone%> <br />
+                                    City: <%=address.city%><br />
+                                    Email: <%=address.email%><br />
+                                    Landmark: <%=address.landmark%><br />
+                                    Address: <%=address.address%><br />
+                                    Landmark: <%=address.state%><br />
+                                    Pincode: <%=address.pincode%><br />
+                                </p>
+
+                                <a class="g-4" onclick="getAddressFeilds('<%=address._id%>')" data-bs-toggle="modal" data-bs-target="#editAddressModal" id="editAddress"><i class="fa fa-edit"></i></a>
+                                <a class="g-4" onclick="removeAddress('<%=address._id%>')" id="removeAddress"><i class="fa fa-trash"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %> <%}%>
                 </div>
+
+                <%}else{%>
+
                 <div class="row">
                     <div class="col-lg-7">
-                        <%if(userAddresses){%>
-                            <%userAddresses?.address.forEach((address,index)=>{%>
-                                <div class=" text-start " >
-                                    <br>
-                                    <div class="card card-dashboard">
-                                        <div class="card-body" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1)">
-                                            
-                                            <input type="radio" id="addressId" name="addressId" value="<%=address._id%>" <%if(index==0){%> checked <%}%> >
-                                            <p> 
-                                                Name:  <%=address.name%> <br>
-                                                Mobile:  <%=address.phone%>  <br>    
-                                                City:  <%=address.city%><br>       
-                                                Email:   <%=address.email%><br>      
-                                                Landmark:   <%=address.landmark%><br>       
-                                                Address:    <%=address.address%><br>        
-                                                Landmark:   <%=address.state%><br>      
-                                                Pincode:    <%=address.pincode%><br>
-                                            </p>  
-                                            
-                                                <a class="g-4" onclick="getAddressFeilds('<%=address._id%>')" data-bs-toggle="modal" data-bs-target="#editAddressModal" id="editAddress"><i
-                                                    class="fa fa-edit"></i></a>
-                                                <a class="g-4" onclick="removeAddress('<%=address._id%>')" id="removeAddress"><i
-                                                    class="fa fa-trash"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            <% }) %>
-                        <%}%>
-                    </div>      
-                
-        
-                <%}else{%>
-                    
-                        <div class="row">
-                            <div class="col-lg-7">
-                                <!-- Checkout Form Start -->
-                                                        
-                                <div class="checkout-form">
-                                    <div class="checkout-title">
-                                        <h4 class="title">Add Billing Address</h4>
-                                    </div>
-                                    <form id="newAddress2" action="" onsubmit="return addAddress()" method="">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="single-form">
-                                                    <input type="text" name="name" id="name" placeholder="name" />
-                                                    <p id="nameError" class="error-message text-danger "></p>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="single-form">
-                                                    <input type="text" name="phone" id="phone" placeholder="mobile number" />
-                                                    <p id="mobileError" class="error-message text-danger  "></p>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="single-form">
-                                                    <input type="text" name="email" id="email" placeholder="Email address" />
-                                                    <p id="emailError" class="error-message text-danger "></p>
-                                                </div>
-                                            </div>
-                
-                                            <div class="col-sm-12">
-                                                <div class="single-form">
-                                                    <input type="text" name="address" id="address" placeholder="Flat, House no., Building, Company, Apartment" />
-                                                    <p id="addressError" class="error-message text-danger "></p>
-                                                </div>
-                                            </div>
-                
-                                            <div class="col-sm-12">
-                                                <div class="single-form">
-                                                    <input type="text" name="landmark" id="landmark" placeholder="Landmark" value="" />
-                                                    <p id="landmarkError" class="error-message text-danger "></p>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <div class="single-form">
-                                                    <input type="text" name="city" id="city" placeholder="city" />
-                                                    <p id="cityError" class="error-message text-danger"></p>
+                        <!-- Checkout Form Start -->
 
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <div class="single-form">
-                                                    <input type="text" name="state" id="state" placeholder="state" />
-                                                    <p id="stateError" class="error-message text-danger "></p>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <div class="single-form">
-                                                    <input type="text" name="pincode" id="pincode" placeholder="Pincode" />
-                                                    <p id="pincodeError" class="error-message text-danger "></p>
-                                                </div>
-                                            </div>
-                                        </div>
+                        <div class="checkout-form">
+                            <div class="checkout-title">
+                                <h4 class="title">Add Billing Address</h4>
+                            </div>
+                            <form id="newAddress2" action="" onsubmit="return addAddress()" method="">
+                                <div class="row">
+                                    <div class="col-sm-12">
                                         <div class="single-form">
-                                            <button type="submit"  class="btn btn-primary btn-hover-dark d-block">add address</button>
+                                            <input type="text" name="name" id="name" placeholder="name" />
+                                            <p id="nameError" class="error-message text-danger"></p>
                                         </div>
-                                    </form>
-                                </div>
-                                <!-- Checkout Form End -->
-                        </div>
-                            
-                <%}%>
-                <!-- order area -->
-                <div class="col-lg-5 mb-5">
-                    <div class="checkout-order">
-                        <div class="checkout-title">
-                            <h4 class="title">Your Order</h4>
-                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="single-form">
+                                            <input type="text" name="phone" id="phone" placeholder="mobile number" />
+                                            <p id="mobileError" class="error-message text-danger"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="single-form">
+                                            <input type="text" name="email" id="email" placeholder="Email address" />
+                                            <p id="emailError" class="error-message text-danger"></p>
+                                        </div>
+                                    </div>
 
-                        <div class="checkout-order-table table-responsive">
-                            <table class="table" id="reloadPart">
-                                <thead>
-                                    <tr>
-                                        <th class="Product-name fw-bold">Product</th>
-                                        <th class="Product-price">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <%if(cartDetails){%>
-                                        <%cartDetails.product.forEach((product,i)=>{%>
-                                            <tr>
-                                                <td class="Product-name">
-                                                    <p><%=product.productId.name%> × <%=product.quantity%></p>
-                                                </td>
-                                                <td class="Product-price">
-                                                    <p>₹<%=product.productId.price%></p>
-                                                </td>
-                                            </tr>
-                                            <%})%>
-                                    <%}%>
-                                    
-                                </tbody>
-                                <tfoot >
-                                    
-                                    <tr>
-                                        <td class="Product-name">
-                                            <p class="fw-bold ">total</p>
-                                        </td>
-                                        <td class="Product-price">
-                                            <p id="subTotalAmount">₹<%=subTotal%></p>
-                                        </td>
-                                    </tr>
-                                    
-                                    <!-- <tr>
+                                    <div class="col-sm-12">
+                                        <div class="single-form">
+                                            <input type="text" name="address" id="address" placeholder="Flat, House no., Building, Company, Apartment" />
+                                            <p id="addressError" class="error-message text-danger"></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <div class="single-form">
+                                            <input type="text" name="landmark" id="landmark" placeholder="Landmark" value="" />
+                                            <p id="landmarkError" class="error-message text-danger"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="single-form">
+                                            <input type="text" name="city" id="city" placeholder="city" />
+                                            <p id="cityError" class="error-message text-danger"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="single-form">
+                                            <input type="text" name="state" id="state" placeholder="state" />
+                                            <p id="stateError" class="error-message text-danger"></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="single-form">
+                                            <input type="text" name="pincode" id="pincode" placeholder="Pincode" />
+                                            <p id="pincodeError" class="error-message text-danger"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="single-form">
+                                    <button type="submit" class="btn btn-primary btn-hover-dark d-block">add address</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- Checkout Form End -->
+                    </div>
+
+                    <%}%>
+                    <!-- order area -->
+                    <div class="col-lg-5 mb-5">
+                        <div class="checkout-order">
+                            <div class="checkout-title">
+                                <h4 class="title">Your Order</h4>
+                            </div>
+
+                            <div class="checkout-order-table table-responsive">
+                                <table class="table" id="reloadPart">
+                                    <thead>
+                                        <tr>
+                                            <th class="Product-name fw-bold">Product</th>
+                                            <th class="Product-price">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%if(cartDetails){%> <%cartDetails.product.forEach((product,i)=>{%>
+                                        <tr>
+                                            <td class="Product-name">
+                                                <p><%=product.productId.name%> × <%=product.quantity%></p>
+                                            </td>
+                                            <td class="Product-price">
+                                                <p>₹<%=product.productId.price%></p>
+                                            </td>
+                                        </tr>
+                                        <%})%> <%}%>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td class="Product-name">
+                                                <p class="fw-bold">total</p>
+                                            </td>
+                                            <td class="Product-price">
+                                                <p id="subTotalAmount">₹<%=subTotal%></p>
+                                            </td>
+                                        </tr>
+
+                                        <!-- <tr>
                                         <td class="Product-name">
                                             <p class="fw-bold ">Shipping</p>
                                         </td>
@@ -329,693 +302,400 @@
                                             </ul>
                                         </td>
                                     </tr> -->
-                                    <div >
-                                    <%if(cartDetails.couponDiscount){%>
-                                        <tr>
-                                            <td class="Product-name ">
-                                                <p class="fw-bold ">Subtotal</p>
-                                            </td>
-                                            <td class="Product-price">
-                                                <p>original amount ₹<span class="old-price"><%=subTotal%></span></p>
-                                                <p class="text-info ">applied <%=cartDetails.couponDiscount.couponName%> coupon</p>
-                                                <p>coupon discounted amount:  ₹<%=subTotal-cartDetails.couponDiscount.discountAmount%></p>
+                                        <div>
+                                            <%if(cartDetails.couponDiscount){%>
+                                            <tr>
+                                                <td class="Product-name">
+                                                    <p class="fw-bold">Subtotal</p>
+                                                </td>
+                                                <td class="Product-price">
+                                                    <p>original amount ₹<span class="old-price"><%=subTotal%></span></p>
+                                                    <p class="text-info">applied <%=cartDetails.couponDiscount.couponName%> coupon</p>
+                                                    <p>coupon discounted amount: ₹<%=subTotal-cartDetails.couponDiscount.discountAmount%></p>
 
-                                                <a onclick="removeCoupon('<%=cartDetails.couponDiscount._id%>')" class="text-muted">remove coupon?</a>
-                                            </td>
-                                        </tr>
-                                    <%}else{%>
-                                        <tr>
-                                            <td class="Product-name">
-                                                <p class="fw-bold ">Subtotal</p>
-                                            </td>
-                                            <td class="Product-price">
-                                                <p>₹<%=subTotal%></p>
-
-                                                <a style="color: black; text-decoration: none;" onmouseover="this.style.color='#f2a100'" onmouseout="this.style.color='black'"
-                                                data-bs-toggle="modal" data-bs-target="#couponModel">apply coupon
-                                                </a>
-                                                    
-                                            </td>
-                                        </tr>
-                                    <%}%>
-                                    </div>
-                                </tfoot>
-                            </table>
-                        </div>
-                        
-                        <div class="checkout-payment">
-                            <ul>
-                                <li>
-                                    <div class="single-payment">
-                                        <div class="payment-radio radio">
-                                            <p class="Product-name fw-bold ">Payment method</p>
-                                            <input type="radio" name="paymentmethod" value="online" id="bank" />
-                                            <label for="bank"><span></span>Online-Razorpay</label>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="single-payment">
-                                        <div class="payment-radio radio  ">
-                                            <%if(subTotal>=10000){%>
-                                                <small class="text-muted ">(cash on delivery is not supported for this order)</small><br>
+                                                    <a onclick="removeCoupon('<%=cartDetails.couponDiscount._id%>')" class="text-muted">remove coupon?</a>
+                                                </td>
+                                            </tr>
                                             <%}else{%>
-                                                <input type="radio" name="paymentmethod" value="cash on delivery" id="cash"  />
-                                                <label for="cash"><span></span> Cash on Delivery</label><br>
+                                            <tr>
+                                                <td class="Product-name">
+                                                    <p class="fw-bold">Subtotal</p>
+                                                </td>
+                                                <td class="Product-price">
+                                                    <p>₹<%=subTotal%></p>
+
+                                                    <a
+                                                        style="color: black; text-decoration: none"
+                                                        onmouseover="this.style.color='#f2a100'"
+                                                        onmouseout="this.style.color='black'"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#couponModel"
+                                                        >apply coupon
+                                                    </a>
+                                                </td>
+                                            </tr>
                                             <%}%>
-                                            <small class="text-danger " id="CODError" ></small>            
-  
-                                            <div class="payment-details">
-                                                <p>Pay with cash upon delivery.</p>
+                                        </div>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                            <div class="checkout-payment">
+                                <ul>
+                                    <li>
+                                        <div class="single-payment">
+                                            <div class="payment-radio radio">
+                                                <p class="Product-name fw-bold">Payment method</p>
+                                                <input type="radio" name="paymentmethod" value="online" id="bank" />
+                                                <label for="bank"><span></span>Online-Razorpay</label>
                                             </div>
                                         </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="single-payment">
-                                        <div class="payment-radio radio">
-                                            <input type="radio" name="paymentmethod" value="wallet" id="wallet" />
-                                            <label for="wallet"><span></span> Wallet</label>
+                                    </li>
+                                    <li>
+                                        <div class="single-payment">
+                                            <div class="payment-radio radio">
+                                                <%if(subTotal>=10000){%>
+                                                <small class="text-muted">(cash on delivery is not supported for this order)</small><br />
+                                                <%}else{%>
+                                                <input type="radio" name="paymentmethod" value="cash on delivery" id="cash" />
+                                                <label for="cash"><span></span> Cash on Delivery</label><br />
+                                                <%}%>
+                                                <small class="text-danger" id="CODError"></small>
 
-                                            <div class="payment-details">
-                                                <p>Pay with cash with your wallet money.</p>
+                                                <div class="payment-details">
+                                                    <p>Pay with cash upon delivery.</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </li>
-                                
-                                <span class="text-danger" id="paymentMethod-Error"></span>
-                            </ul>
+                                    </li>
+                                    <li>
+                                        <div class="single-payment">
+                                            <div class="payment-radio radio">
+                                                <input type="radio" name="paymentmethod" value="wallet" id="wallet" />
+                                                <label for="wallet"><span></span> Wallet</label>
 
-                            <div class="single-form">
-                                <button type="button" onclick="placeOrder()" class="btn btn-primary btn-hover-dark d-block">Place Order</button>
+                                                <div class="payment-details">
+                                                    <p>Pay with cash with your wallet money.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <span class="text-danger" id="paymentMethod-Error"></span>
+                                </ul>
+
+                                <div class="single-form">
+                                    <button type="button" onclick="placeOrder()" class="btn btn-primary btn-hover-dark d-block">Place Order</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        
-    </div>
-</div>
-<!-- Checkout Section End -->
-<!-- Edit address modal  -->
+        </div>
+        <!-- Checkout Section End -->
+        <!-- Edit address modal  -->
 
-<div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="">
-                <h5 class="modal-title" id="exampleModalLabel">Edit address</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="" >
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-md-6">
-                            <div class="single-form">
-                                <input type="text" name="name" />
-                                <p id="nameError" class="error-message text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="single-form">
-                                <input type="text" name="phone" placeholder="mobile number" />
-                                <p id="mobileError" class="error-message"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="single-form">
-                                <input type="text" name="email" placeholder="Email address" />
-                                <p id="emailError" class="error-message"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="single-form">
-                                <input type="text" name="address" placeholder="street address"/>
-                                <p id="addressError" class="error-message"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="single-form">
-                                <input type="text" name="landmark" placeholder="Landmark" value="" />
-                                <p id="landmarkError" class="error-message"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="single-form">
-                                <input type="text" name="state" placeholder="State" />
-                                <p id="stateError" class="error-message"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="single-form">
-                                <input type="text" name="city" placeholder="City" />
-                                <p id="cityError" class="error-message"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-4">
-                            <div class="single-form">
-                                <input type="text" name="pincode" placeholder="Pincode" />
-                                <p id="pincodeError" class="error-message"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <input type="text" name="addressId" hidden />
-
-                    <p id="editAddressError" class="error-message text-danger "></p>
-
+        <div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
                     <div class="">
-                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
-                        <button type="button" onclick="editAddress()" class="btn btn-primary">Save changes</button>
+                        <h5 class="modal-title" id="exampleModalLabel">Edit address</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                </form>
+                    <div class="modal-body">
+                        <form action="">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-md-6">
+                                    <div class="single-form">
+                                        <input type="text" name="name" />
+                                        <p id="nameError" class="error-message text-danger"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="single-form">
+                                        <input type="text" name="phone" placeholder="mobile number" />
+                                        <p id="mobileError" class="error-message"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="single-form">
+                                        <input type="text" name="email" placeholder="Email address" />
+                                        <p id="emailError" class="error-message"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="single-form">
+                                        <input type="text" name="address" placeholder="street address" />
+                                        <p id="addressError" class="error-message"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="single-form">
+                                        <input type="text" name="landmark" placeholder="Landmark" value="" />
+                                        <p id="landmarkError" class="error-message"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="single-form">
+                                        <input type="text" name="state" placeholder="State" />
+                                        <p id="stateError" class="error-message"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="single-form">
+                                        <input type="text" name="city" placeholder="City" />
+                                        <p id="cityError" class="error-message"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="single-form">
+                                        <input type="text" name="pincode" placeholder="Pincode" />
+                                        <p id="pincodeError" class="error-message"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="text" name="addressId" hidden />
+
+                            <p id="editAddressError" class="error-message text-danger"></p>
+
+                            <div class="">
+                                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                                <button type="button" onclick="editAddress()" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-<!-- Edit address modal end-->
+        <!-- Edit address modal end-->
 
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-<script>
-    
-    function removeCoupon(couponId){
-        console.log(couponId);
-        axios.post('/removeCoupon',{
-            couponId
-        })
-        .then((response)=>{
-            if(response.data.updated){
-                $('#reloadPart').load('/checkout #reloadPart ');
+        <script>
+            function removeCoupon(couponId) {
+                console.log(couponId);
+                axios
+                    .post("/removeCoupon", {
+                        couponId,
+                    })
+                    .then((response) => {
+                        if (response.data.updated) {
+                            $("#reloadPart").load("/checkout #reloadPart ");
+                        }
+                    })
+                    .catch((err) => {
+                        if (err) {
+                            throw err;
+                        }
+                    });
             }
-        })
-        .catch((err)=> {
-            if(err){
-                throw err
+
+            function applyCoupon(event) {
+                event.preventDefault();
+
+                const code = document.getElementById("couponCode").value;
+                const subTotalAmount = document.getElementById("subTotalAmount").textContent;
+                console.log("subTotalAmount:", subTotalAmount);
+                const errorElement = document.getElementById("couponCodeError");
+                const successElement = document.getElementById("couponCodeSuccess");
+
+                fetch(`/applyCoupon?cpn=${code}&total=${subTotalAmount}`)
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data.verify) {
+                            errorElement.innerHTML = "";
+                            successElement.innerHTML = `${data.couponData.couponName} coupon applied for the current order`;
+
+                            const totalPart = document.getElementById("reloadPart");
+                            $("#reloadPart").load("/checkout #reloadPart ");
+                        } else if (data.added == "already used") {
+                            successElement.innerHTML = "";
+                            errorElement.innerHTML = "Coupon already used";
+                        } else if (data.coupon == "criteria didnot reached") {
+                            successElement.innerHTML = "";
+                            errorElement.innerHTML = `this coupon is available for minimum purchase of ${data.couponData.criteriaAmount}`;
+                        } else if (!data.verify) {
+                            successElement.innerHTML = "";
+                            errorElement.innerHTML = "Enter correct coupon code";
+                        }
+                    });
             }
-        })
-    }
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 
-    function applyCoupon(event){
+        <script>
+            const notyf = new Notyf({
+                position: {
+                    x: "right",
+                    y: "top",
+                },
+            });
 
-        event.preventDefault();
+            function placeOrder() {
+                console.log("place order methodd");
+                let addressId = document.getElementById("addressId");
+                console.log("addressid:", addressId);
 
-        const code=document.getElementById('couponCode').value
-        const subTotalAmount=document.getElementById('subTotalAmount').textContent;
-        console.log('subTotalAmount:',subTotalAmount );
-        const errorElement=document.getElementById('couponCodeError');
-        const successElement=document.getElementById('couponCodeSuccess');
+                if (addressId == null) {
+                    console.log("no address");
+                    notyf.error("please add an address first");
+                    return;
+                } else {
+                    console.log("place order methodd ok");
+                    addressId = addressId.value;
+                    console.log("address added id:", addressId);
+                }
 
-        
-        fetch(`/applyCoupon?cpn=${code}&total=${subTotalAmount}`)
-        .then((res)=>res.json())
-        .then((data)=>{
-            if(data.verify){
-                errorElement.innerHTML='';
-                successElement.innerHTML=`${data.couponData.couponName} coupon applied for the current order`
-                
-                const totalPart=document.getElementById('reloadPart');
-                $('#reloadPart').load('/checkout #reloadPart ');
- 
-            }else if(data.added=='already used'){
-                successElement.innerHTML='';
-                errorElement.innerHTML='Coupon already used';
+                const paymentMethodElement = document.querySelector('.checkout-payment input[name="paymentmethod"]:checked');
+                let paymentMethod = "";
+
+                if (!paymentMethodElement) {
+                    const errorMessageElement = document.getElementById("paymentMethod-Error");
+                    errorMessageElement.textContent = "Please select a payment method.";
+                } else {
+                    const errorMessageElement = document.getElementById("paymentMethod-Error");
+                    paymentMethod = paymentMethodElement.value;
+                    errorMessageElement.textContent = "";
+                }
+
+                fetch("/placeOrder", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json;charset=utf-8",
+                    },
+                    body: JSON.stringify({
+                        addressId,
+                        paymentMethod,
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.codSuccess) {
+                            window.location.href = `/orderSuccess?id=${data.orderId}`;
+                        } else if (data.onlineSuccess) {
+                            console.log("data.order:", data.order);
+                            razorpayPayment(data.order);
+                        }
+                    })
+                    .catch((err) => {
+                        if (err) throw err;
+                    });
             }
-            else if(data.coupon=='criteria didnot reached'){
-                successElement.innerHTML='';
-                errorElement.innerHTML=`this coupon is available for minimum purchase of ${data.couponData.criteriaAmount}`;
 
-            }else if(!data.verify){
-                successElement.innerHTML='';
-                errorElement.innerHTML='Enter correct coupon code';
-            }
-            
-        })
-    }
-</script>
-<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+            function razorpayPayment(order) {
+                var options = {
+                    key: "rzp_test_bHCQ2sAI4219I7",
+                    amount: order.amount,
+                    currency: "INR",
+                    name: "Homiqo",
+                    description: "Test Transaction",
+                    image: "https://example.com/your_logo",
+                    order_id: order.id,
+                    // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+                    handler: function (response) {
+                        //handler after payment success
+                        console.log("response:", response);
+                        verifyPayment(response, order);
+                    },
+                    prefill: {
+                        name: "muhammad adhil",
+                        email: "aadhi@gmail.com",
+                        contact: "9000090000",
+                    },
+                    notes: {
+                        address: "Razorpay Corporate Office",
+                    },
+                    theme: {
+                        color: "#f2a100",
+                    },
+                };
 
-
-<script>
-    const notyf = new Notyf({
-        position: {
-            x: 'right',
-            y: 'top',
-    }});
-
-    function placeOrder(){
-        console.log('place order methodd');
-        let addressId=document.getElementById('addressId')
-        console.log('addressid:',addressId);
-
-        if(addressId==null){
-            console.log('no address');
-            notyf.error('please add an address first');         
-            return
-        }else{
-            console.log('place order methodd ok');
-            addressId=addressId.value;
-            console.log('address added id:',addressId);
-        }
-
-        const paymentMethodElement=document.querySelector('.checkout-payment input[name="paymentmethod"]:checked');
-        let paymentMethod='';
-        
-        if (!paymentMethodElement) {
-            const errorMessageElement = document.getElementById('paymentMethod-Error');
-            errorMessageElement.textContent = 'Please select a payment method.';
-            
-        } else {
-            const errorMessageElement = document.getElementById('paymentMethod-Error');
-            paymentMethod=paymentMethodElement.value;
-            errorMessageElement.textContent = '';
-        }
-        
-        fetch('/placeOrder',{
-            method:'POST',
-            headers:{
-                "content-type": "application/json;charset=utf-8"
-            },
-            body:JSON.stringify({
-                addressId,
-                paymentMethod
-            })
-        })
-        .then((response)=>response.json())
-        .then((data)=>{
-            if(data.codSuccess){
-                window.location.href=`/orderSuccess?id=${data.orderId}`
-            }else if(data.onlineSuccess){
-                console.log('data.order:',data.order);
-                razorpayPayment(data.order);
-            }
-        })
-        .catch((err)=>{
-            if (err) throw err
-        })
-    }
-
-    function razorpayPayment(order){
-
-        var options = {
-            "key": "rzp_test_bHCQ2sAI4219I7", 
-            "amount": order.amount, 
-            "currency": "INR",
-            "name": "Homiqo", 
-            "description": "Test Transaction",
-            "image": "https://example.com/your_logo",
-            "order_id": order.id, 
-            // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
-            "handler": function (response){                              //handler after payment success
-                console.log('response:',response);
-                verifyPayment(response,order);
-            },
-            "prefill": { 
-                "name": "muhammad adhil", 
-                "email": "aadhi@gmail.com", 
-                "contact": "9000090000" 
-            },
-            "notes": {
-                "address": "Razorpay Corporate Office"
-            },
-            "theme": {  
-                "color": "#f2a100"
-            }
-        };
-
-        var rzp1 = new Razorpay(options);
-        rzp1.on('payment.failed', function (response){
-            // alert(response.error.description);
-            window.location.href=`/orderFailure?id=${order.receipt}`
-
-        });
-
-        rzp1.open();
-    }
-
-    function verifyPayment(response,order){
-        fetch('/verifyPayment',{
-            method:"POST",
-            headers:{
-                "content-type": "application/json;charset=utf-8"
-            },
-            body:JSON.stringify({
-                response,
-                order
-            })
-        })
-        .then((res)=>res.json())
-        .then((data)=>{
-            if(data.statusChanged){
-                window.location.href=`/orderSuccess?id=${data.orderId}`
-            }
-        })   
-    }
-
-</script>
-
-<script>
-
-    function editAddress(){
-
-        console.log('reached here in edit address');
-        const name=document.querySelector('#editAddressModal input[name="name"]').value ;
-        const phone=document.querySelector('#editAddressModal input[name="phone"]').value;
-        const email=document.querySelector('#editAddressModal input[name="email"]').value;
-        const address=document.querySelector('#editAddressModal input[name="address"]').value;
-        const landmark=document.querySelector('#editAddressModal input[name="landmark"]').value;
-        const state= document.querySelector('#editAddressModal input[name="state"]').value ;
-        const city= document.querySelector('#editAddressModal input[name="city"]').value ;
-        const pincode=document.querySelector('#editAddressModal input[name="pincode"]').value ;
-        const addressId=document.querySelector('#editAddressModal input[name="addressId"]').value;
-
-        console.log('bod:',name,phone,email,address,landmark,state,city,pincode,addressId);
-        const commonError=document.getElementById('editAddressError');
-
-        fetch("/editAddress", {
-            method: "POST",
-            headers: {
-                "content-type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({
-                name,phone,email,address,landmark,state,city,pincode,addressId
-            }),
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            console.log("heyyyyyyyyyyyy",data);
-            if(data.edited){
-                console.log('heyyy brroooo');
-                window.location.reload();
-            }else if(!data.validate && data.message) {
-                let errorMessage = "";
-                data.message.forEach(detail => {
-                    errorMessage += `${detail.message}<br>`;
+                var rzp1 = new Razorpay(options);
+                rzp1.on("payment.failed", function (response) {
+                    // alert(response.error.description);
+                    window.location.href = `/orderFailure?id=${order.receipt}`;
                 });
-                commonError.innerHTML = errorMessage;
+
+                rzp1.open();
             }
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-    }
 
+            function verifyPayment(response, order) {
+                fetch("/verifyPayment", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json;charset=utf-8",
+                    },
+                    body: JSON.stringify({
+                        response,
+                        order,
+                    }),
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data.statusChanged) {
+                            window.location.href = `/orderSuccess?id=${data.orderId}`;
+                        }
+                    });
+            }
+        </script>
 
+        <script>
+            function editAddress() {
+                console.log("reached here in edit address");
+                const name = document.querySelector('#editAddressModal input[name="name"]').value;
+                const phone = document.querySelector('#editAddressModal input[name="phone"]').value;
+                const email = document.querySelector('#editAddressModal input[name="email"]').value;
+                const address = document.querySelector('#editAddressModal input[name="address"]').value;
+                const landmark = document.querySelector('#editAddressModal input[name="landmark"]').value;
+                const state = document.querySelector('#editAddressModal input[name="state"]').value;
+                const city = document.querySelector('#editAddressModal input[name="city"]').value;
+                const pincode = document.querySelector('#editAddressModal input[name="pincode"]').value;
+                const addressId = document.querySelector('#editAddressModal input[name="addressId"]').value;
 
-    function getAddressFeilds(addressId) {
-        console.log("reched edit address::::::::::::");
+                console.log("bod:", name, phone, email, address, landmark, state, city, pincode, addressId);
+                const commonError = document.getElementById("editAddressError");
 
-        const response = fetch("/getAddress", {
-            method: "POST",
-            headers: {
-                "content-type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({
-                addressId,
-            }),
-        });
-        response
-            .then((res) => res.json())
-            .then((data) => {
-                console.log(data.currentAddress);
-                populateModalField(data.currentAddress);
-                $("#editAddressModal").modal("show");
-            });
-    }
-    
-    function populateModalField(addressData) {
-        document.querySelector('#editAddressModal input[name="name"]').value = addressData.name;
-        document.querySelector('#editAddressModal input[name="phone"]').value = addressData.phone;
-        document.querySelector('#editAddressModal input[name="email"]').value = addressData.email;
-        document.querySelector('#editAddressModal input[name="address"]').value = addressData.address;
-        document.querySelector('#editAddressModal input[name="landmark"]').value = addressData?.landmark || "! no landmark given";
-        document.querySelector('#editAddressModal input[name="state"]').value = addressData.state;
-        document.querySelector('#editAddressModal input[name="city"]').value = addressData.city;
-        document.querySelector('#editAddressModal input[name="pincode"]').value = addressData.pincode;
-        document.querySelector('#editAddressModal input[name="addressId"]').value = addressData._id;
-    }
+                fetch("/editAddress", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json;charset=utf-8",
+                    },
+                    body: JSON.stringify({
+                        name,
+                        phone,
+                        email,
+                        address,
+                        landmark,
+                        state,
+                        city,
+                        pincode,
+                        addressId,
+                    }),
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        console.log("heyyyyyyyyyyyy", data);
+                        if (data.edited) {
+                            console.log("heyyy brroooo");
+                            window.location.reload();
+                        } else if (!data.validate && data.message) {
+                            let errorMessage = "";
+                            data.message.forEach((detail) => {
+                                errorMessage += `${detail.message}<br>`;
+                            });
+                            commonError.innerHTML = errorMessage;
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
 
-    function addAddress() {
-        console.log('in adddd aaaadresssssssssssssss');
-        
-        const name = document.querySelector("#newAddress2 input[name='name']").value;
-        const phone = document.querySelector("#newAddress2 input[name='phone']").value;
-        const email = document.querySelector("#newAddress2 input[name='email']").value;
-        const address = document.querySelector("#newAddress2 input[name='address']").value;
-        const landmark = document.querySelector("#newAddress2 input[name='landmark']").value;
-        const city = document.querySelector("#newAddress2 input[name='city']").value;
-        const state = document.querySelector("#newAddress2 input[name='state']").value;
-        const pincode = document.querySelector("#newAddress2 input[name='pincode']").value;
+            function getAddressFeilds(addressId) {
+                console.log("reched edit address::::::::::::");
 
-        console.log("Name:", name);
-        console.log("Phone:", phone);
-        console.log("Email:", email);
-        console.log("Address:", address);
-        console.log("Landmark:", landmark);
-        console.log("City:", city);
-        console.log("State:", state);
-        console.log("Pincode:", pincode);
-        
-
-        // Validation for each field
-        const nameError =document.querySelector('#newAddress2 #nameError');
-        console.log(nameError);
-        if (!name.trim()) {
-            console.log('name error und');
-            nameError.innerHTML = 'Name should not be empty';
-            return false;
-            console.log(nameError);
-
-        } else {
-            console.log('name error llyaaa');
-            nameError.textContent = '';
-        } 
-
-        const phoneError = document.querySelector('#newAddress2 #mobileError');
-        if (!phone.trim()) {
-            phoneError.textContent = 'Phone should not be empty';
-            return false;
-        } else {
-            phoneError.textContent = '';
-        }
-
-        const emailError = document.querySelector('#newAddress2 #emailError');
-        if (!email.trim()) {
-            emailError.textContent = 'Email should not be empty';
-            return false;
-        } else {
-            emailError.textContent = '';
-        }
-
-        const addressError = document.querySelector('#newAddress2 #addressError');
-        if (!address.trim()) {
-            addressError.textContent = 'Address should not be empty';
-            return false;
-        } else {
-            addressError.textContent = '';
-        }
-
-        const landmarkError = document.querySelector('#newAddress2 #landmarkError');
-        if (!landmark.trim()) {
-            landmarkError.textContent = 'Landmark should not be empty';
-            return false;
-        } else {
-            landmarkError.textContent = '';
-        }
-
-        const cityError =document.querySelector('#newAddress2 #cityError');
-        if (!city.trim()) {
-            cityError.textContent = 'City should not be empty';
-            return false;
-        } else {
-            cityError.textContent = '';
-        }
-
-        const stateError = document.querySelector('#newAddress2 #stateError');
-        if (!state.trim()) {
-            stateError.textContent = 'State should not be empty';
-            return false;
-        } else {
-            stateError.textContent = '';
-        }
-
-        const pincodeError = document.querySelector('#newAddress2 #pincodeError');
-        if (!pincode.trim()) {
-            pincodeError.textContent = 'Pincode should not be empty';
-            return false;
-        } else {
-            pincodeError.textContent = '';
-        }
-        console.log("add address body:", name, phone, email, address, landmark, state, city, pincode);
-
-        fetch("/addAddress", {
-            method: "POST",
-            headers: {
-                "content-type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({
-                name,
-                phone,
-                email,
-                address,
-                landmark,
-                state,
-                city,
-                pincode,
-            }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.added) {
-                    window.location.reload();
-                } else if(!data.validate){
-                    alert('joi error')
-                    console.log('joi error details:',data.message)
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-    function addAddressExtra() {
-        console.log('in adddd aaaadresssssssssssssss');
-        
-        const name = document.querySelector("#addAddressExtra input[name='name']").value;
-        const phone = document.querySelector("#addAddressExtra input[name='phone']").value;
-        const email = document.querySelector("#addAddressExtra input[name='email']").value;
-        const address = document.querySelector("#addAddressExtra input[name='address']").value;
-        const landmark = document.querySelector("#addAddressExtra input[name='landmark']").value;
-        const city = document.querySelector("#addAddressExtra input[name='city']").value;
-        const state = document.querySelector("#addAddressExtra input[name='state']").value;
-        const pincode = document.querySelector("#addAddressExtra input[name='pincode']").value;
-
-        console.log("Name:", name);
-        console.log("Phone:", phone);
-        console.log("Email:", email);
-        console.log("Address:", address);
-        console.log("Landmark:", landmark);
-        console.log("City:", city);
-        console.log("State:", state);
-        console.log("Pincode:", pincode);
-        
-
-        // Validation for each field
-        const nameError =document.querySelector('#addAddressExtra #nameError');
-        console.log(nameError);
-        if (!name.trim()) {
-            console.log('name error und');
-            nameError.innerHTML = 'Name should not be empty';
-            return false;
-            console.log(nameError);
-
-        } else {
-            console.log('name error llyaaa');
-            nameError.textContent = '';
-        } 
-
-        const phoneError = document.querySelector('#addAddressExtra #mobileError');
-        if (!phone.trim()) {
-            phoneError.textContent = 'Phone should not be empty';
-            return false;
-        } else {
-            phoneError.textContent = '';
-        }
-
-        const emailError = document.querySelector('#addAddressExtra #emailError');
-        if (!email.trim()) {
-            emailError.textContent = 'Email should not be empty';
-            return false;
-        } else {
-            emailError.textContent = '';
-        }
-
-        const addressError = document.querySelector('#addAddressExtra #addressError');
-        if (!address.trim()) {
-            addressError.textContent = 'Address should not be empty';
-            return false;
-        } else {
-            addressError.textContent = '';
-        }
-
-        const landmarkError = document.querySelector('#addAddressExtra #landmarkError');
-        if (!landmark.trim()) {
-            landmarkError.textContent = 'Landmark should not be empty';
-            return false;
-        } else {
-            landmarkError.textContent = '';
-        }
-
-        const cityError =document.querySelector('#addAddressExtra #cityError');
-        if (!city.trim()) {
-            cityError.textContent = 'City should not be empty';
-            return false;
-        } else {
-            cityError.textContent = '';
-        }
-
-        const stateError = document.querySelector('#addAddressExtra #stateError');
-        if (!state.trim()) {
-            stateError.textContent = 'State should not be empty';
-            return false;
-        } else {
-            stateError.textContent = '';
-        }
-
-        const pincodeError = document.querySelector('#addAddressExtra #pincodeError');
-        if (!pincode.trim()) {
-            pincodeError.textContent = 'Pincode should not be empty';
-            return false;
-        } else {
-            pincodeError.textContent = '';
-        }
-        console.log("add address body:", name, phone, email, address, landmark, state, city, pincode);
-
-        fetch("/addAddress", {
-            method: "POST",
-            headers: {
-                "content-type": "application/json;charset=utf-8",
-            },
-            body: JSON.stringify({
-                name,
-                phone,
-                email,
-                address,
-                landmark,
-                state,
-                city,
-                pincode,
-            }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.added) {
-                    window.location.reload();
-                } else if(!data.validate){
-                    alert('joi error')
-                    console.log('joi error details:',data.message)
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-    function removeAddress(addressId) {
-        console.log("reched delete address::::::::::::");
-
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!",
-        }).then((result) => {   
-
-            if (result.isConfirmed) {
-                fetch("/removeAddress", {
+                const response = fetch("/getAddress", {
                     method: "POST",
                     headers: {
                         "content-type": "application/json;charset=utf-8",
@@ -1023,26 +703,309 @@
                     body: JSON.stringify({
                         addressId,
                     }),
-                }).then( async(res) => {
-                    if (res.ok) {
-                       await Swal.fire({
-                            title: "Removed!",
-                            text: "Your address is removed.",
-                            icon: "success",
-                        });
-                        window.location.reload();
+                });
+                response
+                    .then((res) => res.json())
+                    .then((data) => {
+                        console.log(data.currentAddress);
+                        populateModalField(data.currentAddress);
+                        $("#editAddressModal").modal("show");
+                    });
+            }
 
-                    } else {
-                        Swal.fire({
-                            title: " Not Deleted!",
-                            text: "there is a problem while delete",
-                            icon: "error",
+            function populateModalField(addressData) {
+                document.querySelector('#editAddressModal input[name="name"]').value = addressData.name;
+                document.querySelector('#editAddressModal input[name="phone"]').value = addressData.phone;
+                document.querySelector('#editAddressModal input[name="email"]').value = addressData.email;
+                document.querySelector('#editAddressModal input[name="address"]').value = addressData.address;
+                document.querySelector('#editAddressModal input[name="landmark"]').value = addressData?.landmark || "! no landmark given";
+                document.querySelector('#editAddressModal input[name="state"]').value = addressData.state;
+                document.querySelector('#editAddressModal input[name="city"]').value = addressData.city;
+                document.querySelector('#editAddressModal input[name="pincode"]').value = addressData.pincode;
+                document.querySelector('#editAddressModal input[name="addressId"]').value = addressData._id;
+            }
+
+            function addAddress() {
+                console.log("in adddd aaaadresssssssssssssss");
+
+                const name = document.querySelector("#newAddress2 input[name='name']").value;
+                const phone = document.querySelector("#newAddress2 input[name='phone']").value;
+                const email = document.querySelector("#newAddress2 input[name='email']").value;
+                const address = document.querySelector("#newAddress2 input[name='address']").value;
+                const landmark = document.querySelector("#newAddress2 input[name='landmark']").value;
+                const city = document.querySelector("#newAddress2 input[name='city']").value;
+                const state = document.querySelector("#newAddress2 input[name='state']").value;
+                const pincode = document.querySelector("#newAddress2 input[name='pincode']").value;
+
+                console.log("Name:", name);
+                console.log("Phone:", phone);
+                console.log("Email:", email);
+                console.log("Address:", address);
+                console.log("Landmark:", landmark);
+                console.log("City:", city);
+                console.log("State:", state);
+                console.log("Pincode:", pincode);
+
+                // Validation for each field
+                const nameError = document.querySelector("#newAddress2 #nameError");
+                console.log(nameError);
+                if (!name.trim()) {
+                    console.log("name error und");
+                    nameError.innerHTML = "Name should not be empty";
+                    return false;
+                    console.log(nameError);
+                } else {
+                    console.log("name error llyaaa");
+                    nameError.textContent = "";
+                }
+
+                const phoneError = document.querySelector("#newAddress2 #mobileError");
+                if (!phone.trim()) {
+                    phoneError.textContent = "Phone should not be empty";
+                    return false;
+                } else {
+                    phoneError.textContent = "";
+                }
+
+                const emailError = document.querySelector("#newAddress2 #emailError");
+                if (!email.trim()) {
+                    emailError.textContent = "Email should not be empty";
+                    return false;
+                } else {
+                    emailError.textContent = "";
+                }
+
+                const addressError = document.querySelector("#newAddress2 #addressError");
+                if (!address.trim()) {
+                    addressError.textContent = "Address should not be empty";
+                    return false;
+                } else {
+                    addressError.textContent = "";
+                }
+
+                const landmarkError = document.querySelector("#newAddress2 #landmarkError");
+                if (!landmark.trim()) {
+                    landmarkError.textContent = "Landmark should not be empty";
+                    return false;
+                } else {
+                    landmarkError.textContent = "";
+                }
+
+                const cityError = document.querySelector("#newAddress2 #cityError");
+                if (!city.trim()) {
+                    cityError.textContent = "City should not be empty";
+                    return false;
+                } else {
+                    cityError.textContent = "";
+                }
+
+                const stateError = document.querySelector("#newAddress2 #stateError");
+                if (!state.trim()) {
+                    stateError.textContent = "State should not be empty";
+                    return false;
+                } else {
+                    stateError.textContent = "";
+                }
+
+                const pincodeError = document.querySelector("#newAddress2 #pincodeError");
+                if (!pincode.trim()) {
+                    pincodeError.textContent = "Pincode should not be empty";
+                    return false;
+                } else {
+                    pincodeError.textContent = "";
+                }
+                console.log("add address body:", name, phone, email, address, landmark, state, city, pincode);
+
+                fetch("/addAddress", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json;charset=utf-8",
+                    },
+                    body: JSON.stringify({
+                        name,
+                        phone,
+                        email,
+                        address,
+                        landmark,
+                        state,
+                        city,
+                        pincode,
+                    }),
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data.added) {
+                            window.location.reload();
+                        } else if (!data.validate) {
+                            alert("joi error");
+                            console.log("joi error details:", data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+
+            function addAddressExtra() {
+                console.log("in adddd aaaadresssssssssssssss");
+
+                const name = document.querySelector("#addAddressExtra input[name='name']").value;
+                const phone = document.querySelector("#addAddressExtra input[name='phone']").value;
+                const email = document.querySelector("#addAddressExtra input[name='email']").value;
+                const address = document.querySelector("#addAddressExtra input[name='address']").value;
+                const landmark = document.querySelector("#addAddressExtra input[name='landmark']").value;
+                const city = document.querySelector("#addAddressExtra input[name='city']").value;
+                const state = document.querySelector("#addAddressExtra input[name='state']").value;
+                const pincode = document.querySelector("#addAddressExtra input[name='pincode']").value;
+
+                console.log("Name:", name);
+                console.log("Phone:", phone);
+                console.log("Email:", email);
+                console.log("Address:", address);
+                console.log("Landmark:", landmark);
+                console.log("City:", city);
+                console.log("State:", state);
+                console.log("Pincode:", pincode);
+
+                // Validation for each field
+                const nameError = document.querySelector("#addAddressExtra #nameError");
+                console.log(nameError);
+                if (!name.trim()) {
+                    console.log("name error und");
+                    nameError.innerHTML = "Name should not be empty";
+                    return false;
+                    console.log(nameError);
+                } else {
+                    console.log("name error llyaaa");
+                    nameError.textContent = "";
+                }
+
+                const phoneError = document.querySelector("#addAddressExtra #mobileError");
+                if (!phone.trim()) {
+                    phoneError.textContent = "Phone should not be empty";
+                    return false;
+                } else {
+                    phoneError.textContent = "";
+                }
+
+                const emailError = document.querySelector("#addAddressExtra #emailError");
+                if (!email.trim()) {
+                    emailError.textContent = "Email should not be empty";
+                    return false;
+                } else {
+                    emailError.textContent = "";
+                }
+
+                const addressError = document.querySelector("#addAddressExtra #addressError");
+                if (!address.trim()) {
+                    addressError.textContent = "Address should not be empty";
+                    return false;
+                } else {
+                    addressError.textContent = "";
+                }
+
+                const landmarkError = document.querySelector("#addAddressExtra #landmarkError");
+                if (!landmark.trim()) {
+                    landmarkError.textContent = "Landmark should not be empty";
+                    return false;
+                } else {
+                    landmarkError.textContent = "";
+                }
+
+                const cityError = document.querySelector("#addAddressExtra #cityError");
+                if (!city.trim()) {
+                    cityError.textContent = "City should not be empty";
+                    return false;
+                } else {
+                    cityError.textContent = "";
+                }
+
+                const stateError = document.querySelector("#addAddressExtra #stateError");
+                if (!state.trim()) {
+                    stateError.textContent = "State should not be empty";
+                    return false;
+                } else {
+                    stateError.textContent = "";
+                }
+
+                const pincodeError = document.querySelector("#addAddressExtra #pincodeError");
+                if (!pincode.trim()) {
+                    pincodeError.textContent = "Pincode should not be empty";
+                    return false;
+                } else {
+                    pincodeError.textContent = "";
+                }
+                console.log("add address body:", name, phone, email, address, landmark, state, city, pincode);
+
+                fetch("/addAddress", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json;charset=utf-8",
+                    },
+                    body: JSON.stringify({
+                        name,
+                        phone,
+                        email,
+                        address,
+                        landmark,
+                        state,
+                        city,
+                        pincode,
+                    }),
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data.added) {
+                            window.location.reload();
+                        } else if (!data.validate) {
+                            alert("joi error");
+                            console.log("joi error details:", data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+
+            function removeAddress(addressId) {
+                console.log("reched delete address::::::::::::");
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/address/${addressId}`, {
+                            method: "DELETE",
+                            headers: {
+                                "content-type": "application/json;charset=utf-8",
+                            },
+                        }).then(async (res) => {
+                            if (res.ok) {
+                                await Swal.fire({
+                                    title: "Removed!",
+                                    text: "Your address is removed.",
+                                    icon: "success",
+                                });
+                                window.location.reload();
+                            } else {
+                                Swal.fire({
+                                    title: " Not Deleted!",
+                                    text: "there is a problem while delete",
+                                    icon: "error",
+                                });
+                            }
                         });
                     }
                 });
             }
-        });
-    }
-</script>
+        </script>
 
-<%-include('../layouts/footer')%>
+        <%-include('../layouts/footer')%>
+    </div>
+</div>

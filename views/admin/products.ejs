@@ -35,7 +35,7 @@
                                     <%products.forEach((product,i)=>{%>
                                         <tr>
                                             <td><%=i+1%></td>
-                                            <td><img width="90px" class="rounded-3 " src="/multer/products/<%=product.images.image1%>" alt=""/></td>
+                                            <td><img width="90px" class="rounded-3 " src="<%=product.images.image1%>" alt=""/></td>
                                             <td><%=product.name%></td>
                                             <td><%=product.quantity%></td>
                                             <td><%= product.categoryId.name %></td>

@@ -6,7 +6,6 @@ const Products=require('../model/productsModel');
 const Coupon=require('../model/couponModel');
 
 
-
 //load admin login page
 const loginLoad=async (req,res)=>{
     try {
@@ -20,12 +19,10 @@ const loginLoad=async (req,res)=>{
 const verifyAdmin=async (req,res)=>{
     try {
         const {email,password}=req.body;
-        console.log(`email:${email} & password:${password}`);
         const adminData=await User.findOne({email:email});
 
         if(adminData){
             const matchPassword=await bcrypt.compare(password,adminData.password);
-            console.log('matchpassword',matchPassword);
             
             if(matchPassword){
                 if(adminData.isAdmin){
@@ -115,12 +112,6 @@ const loadDashBoard=async (req,res)=>{
             { $limit: 5 }
         ]);
         
-        // const bestSoldProducts=await Promise.all(bestSellingProducts.map(async (product)=>{
-        //     const count=product.count;
-        //     const productDetails=await Products.findOne({_id:product._id});
-        //     return {count,productDetails};
-        // }))
-
         //best selling Category
         const bestSoldCategory=await Order.aggregate([
             {$unwind:'$products'},
@@ -168,9 +159,6 @@ const loadCustomers=async (req,res)=>{
     try {
         const result=res.paginatedResult;
         const customers=await User.find({isAdmin:false});
-        // result.users=result.users.filter((val,i)=>{
-        //     return val.isAdmin!==true
-        // })
         if(result){
             res.render('customers',{users:result.users,result})
         }else{
@@ -243,9 +231,7 @@ const addCategory=async (req,res)=>{
 const editCategory=async (req,res)=>{
     try {
         const categoryId=req.query.id;
-        console.log("category id:",categoryId);
         const categoryData=await Category.findById({_id:categoryId});
-        console.log('category with the id:',categoryData);
         res.render('editCategory',{categoryData});
 
     } catch (error) {
@@ -256,7 +242,6 @@ const editCategory=async (req,res)=>{
 //edit category post
 const updateCategory=async (req,res)=>{
     try {
-        console.log('reached update category');
         const {name,description,categoryId}=req.body;
         const currentCategory= await Category.findOne({_id:categoryId});
 
@@ -264,11 +249,8 @@ const updateCategory=async (req,res)=>{
             return res.json({update:false,message:"category not found"});
         }
 
-        console.log('name ,currentCategory.name:',name,currentCategory.name);
         if(name !== currentCategory.name){
-            console.log('reached here');
             const existingName=await Category.findOne({name:name})
-            console.log('existingname:',existingName);
             if(existingName){
                 return res.json({update:false,message:'Category name already exist'})
             }
@@ -277,7 +259,6 @@ const updateCategory=async (req,res)=>{
 
         if(updatedCategory){
             res.json({update:true,message:'updated successfully'});
-            console.log('data updated');
         }else{
             res.json({update:false,message:'there is a problem while updating your data'});
         }
@@ -344,8 +325,6 @@ const loadOrderList=async (req,res)=>{
 const loadOrderDetails=async (req,res)=>{
     try {
         const orderId=req.query.id;
-        console.log('orderId:',orderId);   
-
         let populateOption={
             path:'products.productId',
             model:'products'
@@ -353,8 +332,6 @@ const loadOrderDetails=async (req,res)=>{
         
         const orderData=await Order.findOne({_id:orderId}).populate(populateOption);
         const address=await Order.findOne({_id:orderId},{deliveryAddress:1,_id:0}); 
-        
-        // console.log('orderData:',orderData,"address:",address);
 
         res.render('orderDetails',{address,orderData});
 
@@ -366,7 +343,6 @@ const loadOrderDetails=async (req,res)=>{
 
 const changeOrderStatus=async (req,res)=>{
     try {
-        console.log("reached here in update status");
         const {orderId,productId,status}=req.body;
     
         const updatedOrder = await Order.findOneAndUpdate(
@@ -398,11 +374,9 @@ const loadSalesReport=async(req,res)=>{
             month: 'short',
             day: 'numeric',
         };
-        console.log('filterCriteria:',filterCriteria);
 
         let orders=[];
         let dateOrTime='';
-        // orders=await Order.find({}).populate('userId').sort({orderDate:-1});
         const overallData=await Order.aggregate([
             {$match:{orderStatus:{$ne:"pending"}}},
             { 
@@ -450,7 +424,6 @@ const loadSalesReport=async(req,res)=>{
         if(startDate && endDate){
             orders=await customReport(startDate,endDate);
         }
-
         res.render('salesReport',{orders,dateOptions,filterCriteria,overallData,dateOrTime})
 
     } catch (error) {
@@ -471,7 +444,7 @@ const weeklyReport=async ()=>{
                 }
             },
             {
-                $sort: { "_id": 1 } // Sort by week number
+                $sort: { "_id": 1 } 
             }
         ]);
         return orderDatas;
@@ -480,26 +453,6 @@ const weeklyReport=async ()=>{
         console.log(error.message);
     }
 }
-// const generateReport=async (timeUnit)=>{
-//     try {
-//         console.log('timeUnit:',timeUnit);
-//         const orderDatas=await Order.aggregate([
-//             {$match:{orderStatus:{$ne:"pending"}}}, 
-//             { 
-//                 $group: {
-//                     _id: { '$month': "$orderDate" },
-//                     totalSalesCount: { $sum: 1},
-//                     totalRevenue:{$sum:'$subTotal'},
-//                 }
-//             }
-//         ]);
-//         return orderDatas;
-
-//     } catch (error) {09
-//         console.log(error.message);
-//     }
-// }
-
 
 const monthlyReport=async ()=>{
     try {
@@ -559,8 +512,6 @@ const dialyReport=async ()=>{
 
 const customReport=async (start,end)=>{
     try {
-        console.log(start,end);
-        console.log(new Date(start));
         const orderDatas=await Order.aggregate([
             {
                 $match:{
@@ -587,8 +538,6 @@ const chartData=async (req,res)=>{
     try {
     
         const {chartType}=req.body;
-        console.log('chartType:',chartType);
-
         let barData;
         
         if(chartType=='monthly'){
@@ -611,7 +560,6 @@ const chartData=async (req,res)=>{
                 }    
             ]);
 
-            // console.log('salesData:',salesData);
             barData=new Array(12).fill(0);
             
             salesData.forEach((item)=>{

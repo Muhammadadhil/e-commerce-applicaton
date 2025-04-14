@@ -1,11 +1,6 @@
 <%-include('../layouts/adminHeader')%>
 
-
-
-
 <section class="content-main">
-
-
     <section class="content-main py-4 d-flex justify-content-center">
         <div class="container-fluid">
             <div class="row">
@@ -14,40 +9,35 @@
                     <div class="card">
                         <div class="card-body">
                             <form action="/admin/addCoupons" onsubmit="return ValidateForm(event)" method="post" id="couponForm">
-                                
                                 <div class="form-group my-3">
                                     <label for="name">Coupon name</label>
-                                    <input type="text" class="form-control" id="name" name="couponName"
-                                        placeholder="Type here">
-                                    <div id="nameError" class="text-danger  error-message"></div>
+                                    <input type="text" class="form-control" id="name" name="couponName" placeholder="Type here" />
+                                    <div id="nameError" class="text-danger error-message"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="code">Coupon code </label>
-                                        <input class="form-control" id="code" name="couponCode" >
-                                        <!-- <button type="button" id="generateButton" class="btn btn-warning  my-3">generate</button> -->
+                                    <input class="form-control" id="code" name="couponCode" />
+                                    <!-- <button type="button" id="generateButton" class="btn btn-warning  my-3">generate</button> -->
                                     <div id="codeError" class="text-danger error-message"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="discount">Discount Amount</label>
-                                    <input type="number" class="form-control" id="discount" name="discount"
-                                        placeholder="Type here">
+                                    <input type="number" class="form-control" id="discount" name="discount" placeholder="Type here" />
                                     <div id="discountError" class="text-danger error-message"></div>
                                 </div>
                                 <div class="form-group my-3">
                                     <label for="activationdate">Activation Date</label>
-                                    <input type="date" class="form-control" id="activationdate"
-                                        name="activationDate">
+                                    <input type="date" class="form-control" id="activationdate" name="activationDate" />
                                     <div id="activationdateError" class="text-danger error-message"></div>
                                 </div>
                                 <div class="form-group my-3">
                                     <label for="expirydate">Expire Date</label>
-                                    <input type="date" class="form-control" id="expirydate" name="expiryDate" onclick="this.type='date'">
+                                    <input type="date" class="form-control" id="expirydate" name="expiryDate" onclick="this.type='date'" />
                                     <div id="expirydateError" class="text-danger error-message"></div>
                                 </div>
                                 <div class="form-group my-3">
                                     <label for="criteriamount">Criteria Amount</label>
-                                    <input type="number" class="form-control" id="criteriAmount"
-                                        name="criteriaAmount" placeholder="Type here">
+                                    <input type="number" class="form-control" id="criteriAmount" name="criteriaAmount" placeholder="Type here" />
                                     <div id="criteriamountError" class="text-danger error-message"></div>
                                 </div>
                                 <div class="container d-flex justify-content-center mt-4">
@@ -60,86 +50,7 @@
             </div>
         </div>
     </section>
+    <script src="/user/assets/js/addCoupon.js"></script>
 
-    <script>
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('activationdate').setAttribute('min',today);
-        document.getElementById('expirydate').setAttribute('min',today);
-
-
-
-        function generateRandomString(length) {
-            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            var randomString = '';
-            for (var i = 0; i < length; i++) {
-                randomString += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            return randomString;
-        }
-
-        document.getElementById('generateButton').addEventListener('click',()=>{
-            const code=generateRandomString(5);
-            
-            document.getElementById('code').value='homiqo'+code;
-        })
-    </script>
-    <script>
-        function ValidateForm(event){
-            
-        const nameInput = document.getElementById('name').value;
-
-        const codeInput = document.getElementById('code').value;
-
-        let discountInput = document.getElementById('discount').value;
-        discountInput=Number(discountInput);
-
-        let criteriaAmountInput = document.getElementById('criteriAmount').value;
-        criteriaAmountInput=Number(criteriaAmountInput);
-        const activationdate=document.getElementById('activationdate').value;
-        const expirydate= document.getElementById('expirydate').value;
-
-
-        const nameError = document.getElementById('nameError');
-        const codeError = document.getElementById('codeError');
-        const discountError = document.getElementById('discountError');
-        const expirydateError = document.getElementById('expirydateError');
-        const criteriaAmountError = document.getElementById('criteriamountError');
-        const useLimitError = document.getElementById('useLimitError');
-        
-        
-        if (!nameInput.trim()) {
-            nameError.innerHTML = 'Coupon name should not be empty';
-            return false;
-        }else if(!/^[a-zA-Z\s][a-zA-Z0-9\s]*$/.test(nameInput)){
-            nameError.innerHTML = 'Coupon name should not only numbers';
-            return false;
-        }else{
-            nameError.innerHTML =""
-        }
-
-        if(discountInput==''){
-            discountError.innerHTML='discount should not be empty';
-            return false;
-        }else if(discountInput> criteriaAmountInput){
-            discountError.innerHTML=" discount amount should not be greater than criteria amount"
-            return false;
-        }else{
-            discountError.innerHTML='';
-        }
-
-        if(criteriaAmountInput==''){
-            criteriaAmountError.innerHTML='criterai amount field should not empty';
-            return false;
-        }
-        if(expirydate<activationdate){
-            expirydateError.innerHTML='expiry date should not less than activation date'
-            return false;
-        }
-    
-        return true;
-
-        } 
-    </script>
-
-
-<%-include('../layouts/adminFooter')%>
+    <%-include('../layouts/adminFooter')%>
+</section>

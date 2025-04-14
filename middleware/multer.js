@@ -1,27 +1,13 @@
 const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../utils/cloudinary");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb)=>{
-
-    isProduct = Object.keys(req.body).includes("productName");
-    let destinationFolder;
-
-    if (!isProduct) {
-      destinationFolder = "./public/multer/users";
-    } else {
-        console.log('reached products page!!');
-      destinationFolder = "./public/multer/products";
-    }
-
-    cb(null,destinationFolder);
-  },
-
-  filename: (req, file, cb)=> {
-    console.log("date.now:",Date.now());
-    cb(null, Date.now() + "-" + file.originalname);
-    console.log("hey this from here:",req.files);
-  },
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: "ecommerce-images",
+        allowed_formats: ["jpeg", "png", "jpg"],
+    },
 });
-
-const upload=multer({storage:storage});
-module.exports=upload;
+const upload = multer({ storage: storage });
+module.exports = upload;

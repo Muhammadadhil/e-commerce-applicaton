@@ -36,32 +36,52 @@
                 <!-- Tab content start -->
                 <div class="tab-content my-account-tab">
                     <div class="tab-pane fade show active" id="pills-dashboard">
-                        <div class="my-account-dashboard account-wrapper">
-                            <div class="account-card card">
-                                <div class="card-body text-center">
-                                    <h3 class="account-title text-center">Account Information</h3>
-                                    <div class="profileImage-section">
-                                        <img src="user/assets/images/profile-image.jpg" alt="User Profile" />
-                                    </div>
-                                    <div class="user-info-card">
-                                        <div class="card-body">
-                                            <ol class="user-info">
-                                                <li class="info-label">Firstname:<%=userData.firstName%></li>
-                                                <br />
-                                                <li class="info-label">Lastname:<%=userData.lastname%></li>
-                                                <br />
-                                                <li class="info-label">Email:<%=userData.email%></li>
-                                                <br />
-                                                <li class="info-label">Phone:<%=userData.mobile%></li>
-                                                <br />
-                                            </ol>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <div class="my-account-dashboard account-wrapper">
+    <div class="card border-0 shadow-sm rounded-3 mb-4">
+      <div class="card-body">
+        <h3 class="account-title text-center mb-4">Account Information</h3>
+        <div class="d-flex flex-column align-items-center">
+          <!-- Profile Image Section -->
+          <div class="profileImage-section mb-4">
+            <div class="avatar-lg border rounded-circle p-1">
+              <img src="user/assets/images/profile-image.jpg" alt="User Profile" class="rounded-circle img-fluid" />
+            </div>
+          </div>
+
+          <!-- User Info Section -->
+          <div class="user-info-card w-100">
+            <div class="row text-center">
+              <div class="col-sm-6 mb-3">
+                <h6 class="text-muted small text-uppercase mb-1">First Name</h6>
+                <p class="fw-medium mb-0"><%=userData.firstName%></p>
+              </div>
+              <div class="col-sm-6 mb-3">
+                <h6 class="text-muted small text-uppercase mb-1">Last Name</h6>
+                <p class="fw-medium mb-0"><%=userData.lastname%></p>
+              </div>
+              <div class="col-sm-6 mb-3">
+                <h6 class="text-muted small text-uppercase mb-1">Email</h6>
+                <p class="fw-medium mb-0"><%=userData.email%></p>
+              </div>
+              <div class="col-sm-6 mb-3">
+                <h6 class="text-muted small text-uppercase mb-1">Phone</h6>
+                <p class="fw-medium mb-0"><%=userData.mobile%></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit Profile Button -->
+          <div class="mt-4">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+              <i class="fa fa-pencil me-1"></i> Edit Profile
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
                     <div class="tab-pane fade" id="pills-order">
                         <div class="my-account-order account-wrapper">
@@ -481,14 +501,11 @@
                 confirmButtonText: "Yes, delete it!",
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch("/removeAddress", {
-                        method: "POST",
+                    fetch(`/address/${addressId}`, {
+                        method: "DELETE",
                         headers: {
                             "content-type": "application/json;charset=utf-8",
                         },
-                        body: JSON.stringify({
-                            addressId,
-                        }),
                     }).then(async (res) => {
                         if (res.ok) {
                             await Swal.fire({
@@ -525,7 +542,7 @@
             const commonError = document.getElementById("editAddressError");
 
             fetch("/editAddress", {
-                method: "POST",
+                method: "PATCH",
                 headers: {
                     "content-type": "application/json;charset=utf-8",
                 },
@@ -596,7 +613,7 @@
             const lastName = document.getElementById("editLastName").value;
 
             fetch("/editProfile", {
-                method: "POST",
+                method: "PATCH",
                 headers: {
                     "content-type": "application/json;charset=utf-8",
                 },

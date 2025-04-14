@@ -27,7 +27,7 @@
                                         <input type="checkbox" checked>
                                     </td>
                                     <td class="product-thumb">
-                                        <a href="/productDetails?id=<%=product.productId._id%>"><img   src="/multer/products/<%=product.productId.images?.image1%>" alt="**" /></a>
+                                        <a href="/productDetails?id=<%=product.productId._id%>"><img   src="<%=product.productId.images?.image1%>" alt="**" /></a>
                                     </td>
                                     <td class="product-info">
                                         <h6 class="name">
@@ -306,14 +306,11 @@
 
     function removeProductFromCart(productId) {
         console.log("prouct id to remove:", productId);
-        fetch("/removeFromCart", {
-            method: "PATCH",
+        fetch(`/cart/${productId}`, {
+            method: "DELETE",
             headers: {
                 "content-type": "application/json;charset=utf-8",
             },
-            body: JSON.stringify({
-                productId,
-            }),
         })
             .then((response) => response.json())
             .then((data) => {

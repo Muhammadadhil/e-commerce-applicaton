@@ -22,7 +22,7 @@
                 <div class="card mx-auto card-login">
                     <div class="card-body">
                         <h4 class="card-title mb-4">Sign in</h4>
-                        <form  action="">
+                        <form action="">
                             <div class="mb-3">
                                 <input id="email" class="form-control" placeholder=" email" type="text" />
                             </div>
@@ -33,7 +33,7 @@
                             <!-- form-group// -->
                             <!-- form-group form-check .// -->
                             <div class="single-form">
-                                <p style="color: red;" id="error-message"></p>
+                                <p style="color: red" id="error-message"></p>
                             </div>
                             <div class="mb-4">
                                 <button type="button" onclick="login()" class="btn btn-primary w-100">Login</button>
@@ -54,42 +54,35 @@
             </footer>
         </main>
         <script>
-            function login(){
-                const email=document.getElementById('email').value;
-                const password=document.getElementById('password').value;
-                const errorMessageElement=document.getElementById('error-message');
+            function login() {
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+                const errorMessageElement = document.getElementById("error-message");
 
-
-                fetch('/admin/login',{
-                    method:'POST',
-                    headers:{
-                        "content-type": "application/json;charset=utf-8"
+                fetch("/admin/login", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json;charset=utf-8",
                     },
-                    body:JSON.stringify({
+                    body: JSON.stringify({
                         email,
-                        password
-                    })
-                    })
-                    .then(res =>res.json())
-                    .then(data =>{
-                        if(data.admin){
+                        password,
+                    }),
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data.admin) {
                             // console.log(data.message);
-                            window.location.href='/admin/home'
-                        }else{
-                            errorMessageElement.innerHTML=data.message;
+                            window.location.href = "/admin/home";
+                        } else {
+                            errorMessageElement.innerHTML = data.message;
                         }
                     })
-                    .catch(error =>{
+                    .catch((error) => {
                         console.log(error);
-                    })
-
-                
+                    });
             }
-            
-
         </script>
-
-
 
         <script src="admin/assets/js/vendors/jquery-3.6.0.min.js"></script>
         <script src="admin/assets/js/vendors/bootstrap.bundle.min.js"></script>

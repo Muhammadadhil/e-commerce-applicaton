@@ -33,31 +33,27 @@
                     <br />
                 </p>
             </div>
-            <div class="col-md-6  text-end mt-5">
+            <div class="col-md-6 text-end mt-5">
                 <p></p>
                 <p>
-                    Amount after all discount: <br>
+                    Amount after all discount: <br />
                     <b>Order total:</b><%=orderData.subTotal%>
                 </p>
                 <%if(orderData.orderStatus==='pending' && orderData.subTotal>0){%>
-                    <div>
-                        <button class="btn btn-primary " onclick="payAgain('<%=orderData._id%>')">pay now</button><br>
-                        <small>(buy the products which you have choosed)</small>
-                    </div>
+                <div>
+                    <button class="btn btn-primary" onclick="payAgain('<%=orderData._id%>')">pay now</button><br />
+                    <small>(buy the products which you have choosed)</small>
+                </div>
                 <%}%>
                 <p><b>Order status:</b><%=orderData.orderStatus%></p>
                 <%if(orderData.orderStatus==='delivered'){%>
-                    <a href="/salesInvoice?id=<%=orderData._id%>"><button class="btn btn-secondary " >download invoice</button></a>
+                <a href="/salesInvoice?id=<%=orderData._id%>"><button class="btn btn-secondary">download invoice</button></a>
                 <%}%>
-                
-
-
-
             </div>
-            <div class="col-md-12 ">
+            <div class="col-md-12">
                 <% if (orderData.products.length > 0) { %>
                 <h3 class="mb-4 mt-5">Ordered Products</h3>
-                <div class="table-responsive ">
+                <div class="table-responsive">
                     <table class="table" style="border: 1px solid grey">
                         <thead>
                             <tr class="text-center">
@@ -89,108 +85,105 @@
                                     </p>
                                 </td>
                                 <td>
-                                    <h5 id="reloadPart" ><%=product.productStatus%></h5>
-                                
+                                    <h5 id="reloadPart"><%=product.productStatus%></h5>
                                 </td>
-                                <td> 
+                                <td>
                                     <%if(product.productStatus=='delivered'){%>
-                                        <h5><a onclick="returnOrder('<%=orderData._id%>','<%= product.productId._id %>')" class="btn" style="background-color: rgb(240, 88, 0)">Return</a></h5>
+                                    <h5><a onclick="returnOrder('<%=orderData._id%>','<%= product.productId._id %>')" class="btn" style="background-color: rgb(240, 88, 0)">Return</a></h5>
                                     <%}else if(product.productStatus=='canceled'){%>
-                                        <h5><a id="cancelButton" href="/productDetails?id=<%=product.productId._id%>" class="btn" style="background-color: rgb(51, 255, 0)">buy again</a></h5>
+                                    <h5><a id="cancelButton" href="/productDetails?id=<%=product.productId._id%>" class="btn" style="background-color: rgb(51, 255, 0)">buy again</a></h5>
                                     <%}else if(product.productStatus=='returned'){%>
-                                        <p>Product Returned</p>
+                                    <p>Product Returned</p>
                                     <%}else{%>
-                                        <h5><a id="cancelButton" onclick="cancelOrder('<%=orderData._id%>','<%= product.productId._id %>')" class="btn" style="background-color: rgb(255, 208, 0)">cancel</a></h5>
+                                    <h5>
+                                        <a id="cancelButton" onclick="cancelOrder('<%=orderData._id%>','<%= product.productId._id %>')" class="btn" style="background-color: rgb(255, 208, 0)"
+                                            >cancel</a
+                                        >
+                                    </h5>
                                     <%}%>
                                 </td>
                             </tr>
                             <%})%>
                         </div>
-                    </table>        
+                    </table>
                 </div>
                 <% } %>
             </div>
-            
         </div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-    
-        function payAgain(orderId){
-
-            axios.get(`/paytheAmount?id=${orderId}`)
-            .then((response)=>{
-                if(response.data.createInstance){
-                    razorpayPayment(response.data.order);
-                    
-                }         
-            })
-        }
-
-    function razorpayPayment(order){
-
-    console.log('pay again: order:',order);
-
-    var options = {
-        "key": "rzp_test_bHCQ2sAI4219I7", 
-        "amount": order.amount, 
-        "currency": "INR",
-        "name": "Homiqo", 
-        "description": "Test Transaction",
-        "image": "https://example.com/your_logo",
-        "order_id": order.id, 
-        // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
-        "handler": function (response){                              //handler after payment success
-            console.log('response:',response);
-            verifyPayment(response,order);
-        },
-        "prefill": { 
-            "name": "muhammad adhil", 
-            "email": "aadhi@gmail.com", 
-            "contact": "9000090000" 
-        },
-        "notes": {
-            "address": "Razorpay Corporate Office"
-        },
-        "theme": {  
-            "color": "#f2a100"
-        }
-    };
-
-    var rzp1 = new Razorpay(options);
-    rzp1.on('payment.failed', function (response){
-        alert(response.error.description);
-        // window.location.href=`/detailsOrder?id=${order.receipt}`
-    });
-
-    rzp1.open();
+    function payAgain(orderId) {
+        axios.get(`/paytheAmount?id=${orderId}`).then((response) => {
+            if (response.data.createInstance) {
+                razorpayPayment(response.data.order);
+            }
+        });
     }
 
-    function verifyPayment(response,order){
-    fetch('/verifyPayment',{
-        method:"POST",
-        headers:{
-            "content-type": "application/json;charset=utf-8"
-        },
-        body:JSON.stringify({
-            response,
-            order
+    function razorpayPayment(order) {
+        console.log("pay again: order:", order);
+
+        var options = {
+            key: "rzp_test_bHCQ2sAI4219I7",
+            amount: order.amount,
+            currency: "INR",
+            name: "Homiqo",
+            description: "Test Transaction",
+            image: "https://example.com/your_logo",
+            order_id: order.id,
+            // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+            handler: function (response) {
+                //handler after payment success
+                console.log("response:", response);
+                verifyPayment(response, order);
+            },
+            prefill: {
+                name: "muhammad adhil",
+                email: "aadhi@gmail.com",
+                contact: "9000090000",
+            },
+            notes: {
+                address: "Razorpay Corporate Office",
+            },
+            theme: {
+                color: "#f2a100",
+            },
+        };
+
+        var rzp1 = new Razorpay(options);
+        rzp1.on("payment.failed", function (response) {
+            alert(response.error.description);
+            // window.location.href=`/detailsOrder?id=${order.receipt}`
+        });
+
+        rzp1.open();
+    }
+
+    function verifyPayment(response, order) {
+        fetch("/verifyPayment", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify({
+                response,
+                order,
+            }),
         })
-    })
-    .then((res)=>res.json())
-    .then((data)=>{
-        if(data.statusChanged){
-            window.location.href=`/orderSuccess?id=${data.orderId}`
-        }
-    })   
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.statusChanged) {
+                    window.location.href = `/orderSuccess?id=${data.orderId}`;
+                }
+            });
     }
 </script>
 
 <script>
-    async function returnOrder(orderId,productId){
-
+    async function returnOrder(orderId, productId) {
         const { value: text } = await Swal.fire({
             input: "textarea",
             inputLabel: "Reason for returning product",
@@ -201,97 +194,77 @@
             },
             showCancelButton: true,
 
-            preConfirm:(value)=>{
-                if(!value){
+            preConfirm: (value) => {
+                if (!value) {
                     Swal.showValidationMessage("Please enter a reason for cancel.");
                 }
                 return value;
-            }
-
+            },
         });
 
-        if(text){
-            fetch("/returnProduct", {
-                method: "POST",
+        if (text) {
+            fetch(`/returnProduct?orderId=${orderId}&productId=${productId}&text=${text}`, {
+                method: "DELETE",
                 headers: {
                     "content-type": "application/json;charset=utf-8",
                 },
-                body: JSON.stringify({
-                    orderId,
-                    productId,
-                    text
-                }),
             })
-            .then((res)=>res.json())
-            .then((data)=>{
-                // console.log('data:',data);
+                .then((res) => res.json())
+                .then((data) => {
+                    // console.log('data:',data);
 
-                const updatedProduct=data.updateData.products.find((product)=> productId==productId);
-                console.log('updatedProduct:',updatedProduct);
-                Swal.fire({
-                    title: "done!",
-                    text: "Your amount will be credited to your wallet and we will pick the product within 2 days",
-                }).then(()=>{
-                    window.location.reload();
-                })
-            })
+                    const updatedProduct = data.updateData.products.find((product) => productId == productId);
+                    console.log("updatedProduct:", updatedProduct);
+                    Swal.fire({
+                        title: "done!",
+                        text: "Your amount will be credited to your wallet and we will pick the product within 2 days",
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                });
         }
     }
 
-    async function cancelOrder(orderId,productId) {
+    async function cancelOrder(orderId, productId) {
         Swal.fire({
-            
             text: "if you cancel this may be you dont get this product at this price",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, cancel it"
-            }).then((result) => {
+            confirmButtonText: "Yes, cancel it",
+        }).then((result) => {
             if (result.isConfirmed) {
-
-                fetch("/cancelProductOrder", {
-                    method: "POST",
+                fetch(`/order/${orderId}/${productId}`, {
+                    method: "DELETE",
                     headers: {
                         "content-type": "application/json;charset=utf-8",
                     },
-                    body: JSON.stringify({
-                        orderId,
-                        productId
-                    }),
                 })
-            
-                .then((res)=>res.json())
-                .then((data)=>{
-                    // console.log('data:',data);
-                    
-                    const updatedProduct=data.updateData.products.find((product)=> productId==productId);
-                    console.log('updatedProduct:',updatedProduct);
+                    .then((res) => res.json())
+                    .then((data) => {
+                        const updatedProduct = data.updateData.products.find((product) => productId == productId);
 
-                    if(data.updateData.payment==='online' && data.updateData.orderStatus=='placed'){
+                        if (data.updateData.payment === "online" && data.updateData.orderStatus == "placed") {
                             Swal.fire({
-                            title: "product order canceled",
-                            text: "Your amount will be credited to your wallet ",
-                            }).then(()=>{
+                                title: "product order canceled",
+                                text: "Your amount will be credited to your wallet ",
+                            }).then(() => {
                                 window.location.reload();
-                            })
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "canceled ",
+                                text: "canceled product order",
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        }
 
-                    }else{
-                        Swal.fire({
-                        title: "canceled ",
-                        text: "canceled product order",
-                    }).then(()=>{
-                        window.location.reload()
-                    })
-                    }
-
-                    const statusElement=document.getElementById('reloadPart');
-                    statusElement.innerHTML=`<h5 id="reloadPart">${updatedProduct.productStatus}</h5>`;
-
-                })
+                        const statusElement = document.getElementById("reloadPart");
+                        statusElement.innerHTML = `<h5 id="reloadPart">${updatedProduct.productStatus}</h5>`;
+                    });
             }
-        }); 
-
-            
+        });
     }
 </script>

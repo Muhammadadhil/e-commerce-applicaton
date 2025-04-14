@@ -52,8 +52,6 @@
                         <li><a class="dropdown-item" onclick="sortProducts('7')">Z to A</a></li>
                     </ul>
                 </div>
-
-                
             </div>
             <!-- Shop top Bar End -->
             <div class="row">
@@ -81,12 +79,11 @@
                             </div>
                         </div>
                         <!-- Sidebar Widget End -->
-                        
                     </div>
                     <!-- Sidebar End -->
                 </div>
-                <div class="tab-content mb-5 col-lg-9" >
-                    <div class="tab-pane fade show active " id="grid">
+                <div class="tab-content mb-5 col-lg-9">
+                    <div class="tab-pane fade show active" id="grid">
                         <!-- Shop Product Wrapper Start -->
                         <div class="shop-product-wrapper">
                             <div id="productPart" class="row">
@@ -94,7 +91,7 @@
                                 <div class="col-lg-4 col-sm-6">
                                     <!-- Single Product Start -->
                                     <div class="single-product">
-                                        <a href="/productDetails?id=<%=product._id%>"><img src="/multer/products/<%=product.images.image1%>" width="270" height="303" alt="product" /></a>
+                                        <a href="/productDetails?id=<%=product._id%>"><img src="<%=product.images.image1%>" width="270" height="303" alt="product" /></a>
                                         <div class="product-content">
                                             <h4 class="title">
                                                 <a href=""><%=product.name%></a>
@@ -137,57 +134,54 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-content mb-5 col-lg-9" >
+                <div class="tab-content mb-5 col-lg-9">
                     <div class="tab-pane fade" id="list">
                         <!-- Shop Product Wrapper Start -->
                         <div class="col-lg-4 col-sm-6">
-                        <div class="shop-product-wrapper">
-                            <%products.forEach((product)=>{%> <%if(!product.isDeleted && !product.isCategoryBlocked){%>
+                            <div class="shop-product-wrapper">
+                                <%products.forEach((product)=>{%> <%if(!product.isDeleted && !product.isCategoryBlocked){%>
 
-
-                            <!-- Single Product Start -->
-                            <div class="single-product">
-                                <a href="/productDetails?id=<%=product._id%>"><img src="/multer/products/<%=product.images.image1%>" width="270" height="303" alt="product" /></a>
-                                <div class="product-content">
-                                    <h4 class="title">
-                                        <a href=""><%=product.name%></a>
-                                    </h4>
-                                    <div class="price">
-                                        <span class="sale-price">₹<%=product.price%></span>
-                                        <%if(product.productDiscount || product.categoryDiscount){%>
-                                        <span class="old-price">₹<%=product.orgPrice%></span>
-                                        <%}%>
-                                        
+                                <!-- Single Product Start -->
+                                <div class="single-product">
+                                    <a href="/productDetails?id=<%=product._id%>"><img src="<%=product.images.image1%>" width="270" height="303" alt="product" /></a>
+                                    <div class="product-content">
+                                        <h4 class="title">
+                                            <a href=""><%=product.name%></a>
+                                        </h4>
+                                        <div class="price">
+                                            <span class="sale-price">₹<%=product.price%></span>
+                                            <%if(product.productDiscount || product.categoryDiscount){%>
+                                            <span class="old-price">₹<%=product.orgPrice%></span>
+                                            <%}%>
+                                        </div>
                                     </div>
-                                </div>
-                                <ul class="product-meta">
-                                    <li>
-                                        <%if(locals.user){%>
-                                        <a class="action" onclick="addToCart('<%=product._id%>')"><i class="pe-7s-shopbag"></i></a>
-                                        <%}else{%>
-                                        <a class="action" onclick="showLoginAlert()"><i class="pe-7s-shopbag"></i></a>
-                                        <%}%>
-                                    </li>
-                                    <li id="wishlist-icon">
-                                        <%if(locals.user){%>
-                                        <a id="wishlstIcon" class="action" onclick="addToWishlist('<%=product._id%>')">
-                                            <i
-                                                id="wishlistIcon-<%=product._id%>"
-                                                class="<%=wishlist?.products?.some((item)=>item.productId.equals(product._id))?'fa-solid':'fa-regular' %> fa-heart"
-                                            ></i>
-                                        </a>
-                                        <%}else{%>
-                                        <a class="action" onclick="showLoginAlert()"><i class="pe-7s-like"></i></a>
+                                    <ul class="product-meta">
+                                        <li>
+                                            <%if(locals.user){%>
+                                            <a class="action" onclick="addToCart('<%=product._id%>')"><i class="pe-7s-shopbag"></i></a>
+                                            <%}else{%>
+                                            <a class="action" onclick="showLoginAlert()"><i class="pe-7s-shopbag"></i></a>
+                                            <%}%>
+                                        </li>
+                                        <li id="wishlist-icon">
+                                            <%if(locals.user){%>
+                                            <a id="wishlstIcon" class="action" onclick="addToWishlist('<%=product._id%>')">
+                                                <i
+                                                    id="wishlistIcon-<%=product._id%>"
+                                                    class="<%=wishlist?.products?.some((item)=>item.productId.equals(product._id))?'fa-solid':'fa-regular' %> fa-heart"
+                                                ></i>
+                                            </a>
+                                            <%}else{%>
+                                            <a class="action" onclick="showLoginAlert()"><i class="pe-7s-like"></i></a>
 
-                                        <%}%>
-                                    </li>
-                                </ul>
+                                            <%}%>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- Single Product End -->
+                                <%}%> <%})%>
                             </div>
-                            <!-- Single Product End -->
-                            <%}%>
-                        <%})%>
                         </div>
-                    </div>
                         <!-- Shop Product Wrapper End -->
                     </div>
                 </div>
@@ -251,28 +245,26 @@
         </div>
     </div>
     <script>
-
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener("DOMContentLoaded", () => {
             const tabButtons = document.querySelectorAll('[data-bs-toggle="tab"]');
-            const tabContents = document.querySelectorAll('.tab-content .tab-pane');
-    
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
+            const tabContents = document.querySelectorAll(".tab-content .tab-pane");
+
+            tabButtons.forEach((button) => {
+                button.addEventListener("click", () => {
                     // Hide all tab contents
-                    tabContents.forEach(content => {
-                        content.classList.remove('show', 'active');
+                    tabContents.forEach((content) => {
+                        content.classList.remove("show", "active");
                     });
-    
+
                     // Show the clicked tab content
-                    const targetId = button.getAttribute('data-bs-target');
+                    const targetId = button.getAttribute("data-bs-target");
                     const targetContent = document.querySelector(targetId);
                     if (targetContent) {
-                        targetContent.classList.add('show', 'active');
+                        targetContent.classList.add("show", "active");
                     }
                 });
             });
         });
-        
     </script>
     <script>
         function getPagination(pageNum) {
@@ -298,6 +290,7 @@
                     }
                 });
         }
+
         function filterCategory(filterCategory) {
             const currentUrl = new URL(window.location.href);
             currentUrl.searchParams.set("filter", filterCategory);
