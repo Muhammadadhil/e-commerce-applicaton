@@ -6,6 +6,8 @@ require("dotenv").config();
 const session = require("express-session");
 const nocache = require("nocache");
 const flash = require("express-flash");
+const connectToDb = require("./utils/connectToDb");
+
 
 const app = express();
 connectToDb();
@@ -26,7 +28,6 @@ app.use(morgan("dev"));
 
 const adminRouter = require("./routes/adminRoute");
 const usersRouter = require("./routes/usersRoute");
-const connectToDb = require("./utils/connectToDb");
 
 // view engine setup
 app.set("views", path.join(__dirname, "/views"));
