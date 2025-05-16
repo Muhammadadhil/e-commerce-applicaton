@@ -102,8 +102,7 @@ const verifyCoupon = async (req, res) => {
         const currentDate = new Date();
 
         const couponData = await Coupon.findOne({ couponCode: userEnteredCode, expiryDate: { $gte: currentDate } });
-
-        if (orderSubTotal < couponData.criteriaAmount) {
+        if (Number(orderSubTotal) < Number(couponData.criteriaAmount)) {
             return res.json({ coupon: "criteria didnot reached", couponData });
         }
         const useridExist = couponData.usedUser.includes(userId);

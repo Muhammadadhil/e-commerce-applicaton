@@ -311,7 +311,9 @@ const otpVerificationEmail = async ({ _id, email }, req, res) => {
             <html>
                 <body style="font-family: 'Arial', sans-serif; background-color: #f4f4f4; padding: 20px;">
                     <div style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-                        <h1 style="color: #333;">Verify Your Email Address</h1>
+                        <h1 style="color: #333;">Homiqo</h1>
+                        <h4 style="color: #444;">Homiqo Verify Your Email Address</h5>
+                        
                         <p style="color: #555; line-height: 1.5;">Enter the following OTP code to verify your email address. This code will expire in 1 minutes:</p>
                         <p style="font-size: 24px; font-weight: bold; color: #007bff;">${otp}</p>
                         <p style="color: #555; line-height: 1.5;">If you did not request this verification, please ignore this email.</p>

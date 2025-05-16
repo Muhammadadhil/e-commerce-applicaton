@@ -35,11 +35,11 @@
                                         <%=i+1%>
                                     </td>
                                     <td class="product-thumb">
-                                        <a href="/productDetails?id=<%=item.productId?._id%>"><img   src="<%=item.productId?.images?.image1%>" alt="**" /></a>
+                                        <a href="/product/details?id=<%=item.productId?._id%>"><img   src="<%=item.productId?.images?.image1%>" alt="**" /></a>
                                     </td>
                                     <td class="product-info">
                                         <h6 class="name">
-                                            <a href="/productDetails?id=<%=item.productId?._id%>"><%=item.productId?.name%></a>
+                                            <a href="/product/details?id=<%=item.productId?._id%>"><%=item.productId?.name%></a>
                                         </h6>
                                         <div class="product-prices">
                                             <%if(item.productId?.productDiscount || item.productId?.categoryDiscount){%>

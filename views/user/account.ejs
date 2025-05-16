@@ -541,8 +541,8 @@
             console.log("bod:", name, phone, email, address, landmark, state, city, pincode, addressId);
             const commonError = document.getElementById("editAddressError");
 
-            fetch("/editAddress", {
-                method: "PATCH",
+            fetch("/address/edit", {
+                method: "PUT",
                 headers: {
                     "content-type": "application/json;charset=utf-8",
                 },
@@ -577,8 +577,6 @@
         }
 
         function getAddressFeilds(addressId) {
-            console.log("reched edit address::::::::::::");
-
             const response = fetch("/getAddress", {
                 method: "POST",
                 headers: {
@@ -612,8 +610,8 @@
             const firstName = document.getElementById("editFirstName").value;
             const lastName = document.getElementById("editLastName").value;
 
-            fetch("/editProfile", {
-                method: "PATCH",
+            fetch("/profile/edit", {
+                method: "PUT",
                 headers: {
                     "content-type": "application/json;charset=utf-8",
                 },

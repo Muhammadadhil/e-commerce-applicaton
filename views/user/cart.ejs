@@ -27,11 +27,11 @@
                                         <input type="checkbox" checked>
                                     </td>
                                     <td class="product-thumb">
-                                        <a href="/productDetails?id=<%=product.productId._id%>"><img   src="<%=product.productId.images?.image1%>" alt="**" /></a>
+                                        <a href="/product/details?id=<%=product.productId._id%>"><img   src="<%=product.productId.images?.image1%>" alt="**" /></a>
                                     </td>
                                     <td class="product-info">
                                         <h6 class="name">
-                                            <a href="/productDetails?id=<%=product.productId._id%>"><%=product.productId.name%></a>
+                                            <a href="/product/details?id=<%=product.productId._id%>"><%=product.productId.name%></a>
                                         </h6>
                                         <div class="product-prices">
                                             <%if(product.productId.productDiscount || product.productId.categoryDiscount){%>

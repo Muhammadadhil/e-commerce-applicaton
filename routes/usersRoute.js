@@ -21,11 +21,11 @@ router.get("/about", auth.isUserBlocled, userController.loadAbout);
 
 //account
 router.get("/account", auth.isUserBlocled, auth.isLogin, userController.loadAccount);
-router.patch("/editProfile", auth.isUserBlocled, auth.isLogin, userController.editProfile);
+router.put("/profile/edit", auth.isUserBlocled, auth.isLogin, userController.editProfile);
 
 //shop and details shop
 router.get("/shop", auth.isUserBlocled, userController.loadShop);
-router.get("/productDetails", auth.isUserBlocled, userController.loadProductDetails);
+router.get("/product/details", auth.isUserBlocled, userController.loadProductDetails);
 router.get("/search", userController.searchProducts);
 
 //cart
@@ -57,7 +57,7 @@ router.get("/resendOtp", auth.isLogout, userController.resendOtp);
 //address
 router.post("/addAddress", auth.isLogin, validateAddress, addressController.addAddress);
 router.post("/getAddress", auth.isLogin, addressController.getAddress);
-router.patch("/editAddress", auth.isLogin, validateAddress, addressController.editAddress);
+router.put("/address/edit", auth.isLogin, validateAddress, addressController.editAddress);
 router.delete("/address/:addressId", auth.isLogin, addressController.removeAddress);
 
 //checkout
@@ -70,7 +70,7 @@ router.get("/orderFailure", auth.isLogin, orderController.loadFailurePage);
 router.get("/detailsOrder", auth.isLogin, orderController.loadOrderDetails);
 router.delete("/order/:orderId/:productId", orderController.cancelProductOrder);
 router.post("/verifyPayment", orderController.verifyOnlinePayment);
-router.delete("/returnProduct", orderController.returnProductOrder);
+router.delete("/returnProduct", orderController.returnProductOrder);  
 router.get("/paytheAmount", auth.isLogin, orderController.payAgain);
 
 //invoice

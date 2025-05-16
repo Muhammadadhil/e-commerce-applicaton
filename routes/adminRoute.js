@@ -9,7 +9,6 @@ const couponController = require("../controller/couponController");
 const offerController = require("../controller/offerController");
 // const orderController=require('../controller/orderController');
 const paginatedResult = require("../middleware/pagination");
-const { model } = require("mongoose");
 const Users = require("../model/userModel");
 
 router.set("views", "./views/admin");
@@ -26,7 +25,7 @@ router.patch("/blockAndUnblock", auth.isAdminLogin, adminController.userBlock);
 //category routes
 router.get("/category", auth.isAdminLogin, adminController.loadCategory);
 router.post("/addCategory", auth.isAdminLogin, adminController.addCategory);
-router.get("/editCategory", auth.isAdminLogin, adminController.editCategory);
+router.get("/editCategory", auth.isAdminLogin, adminController.editCategory);  
 router.post("/editCategory", auth.isAdminLogin, adminController.updateCategory);
 router.post("/blockUnblock", auth.isAdminLogin, adminController.blockCategory);
 

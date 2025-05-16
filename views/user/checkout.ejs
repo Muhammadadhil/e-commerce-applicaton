@@ -495,7 +495,8 @@
                 event.preventDefault();
 
                 const code = document.getElementById("couponCode").value;
-                const subTotalAmount = document.getElementById("subTotalAmount").textContent;
+                let subTotalAmount = document.getElementById("subTotalAmount").textContent;
+                subTotalAmount = subTotalAmount.slice(1);
                 console.log("subTotalAmount:", subTotalAmount);
                 const errorElement = document.getElementById("couponCodeError");
                 const successElement = document.getElementById("couponCodeSuccess");
@@ -656,8 +657,8 @@
                 console.log("bod:", name, phone, email, address, landmark, state, city, pincode, addressId);
                 const commonError = document.getElementById("editAddressError");
 
-                fetch("/editAddress", {
-                    method: "POST",
+                fetch("/address/edit", {
+                    method: "PUT",
                     headers: {
                         "content-type": "application/json;charset=utf-8",
                     },
@@ -693,7 +694,6 @@
             }
 
             function getAddressFeilds(addressId) {
-                console.log("reched edit address::::::::::::");
 
                 const response = fetch("/getAddress", {
                     method: "POST",
@@ -726,7 +726,6 @@
             }
 
             function addAddress() {
-                console.log("in adddd aaaadresssssssssssssss");
 
                 const name = document.querySelector("#newAddress2 input[name='name']").value;
                 const phone = document.querySelector("#newAddress2 input[name='phone']").value;
@@ -736,15 +735,6 @@
                 const city = document.querySelector("#newAddress2 input[name='city']").value;
                 const state = document.querySelector("#newAddress2 input[name='state']").value;
                 const pincode = document.querySelector("#newAddress2 input[name='pincode']").value;
-
-                console.log("Name:", name);
-                console.log("Phone:", phone);
-                console.log("Email:", email);
-                console.log("Address:", address);
-                console.log("Landmark:", landmark);
-                console.log("City:", city);
-                console.log("State:", state);
-                console.log("Pincode:", pincode);
 
                 // Validation for each field
                 const nameError = document.querySelector("#newAddress2 #nameError");
@@ -847,8 +837,6 @@
             }
 
             function addAddressExtra() {
-                console.log("in adddd aaaadresssssssssssssss");
-
                 const name = document.querySelector("#addAddressExtra input[name='name']").value;
                 const phone = document.querySelector("#addAddressExtra input[name='phone']").value;
                 const email = document.querySelector("#addAddressExtra input[name='email']").value;
@@ -857,15 +845,6 @@
                 const city = document.querySelector("#addAddressExtra input[name='city']").value;
                 const state = document.querySelector("#addAddressExtra input[name='state']").value;
                 const pincode = document.querySelector("#addAddressExtra input[name='pincode']").value;
-
-                console.log("Name:", name);
-                console.log("Phone:", phone);
-                console.log("Email:", email);
-                console.log("Address:", address);
-                console.log("Landmark:", landmark);
-                console.log("City:", city);
-                console.log("State:", state);
-                console.log("Pincode:", pincode);
 
                 // Validation for each field
                 const nameError = document.querySelector("#addAddressExtra #nameError");
@@ -935,7 +914,6 @@
                 } else {
                     pincodeError.textContent = "";
                 }
-                console.log("add address body:", name, phone, email, address, landmark, state, city, pincode);
 
                 fetch("/addAddress", {
                     method: "POST",
@@ -968,7 +946,6 @@
             }
 
             function removeAddress(addressId) {
-                console.log("reched delete address::::::::::::");
 
                 Swal.fire({
                     title: "Are you sure?",

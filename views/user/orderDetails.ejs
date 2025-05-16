@@ -74,7 +74,7 @@
                                 </td>
 
                                 <td>
-                                    <h5 class="product-details"><a href="/productDetails?id=<%=product.productId._id%>"> <%= product.productId.name %> </a></h5>
+                                    <h5 class="product-details"><a href="/product/details?id=<%=product.productId._id%>"> <%= product.productId.name %> </a></h5>
                                 </td>
                                 <td>
                                     <p class="product-details">
@@ -91,7 +91,7 @@
                                     <%if(product.productStatus=='delivered'){%>
                                     <h5><a onclick="returnOrder('<%=orderData._id%>','<%= product.productId._id %>')" class="btn" style="background-color: rgb(240, 88, 0)">Return</a></h5>
                                     <%}else if(product.productStatus=='canceled'){%>
-                                    <h5><a id="cancelButton" href="/productDetails?id=<%=product.productId._id%>" class="btn" style="background-color: rgb(51, 255, 0)">buy again</a></h5>
+                                    <h5><a id="cancelButton" href="/product/details?id=<%=product.productId._id%>" class="btn" style="background-color: rgb(51, 255, 0)">buy again</a></h5>
                                     <%}else if(product.productStatus=='returned'){%>
                                     <p>Product Returned</p>
                                     <%}else{%>

@@ -62,8 +62,6 @@ const addProducts = async (req, res) => {
 const loadEditProduct = async (req, res) => {
     try {
         const productId = req.query.id;
-        console.log("productId:", productId);
-
         const productData = await Products.findOne({ _id: productId }).populate("categoryId");
         const categories = await Category.find({});
         res.render("editProducts", { productData, categories });
@@ -139,6 +137,7 @@ const blockProduct = async (req, res) => {
         res.status(500).render("user/error-500");
     }
 };
+
 
 module.exports = {
     loadProducts,
